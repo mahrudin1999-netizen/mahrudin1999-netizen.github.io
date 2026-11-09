@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Ganti Karakter - GIRINATAN</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:white;font-family:Arial,sans-serif}
+header{padding:18px;display:flex;align-items:center;gap:15px;border-bottom:1px solid #806326}
+header a{color:#D6AD48;font-size:25px;text-decoration:none}
+.logo{color:#D6AD48;font-size:21px;font-weight:bold}
+main{max-width:650px;margin:auto;padding:20px}
+h1{color:#D6AD48}
+.desc{color:#aaa;line-height:1.6;font-size:14px}
+.section{background:#151515;border:1px solid #55451f;border-radius:15px;padding:17px;margin-top:20px}
+.section h3{color:#D6AD48;margin-top:0}
+.upload{display:block;background:#202020;border:1px dashed #D6AD48;border-radius:12px;padding:25px 12px;text-align:center;cursor:pointer}
+.upload span{display:block;font-size:35px;margin-bottom:10px}
+input[type=file]{display:none}
+.preview{width:100%;max-height:300px;object-fit:contain;margin-top:15px;border-radius:10px;display:none;background:#080808}
+textarea{width:100%;background:#202020;color:white;border:1px solid #555;border-radius:10px;padding:13px;margin-top:10px;font-size:14px;min-height:110px;resize:vertical}
+.audio-option{display:flex;gap:10px;align-items:center;margin:15px 0;color:#ddd;font-size:14px}
+.audio-option input{accent-color:#00C875}
+.generate{width:100%;padding:16px;margin-top:22px;border:none;border-radius:12px;background:linear-gradient(135deg,#E5C36A,#B88A2E);color:#080808;font-weight:bold;font-size:16px;cursor:pointer}
+.generate:disabled{opacity:.5;cursor:not-allowed}
+.notice{color:#00C875;font-size:12px;text-align:center;margin-top:15px;line-height:1.5}
+.result{display:none;margin-top:20px;padding:17px;background:#151515;border:1px solid #00C875;border-radius:15px}
+.result video{width:100%;border-radius:10px}
+.download{display:block;text-align:center;margin-top:15px;padding:13px;background:#00C875;color:#080808;text-decoration:none;font-weight:bold;border-radius:10px}
+.small{font-size:12px;color:#aaa;line-height:1.5}
+.credit-line{display:flex;justify-content:space-between;gap:12px;margin:10px 0;color:#ddd;font-size:14px}
+.credit-value{color:#00C875;font-weight:bold}
+</style>
+</head>
+<body>
+<header><a href="../index.html">←</a><div class="logo">GIRINATAN</div></header>
+<main>
+<h1>AI Ganti Karakter 🎬</h1>
+
+<div class="section">
+  <h3>💳 Dompet Kredit Video AI</h3>
+  <div class="credit-line"><span>Saldo saat ini</span><span class="credit-value" id="walletBalance">Memuat...</span></div>
+  <div class="credit-line"><span>Tarif</span><span class="credit-value">9 kredit / detik</span></div>
+  <div class="credit-line"><span>Estimasi biaya video</span><span class="credit-value" id="estimatedCost">Pilih video</span></div>
+  <p class="desc">Kredit dicadangkan saat proses dimulai. Jika mesin AI menyatakan gagal atau dibatalkan, kredit akan dikembalikan otomatis.</p>
+</div>
+
+<p class="desc">Ganti karakter dalam video menggunakan foto pilihanmu. Gunakan video dan foto yang kamu miliki atau punya izin untuk menggunakannya.</p>
+
+<div class="section">
+<h3>1. Video Referensi</h3>
+<label class="upload" for="referenceVideo"><span>🎥</span>Pilih video referensi<p class="desc">Format MP4, maksimal 45 MB</p></label>
+<input type="file" id="referenceVideo" accept="video/mp4,.mp4">
+<video id="videoPreview" class="preview" controls playsinline></video>
+<p class="small" id="videoDuration">Durasi: belum dipilih</p>
+</div>
+
+<div class="section">
+<h3>2. Foto Karakter Pengganti</h3>
+<label class="upload" for="characterPhoto"><span>🧑</span>Pilih foto karakter<p class="desc">JPG, PNG atau WebP, maksimal 10 MB</p></label>
+<input type="file" id="characterPhoto" accept="image/jpeg,image/png,image/webp">
+<img id="photoPreview" class="preview" alt="Foto karakter">
+</div>
+
+<div class="section">
+<h3>3. Instruksi AI</h3>
+<textarea id="prompt" maxlength="2000" placeholder="Contoh: Ganti karakter utama dalam video dengan karakter dari foto. Pertahankan gerakan tubuh, ekspresi, sudut kamera dan suasana video asli."></textarea>
+</div>
+
+<div class="section">
+<h3>4. Pengaturan Audio</h3>
+<label class="audio-option"><input type="radio" name="audio" value="original" checked> Pertahankan audio asli</label>
+<label class="audio-option"><input type="radio" name="audio" value="silent"> Tanpa audio</label>
+<p class="small">Fitur ganti audio belum tersedia.</p>
+</div>
+
+<button class="generate" id="generateBtn" type="button">✨ Hasilkan Video</button>
+<p class="notice" id="status">Memeriksa akun GIRINATAN...</p>
+
+<div class="result" id="resultBox">
+<h3 style="color:#00C875">🎉 Video Selesai!</h3>
+<video id="resultVideo" controls playsinline></video>
+<a id="downloadLink" class="download" target="_blank" rel="noopener">Unduh Video</a>
+<p class="small">Simpan hasil video segera. Tautan hasil dari mesin AI dapat memiliki masa berlaku.</p>
+</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://ozypepeusicvnlgqqcld.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_8CDQECDwjuziyGRhlucdDw_qCAYogOa";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+const videoInput = document.getElementById("referenceVideo");
+const photoInput = document.getElementById("characterPhoto");
+const promptInput = document.getElementById("prompt");
+const statusText = document.getElementById("status");
+const generateBtn = document.getElementById("generateBtn");
+
+let currentUser = null;
+let videoDurationSeconds = 0;
+let walletBalance = 0;
+const CREDITS_PER_SECOND = 9;
+let activeJobUnresolved = false;
+
+function activeJobKey() {
+  return currentUser
+    ? "girinat an_video_ai_job_" + currentUser.id
+    : null;
+}
+
+function saveActiveJob(predictionId, jobId) {
+  if (!activeJobKey()) return;
+
+  localStorage.setItem(activeJobKey(), JSON.stringify({
+    predictionId,
+    jobId
+  }));
+
+  activeJobUnresolved = true;
+}
+
+function clearActiveJob() {
+  if (activeJobKey()) {
+    localStorage.removeItem(activeJobKey());
+  }
+
+  activeJobUnresolved = false;
+}
+function setStatus(message) { statusText.textContent = message; }
+
+function formatNumber(value) {
+  return new Intl.NumberFormat("id-ID").format(value);
+}
+
+async function loadWallet() {
+  if (!currentUser) return;
+
+  try {
+    const { data: sessionData, error: sessionError } =
+      await db.auth.getSession();
+
+    if (sessionError || !sessionData.session) {
+      throw new Error("Sesi login tidak ditemukan.");
+    }
+
+    const response = await fetch(
+      "https://girinatan-video-ai.mahrudin1999.workers.dev/wallet",
+      {
+        method: "GET",
+        headers: {
+          "Authorization":
+            "Bearer " + sessionData.session.access_token
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Gagal mengambil saldo.");
+    }
+
+    walletBalance = Number(data.available_balance);
+
+    document.getElementById("walletBalance").textContent =
+      formatNumber(walletBalance) + " kredit";
+
+    updateEstimate();
+
+  } catch (error) {
+    console.error("Gagal memuat saldo:", error);
+    setStatus("Gagal memuat saldo: " + error.message);
+  }
+}
+
+
+function updateEstimate() {
+  const output = document.getElementById("estimatedCost");
+
+  if (!videoDurationSeconds) {
+    output.textContent = "Pilih video";
+    return;
+  }
+
+  const cost = videoDurationSeconds * CREDITS_PER_SECOND;
+
+  output.textContent = formatNumber(cost) + " kredit";
+  output.style.color =
+    cost <= walletBalance ? "#00C875" : "#FF8A80";
+}
+
+
+function previewFile(input, elementId) {
+  const file = input.files[0];
+  if (!file) return;
+  const preview = document.getElementById(elementId);
+  if (preview.dataset.objectUrl) URL.revokeObjectURL(preview.dataset.objectUrl);
+  const objectUrl = URL.createObjectURL(file);
+  preview.dataset.objectUrl = objectUrl;
+  preview.src = objectUrl;
+  preview.style.display = "block";
+}
+
+function readVideoDuration(file) {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const probe = document.createElement("video");
+    probe.preload = "metadata";
+    probe.onloadedmetadata = () => {
+      const duration = probe.duration;
+      URL.revokeObjectURL(objectUrl);
+      if (!Number.isFinite(duration) || duration <= 0) {
+        reject(new Error("Durasi video tidak dapat dibaca."));
+      } else {
+        resolve(Math.ceil(duration));
+      }
+    };
+    probe.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Video tidak dapat dibaca."));
+    };
+    probe.src = objectUrl;
+  });
+}
+
+videoInput.addEventListener("change", async () => {
+  videoDurationSeconds = 0;
+  document.getElementById("videoDuration").textContent = "Durasi: membaca...";
+  if (!videoInput.files[0]) return;
+  previewFile(videoInput, "videoPreview");
+  try {
+    videoDurationSeconds = await readVideoDuration(videoInput.files[0]);
+    document.getElementById("videoDuration").textContent =
+      "Durasi: " + videoDurationSeconds + " detik";
+    updateEstimate();
+  } catch (error) {
+    document.getElementById("videoDuration").textContent = error.message;
+  }
+});
+
+photoInput.addEventListener("change", () => previewFile(photoInput, "photoPreview"));
+
+async function checkLogin() {
+  const { data, error } = await db.auth.getSession();
+  if (error || !data.session) {
+    currentUser = null;
+    setStatus("Silakan login melalui akun GIRINATAN terlebih dahulu.");
+    generateBtn.disabled = true;
+    document.getElementById("walletBalance").textContent = "Login diperlukan";
+    return false;
+  }
+  currentUser = data.session.user;
+  generateBtn.disabled = false;
+    await loadWallet();
+  return true;
+}
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function getErrorMessage(error) {
+  return error?.message || "Terjadi kesalahan. Silakan coba kembali.";
+}
+
+
+async function uploadFile(path, file) {
+  if (!currentUser) {
+    throw new Error("Silakan login terlebih dahulu.");
+  }
+
+  const { data: sessionData, error: sessionError } =
+    await db.auth.getSession();
+
+  if (sessionError || !sessionData.session) {
+    throw new Error("Sesi login tidak ditemukan.");
+  }
+
+  const isVideo = file.type.startsWith("video/");
+  const endpoint = isVideo ? "/upload/video" : "/upload/image";
+
+  const response = await fetch(
+    "https://girinatan-video-ai.mahrudin1999.workers.dev" + endpoint,
+    {
+      method: "PUT",
+      headers: {
+        "Authorization":
+          "Bearer " + sessionData.session.access_token,
+        "Content-Type": file.type
+      },
+      body: file
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Upload ke Cloudflare gagal.");
+  }
+
+  return data.key;
+}
+
+
+async function startGeneration() {
+  const video = videoInput.files[0];
+  const photo = photoInput.files[0];
+  const prompt = promptInput.value.trim();
+  const audioMode = document.querySelector('input[name="audio"]:checked').value;
+
+  if (!video || !photo || !prompt) {
+    setStatus("Lengkapi video, foto karakter, dan instruksi AI.");
+    return;
+  }
+
+  if (video.type !== "video/mp4") {
+    setStatus("Gunakan video dengan format MP4.");
+    return;
+  }
+
+  if (video.size > 45 * 1024 * 1024) {
+    setStatus("Ukuran video maksimal 45 MB.");
+    return;
+  }
+
+  if (!["image/jpeg", "image/png", "image/webp"].includes(photo.type)) {
+    setStatus("Gunakan foto JPG, PNG, atau WebP.");
+    return;
+  }
+
+  if (photo.size > 10 * 1024 * 1024) {
+    setStatus("Ukuran foto maksimal 10 MB.");
+    return;
+  }
+
+  generateBtn.disabled = true;
+  document.getElementById("resultBox").style.display = "none";
+
+  try {
+    const loggedIn = await checkLogin();
+    if (!loggedIn) {
+      throw new Error("Silakan login terlebih dahulu.");
+    }
+
+    if (!videoDurationSeconds) {
+      videoDurationSeconds = await readVideoDuration(video);
+      updateEstimate();
+    }
+
+    const creditsNeeded =
+      videoDurationSeconds * CREDITS_PER_SECOND;
+
+    if (walletBalance < creditsNeeded) {
+      throw new Error(
+        "Kredit tidak mencukupi. Dibutuhkan " +
+        formatNumber(creditsNeeded) + " kredit."
+      );
+    }
+
+    const { data: sessionData, error: sessionError } =
+      await db.auth.getSession();
+
+    const accessToken = sessionData?.session?.access_token;
+
+    if (sessionError || !accessToken) {
+      throw new Error("Sesi login tidak ditemukan. Silakan login ulang.");
+    }
+
+    setStatus("Mengunggah video referensi...");
+    const videoKey = await uploadFile("video.mp4", video);
+
+    setStatus("Mengunggah foto karakter...");
+    const imageKey = await uploadFile("character", photo);
+
+    setStatus(
+      "Mengirim pekerjaan AI dan mencadangkan " +
+      formatNumber(creditsNeeded) + " kredit..."
+    );
+
+    const response = await fetch(
+      "https://girinatan-video-ai.mahrudin1999.workers.dev/jobs/start",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          video_key: videoKey,
+          image_key: imageKey,
+          prompt: prompt,
+          audio_mode: audioMode,
+          duration_seconds: videoDurationSeconds,
+          idempotency_key: crypto.randomUUID()
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.message || "Gagal mengirim pekerjaan AI."
+      );
+    }
+
+    if (!data.job_id) {
+      throw new Error("ID pekerjaan AI tidak diterima.");
+    }
+
+    saveActiveJob(data.id || data.job_id, data.job_id);
+
+    await loadWallet();
+
+    setStatus(
+      "AI mulai bekerja. " +
+      formatNumber(creditsNeeded) +
+      " kredit dicadangkan. Mohon tunggu..."
+    );
+
+    await checkPrediction(null, data.job_id);
+
+  } catch (error) {
+    setStatus("Gagal: " + getErrorMessage(error));
+    await loadWallet();
+  } finally {
+    generateBtn.disabled = activeJobUnresolved;
+  }
+}
+
+
+async function checkPrediction(predictionId, jobId) {
+  const maxAttempts = 240;
+
+  for (let i = 0; i < maxAttempts; i++) {
+    await wait(5000);
+
+    setStatus(
+      "AI sedang memproses video... " +
+      Math.round(((i + 1) * 5) / 60) + " menit"
+    );
+
+    const { data: sessionData, error: sessionError } =
+      await db.auth.getSession();
+
+    const accessToken = sessionData?.session?.access_token;
+
+    if (sessionError || !accessToken) {
+      throw new Error(
+        "Sesi login tidak ditemukan. Silakan login ulang."
+      );
+    }
+
+    const response = await fetch(
+      "https://girinatan-video-ai.mahrudin1999.workers.dev/jobs/status",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          job_id: jobId
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.message || "Gagal memeriksa status pekerjaan AI."
+      );
+    }
+
+    if (data.status === "succeeded") {
+      const outputUrl = Array.isArray(data.output)
+        ? data.output[0]
+        : data.output_url || data.output;
+
+      if (!outputUrl) {
+        throw new Error("Tautan hasil video tidak ditemukan.");
+      }
+
+      document.getElementById("resultVideo").src = outputUrl;
+      document.getElementById("downloadLink").href = outputUrl;
+      document.getElementById("resultBox").style.display = "block";
+
+      setStatus("Berhasil! Video selesai. Kredit telah digunakan.");
+
+      clearActiveJob();
+      await loadWallet();
+      return;
+    }
+
+    if (data.status === "failed" || data.status === "canceled") {
+      clearActiveJob();
+      await loadWallet();
+
+      throw new Error(
+        (data.error || "Proses AI gagal.") +
+        (data.credits_refunded
+          ? " Kredit sudah dikembalikan."
+          : "")
+      );
+    }
+
+    if (data.status === "submission_unknown") {
+      setStatus(
+        "Status pekerjaan belum dapat dipastikan. " +
+        "Kredit tetap dicadangkan. Jangan mulai pekerjaan baru."
+      );
+
+      await loadWallet();
+      return;
+    }
+  }
+
+  setStatus(
+    "Proses masih berjalan. Kredit tetap dicadangkan sampai mesin AI memberi hasil. " +
+    "Muat ulang halaman tidak membatalkan pekerjaan."
+  );
+
+  await loadWallet();
+}
+
+
+async function resumeActiveJob() {
+  if (!currentUser) return;
+
+  const key = activeJobKey();
+  const saved = key ? localStorage.getItem(key) : null;
+
+  if (!saved) return;
+
+  let job;
+
+  try {
+    job = JSON.parse(saved);
+  } catch {
+    localStorage.removeItem(key);
+    return;
+  }
+
+  if (!job?.jobId) {
+    localStorage.removeItem(key);
+    return;
+  }
+
+  activeJobUnresolved = true;
+  generateBtn.disabled = true;
+
+  setStatus(
+    "Melanjutkan pemeriksaan pekerjaan Video AI sebelumnya..."
+  );
+
+  try {
+    await checkPrediction(null, job.jobId);
+  } catch (error) {
+    setStatus(
+      "Pekerjaan sebelumnya belum dapat diperiksa: " +
+      getErrorMessage(error) +
+      ". Kredit tetap dicadangkan."
+    );
+  } finally {
+    generateBtn.disabled = activeJobUnresolved;
+  }
+}
+generateBtn.addEventListener("click", startGeneration);
+
+checkLogin().then(async (loggedIn) => {
+  if (loggedIn) {
+    await resumeActiveJob();
+  }
+});
+
+  </script>
+</body>
+</html>
