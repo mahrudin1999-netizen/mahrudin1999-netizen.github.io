@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
+  <title>Checkout | GIRINATAN</title>
+
+  <style>
+    :root {
+      --bg: #080808;
+      --panel: #151515;
+      --gold: #D6AD48;
+      --green: #00C875;
+      --text: #fff;
+      --muted: #A8ADA8;
+      --border: #343434;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header a {
+      color: var(--gold);
+      font-size: 26px;
+      text-decoration: none;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 18px;
+      margin-bottom: 17px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: var(--gold);
+    }
+
+    .detail {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .detail:last-child {
+      border-bottom: 0;
+    }
+
+    .detail span:first-child {
+      color: var(--muted);
+    }
+
+    .detail strong {
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .total {
+      font-size: 19px;
+      color: var(--green);
+    }
+
+    .notice {
+      padding: 14px;
+      background: #202820;
+      border: 1px solid #3C9B65;
+      color: var(--green);
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .warning {
+      padding: 14px;
+      background: #301316;
+      border: 1px solid #8B3038;
+      color: #FF8A80;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 15px;
+    }
+
+    .button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin-top: 12px;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #E5C36A, #B88A2E);
+      color: #080808;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      background: #202820;
+      border: 1px solid #3C9B65;
+      color: var(--green);
+    }
+
+    .button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 35px 15px;
+      color: var(--muted);
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html">‹</a>
+  <h2>Checkout Pesanan</h2>
+</header>
+
+<main class="container">
+
+  <div id="orderSection" class="hidden">
+
+    <div class="card">
+      <h3>Detail Pesanan</h3>
+
+      <div class="detail">
+        <span>Jenis Produk</span>
+        <strong id="orderType">-</strong>
+      </div>
+
+      <div class="detail">
+        <span>Operator</span>
+        <strong id="orderOperator">-</strong>
+      </div>
+
+      <div class="detail">
+        <span>Nomor Tujuan</span>
+        <strong id="orderCustomer">-</strong>
+      </div>
+
+      <div class="detail">
+        <span>Produk</span>
+        <strong id="orderProduct">-</strong>
+      </div>
+
+      <div class="detail">
+        <span>Nominal</span>
+        <strong id="orderAmount">-</strong>
+      </div>
+
+      <div class="detail">
+        <span>Total Sementara</span>
+        <strong class="total" id="orderTotal">-</strong>
+      </div>
+    </div>
+
+    <div class="notice">
+      Pesanan berhasil diteruskan ke halaman checkout.
+      Ini belum berarti transaksi sudah dibuat atau dibayar.
+    </div>
+
+    <div class="warning">
+      Pembayaran belum tersedia. Harga jual final, biaya layanan,
+      pengecekan pelanggan, dan transaksi supplier harus diproses
+      melalui server terlebih dahulu.
+    </div>
+
+    <button class="button" disabled>
+      Pembayaran Belum Tersedia
+    </button>
+
+    <button class="button secondary" onclick="cancelOrder()">
+      Batalkan Pesanan
+    </button>
+
+  </div>
+
+  <div id="emptySection" class="card empty hidden">
+    <h3>Belum Ada Pesanan</h3>
+    <p>
+      Silakan pilih produk terlebih dahulu
+      sebelum masuk ke halaman checkout.
+    </p>
+
+    <a href="index.html" class="button">
+      Kembali ke Market
+    </a>
+  </div>
+
+</main>
+
+<script>
+  const storageKey = "girINATAN_market_order";
+
+  function rupiah(value) {
+    return "Rp" + Number(value).toLocaleString("id-ID");
+  }
+
+  function loadOrder() {
+    const orderData = sessionStorage.getItem(storageKey);
+
+    if (!orderData) {
+      document.getElementById("emptySection").classList.remove("hidden");
+      return;
+    }
+
+    try {
+      const order = JSON.parse(orderData);
+
+      if (
+        !order ||
+        !["Pulsa", "Paket Data", "Token PLN"].includes(order.type) ||
+        typeof order.customer !== "string" ||
+        typeof order.product !== "string" ||
+        typeof order.amount !== "number"
+      ) {
+        throw new Error("Data pesanan tidak valid");
+      }
+
+      document.getElementById("orderType").textContent =
+        order.type || "-";
+
+      document.getElementById("orderOperator").textContent =
+        order.operator || "-";
+
+      document.getElementById("orderCustomer").textContent =
+        order.customer || "-";
+
+      document.getElementById("orderProduct").textContent =
+        order.product || "-";
+
+      document.getElementById("orderAmount").textContent =
+        order.amount > 0 ? rupiah(order.amount) : "Belum ditentukan";
+
+      document.getElementById("orderTotal").textContent =
+        order.amount > 0 ? rupiah(order.amount) : "Belum ditentukan";
+
+            // Simpan pesanan ke riwayat browser
+      const historyKey = "girINATAN_market_history";
+      const history = JSON.parse(
+        localStorage.getItem(historyKey) || "[]"
+      );
+
+      const orderId = order.createdAt ||
+        (order.type + order.customer + order.product);
+
+      const alreadySaved = history.some(item =>
+        item.orderId === orderId
+      );
+
+      if (!alreadySaved) {
+        history.unshift({
+          ...order,
+          orderId: orderId,
+          status: "Menunggu",
+          savedAt: new Date().toISOString()
+        });
+
+        localStorage.setItem(
+          historyKey,
+          JSON.stringify(history)
+        );
+      }
+
+      document.getElementById("orderSection").classList.remove("hidden");
+
+    } catch (error) {
+      sessionStorage.removeItem(storageKey);
+      document.getElementById("emptySection").classList.remove("hidden");
+    }
+  }
+
+  function cancelOrder() {
+    if (confirm("Yakin ingin membatalkan pesanan ini?")) {
+      sessionStorage.removeItem(storageKey);
+      window.location.href = "index.html";
+    }
+  }
+
+  loadOrder();
+</script>
+
+</body>
+</html>

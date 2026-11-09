@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
+  <title>Token PLN | GIRINATAN</title>
+
+  <style>
+    :root {
+      --bg: #080808;
+      --panel: #151515;
+      --gold: #D6AD48;
+      --green: #00C875;
+      --text: #fff;
+      --muted: #A8ADA8;
+      --border: #343434;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header a {
+      color: var(--gold);
+      font-size: 26px;
+      text-decoration: none;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 17px;
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: #202020;
+      color: white;
+      font-size: 15px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .product {
+      padding: 15px 10px;
+      background: #202020;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: white;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .product strong {
+      display: block;
+      color: var(--gold);
+      margin-bottom: 7px;
+    }
+
+    .product.selected {
+      border: 2px solid var(--green);
+      background: #14251b;
+    }
+
+    .summary {
+      line-height: 1.8;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .summary strong {
+      color: white;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .continue {
+      width: 100%;
+      padding: 15px;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #E5C36A, #B88A2E);
+      color: #080808;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html">‹</a>
+  <h2>Token Listrik PLN</h2>
+</header>
+
+<main class="container">
+
+  <div class="card">
+    <label for="customer">Nomor Meter / ID Pelanggan</label>
+    <input
+      type="text"
+      id="customer"
+      placeholder="Masukkan nomor meter atau ID pelanggan"
+      maxlength="20"
+      inputmode="numeric"
+    >
+  </div>
+
+  <div class="card">
+    <label>Pilih Nominal Token</label>
+
+    <div class="products">
+      <button class="product" onclick="chooseProduct(this, 20000)">
+        <strong>Rp20.000</strong>
+        Token 20 Ribu
+      </button>
+
+      <button class="product" onclick="chooseProduct(this, 50000)">
+        <strong>Rp50.000</strong>
+        Token 50 Ribu
+      </button>
+
+      <button class="product" onclick="chooseProduct(this, 100000)">
+        <strong>Rp100.000</strong>
+        Token 100 Ribu
+      </button>
+
+      <button class="product" onclick="chooseProduct(this, 200000)">
+        <strong>Rp200.000</strong>
+        Token 200 Ribu
+      </button>
+
+      <button class="product" onclick="chooseProduct(this, 500000)">
+        <strong>Rp500.000</strong>
+        Token 500 Ribu
+      </button>
+
+      <button class="product" onclick="chooseProduct(this, 1000000)">
+        <strong>Rp1.000.000</strong>
+        Token 1 Juta
+      </button>
+    </div>
+  </div>
+
+  <div class="card summary">
+    <strong>Ringkasan Pesanan</strong>
+    <div>ID Pelanggan: <strong id="selectedCustomer">-</strong></div>
+    <div>Produk: <strong id="selectedProduct">Belum dipilih</strong></div>
+    <div>Nominal: <strong id="selectedPrice">Rp0</strong></div>
+    <p class="hint">
+      Nominal di atas adalah contoh pilihan. Harga jual, biaya
+      administrasi, dan ketersediaan token belum terhubung ke supplier.
+    </p>
+  </div>
+
+  <button class="continue" onclick="continueCheckout()">
+    Lanjut ke Checkout
+  </button>
+
+</main>
+
+<script>
+  let selectedAmount = 0;
+
+  const rupiah = value =>
+    "Rp" + Number(value).toLocaleString("id-ID");
+
+  function chooseProduct(button, amount) {
+    document.querySelectorAll(".product").forEach(item => {
+      item.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+    selectedAmount = amount;
+
+    document.getElementById("selectedProduct").textContent =
+      "Token PLN " + rupiah(amount);
+
+    document.getElementById("selectedPrice").textContent =
+      rupiah(amount);
+  }
+
+  document.getElementById("customer").addEventListener("input", function() {
+    document.getElementById("selectedCustomer").textContent =
+      this.value || "-";
+  });
+
+  function continueCheckout() {
+    const customer = document.getElementById("customer").value.trim();
+
+    if (!/^[0-9]{11,20}$/.test(customer)) {
+      alert("Masukkan nomor meter atau ID pelanggan berupa 11 sampai 20 digit.");
+      return;
+    }
+
+    if (!selectedAmount) {
+      alert("Silakan pilih nominal token.");
+      return;
+    }
+
+    const order = {
+      type: "Token PLN",
+      operator: "PLN",
+      customer: customer,
+      product: "Token PLN " + rupiah(selectedAmount),
+      amount: selectedAmount,
+      createdAt: new Date().toISOString()
+    };
+
+    sessionStorage.setItem("girINATAN_market_order", JSON.stringify(order));
+
+    window.location.href = "checkout.html";
+  }
+</script>
+
+</body>
+</html>

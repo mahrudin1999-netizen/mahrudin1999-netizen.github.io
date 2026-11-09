@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
+  <title>Paket Data | GIRINATAN</title>
+
+  <style>
+    :root {
+      --bg: #080808;
+      --panel: #151515;
+      --gold: #D6AD48;
+      --green: #00C875;
+      --text: #fff;
+      --muted: #A8ADA8;
+      --border: #343434;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header a {
+      color: var(--gold);
+      font-size: 26px;
+      text-decoration: none;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 17px;
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: #202020;
+      color: white;
+      font-size: 15px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .product {
+      padding: 15px 10px;
+      background: #202020;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: white;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .product strong {
+      display: block;
+      color: var(--gold);
+      margin-bottom: 7px;
+    }
+
+    .product.selected {
+      border: 2px solid var(--green);
+      background: #14251b;
+    }
+
+    .summary {
+      line-height: 1.8;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .summary strong {
+      color: white;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .continue {
+      width: 100%;
+      padding: 15px;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #E5C36A, #B88A2E);
+      color: #080808;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html">‹</a>
+  <h2>Paket Data</h2>
+</header>
+
+<main class="container">
+
+  <div class="card">
+    <label for="phone">Nomor HP Tujuan</label>
+    <input
+      type="tel"
+      id="phone"
+      placeholder="Contoh: 081234567890"
+      maxlength="15"
+      inputmode="numeric"
+    >
+  </div>
+
+  <div class="card">
+    <label for="operator">Pilih Operator</label>
+    <select id="operator">
+      <option value="">Pilih operator</option>
+      <option>Telkomsel</option>
+      <option>Indosat</option>
+      <option>XL</option>
+      <option>Axis</option>
+      <option>Tri</option>
+      <option>Smartfren</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <label>Pilih Paket Data</label>
+
+    <div class="products">
+      <button class="product" onclick="chooseProduct(this, 1)">
+        <strong>1 GB</strong>
+        Paket 1 GB
+      </button>
+
+      <button class="product" onclick="chooseProduct(this, 3)">
+        <strong>3 GB</strong>
+        Paket 3 GB
+      </button>
+
+      <button class="product" onclick="chooseProduct(this, 5)">
+        <strong>5 GB</strong>
+        Paket 5 GB
+      </button>
+
+      <button class="product" onclick="chooseProduct(this, 10)">
+        <strong>10 GB</strong>
+        Paket 10 GB
+      </button>
+
+      <button class="product" onclick="chooseProduct(this, 15)">
+        <strong>15 GB</strong>
+        Paket 15 GB
+      </button>
+
+      <button class="product" onclick="chooseProduct(this, 20)">
+        <strong>20 GB</strong>
+        Paket 20 GB
+      </button>
+    </div>
+  </div>
+
+  <div class="card summary">
+    <strong>Ringkasan Pesanan</strong>
+    <div>Operator: <strong id="selectedOperator">-</strong></div>
+    <div>Nomor: <strong id="selectedPhone">-</strong></div>
+    <div>Paket: <strong id="selectedPackage">Belum dipilih</strong></div>
+    <p class="hint">
+      Pilihan paket ini masih contoh. Harga, kuota, masa aktif,
+      dan ketersediaan produk belum terhubung ke supplier.
+    </p>
+  </div>
+
+  <button class="continue" onclick="continueCheckout()">
+    Lanjut ke Checkout
+  </button>
+
+</main>
+
+<script>
+  let selectedPackage = 0;
+
+  function updateSummary() {
+    document.getElementById("selectedOperator").textContent =
+      document.getElementById("operator").value || "-";
+
+    document.getElementById("selectedPhone").textContent =
+      document.getElementById("phone").value || "-";
+  }
+
+  function chooseProduct(button, gb) {
+    document.querySelectorAll(".product").forEach(item => {
+      item.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+    selectedPackage = gb;
+
+    document.getElementById("selectedPackage").textContent =
+      gb + " GB";
+
+    updateSummary();
+  }
+
+  document.getElementById("operator").addEventListener("change", updateSummary);
+  document.getElementById("phone").addEventListener("input", updateSummary);
+
+  function continueCheckout() {
+    const phone = document.getElementById("phone").value.trim();
+    const operator = document.getElementById("operator").value;
+
+    if (!/^08[0-9]{8,13}$/.test(phone)) {
+      alert("Masukkan nomor HP yang valid, diawali 08.");
+      return;
+    }
+
+    if (!operator) {
+      alert("Silakan pilih operator.");
+      return;
+    }
+
+    if (!selectedPackage) {
+      alert("Silakan pilih paket data.");
+      return;
+    }
+
+    const order = {
+      type: "Paket Data",
+      operator: operator,
+      customer: phone,
+      product: "Paket Data " + selectedPackage + " GB",
+      amount: 0,
+      createdAt: new Date().toISOString()
+    };
+
+    sessionStorage.setItem("girINATAN_market_order", JSON.stringify(order));
+
+    window.location.href = "checkout.html";
+  }
+</script>
+
+</body>
+</html>

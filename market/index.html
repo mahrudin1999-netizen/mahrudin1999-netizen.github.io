@@ -1,1 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
+  <title>GIRINATAN Market</title>
+  <style>
+    :root{--bg:#080808;--panel:#151515;--gold:#D6AD48;--green:#00C875;--text:#fff;--muted:#A8ADA8;--border:#343434}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif;min-height:100vh}
+  
+    header{padding:18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#080808;border-bottom:1px solid var(--border);z-index:10}
+    .brand{color:var(--gold);font-size:21px;font-weight:900}.brand span{color:#fff}
+    .back{color:var(--green);text-decoration:none;font-size:14px}
+    main{max-width:700px;margin:auto;padding:20px 16px 35px}
+    .welcome{background:linear-gradient(135deg,#252015,#111);border:1px solid #806326;border-radius:16px;padding:23px 18px;margin-bottom:25px}
+    .welcome h1{color:var(--gold);font-size:25px;margin-bottom:9px}.welcome p{color:var(--muted);font-size:14px;line-height:1.6}
+    .section-title{font-size:18px;margin:24px 0 15px}
+    .coin-card{display:block;padding:19px;background:linear-gradient(135deg,#211b0e,#151515);border:1px solid #806326;border-radius:15px;text-decoration:none;color:#fff}
+    .coin-top{display:flex;align-items:center;gap:14px}.coin-icon{font-size:36px}
+    .coin-card h2{color:var(--gold);font-size:18px;margin-bottom:6px}.coin-card p{font-size:13px;line-height:1.55;color:var(--muted)}
+    .coin-action{display:inline-block;margin-top:15px;padding:11px 15px;border-radius:10px;background:linear-gradient(135deg,#e5c36a,#b88a2e);color:#111;font-size:13px;font-weight:bold}
+    .notice{margin-top:12px;padding:13px;background:#101810;border:1px solid #285C3C;border-radius:12px;color:var(--muted);font-size:12px;line-height:1.6}
+    .categories{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .category{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:19px 8px;text-align:center;text-decoration:none;color:#fff}
+    .category:active{transform:scale(.97);border-color:var(--gold)}
+    .category .icon{font-size:30px;margin-bottom:12px}.category h3{font-size:13px;color:var(--gold)}.category p{font-size:10px;color:var(--muted);margin-top:6px}
+    .info{margin-top:25px;padding:17px;background:#101810;border:1px solid #285C3C;border-radius:14px}
+    .info h3{color:var(--green);margin-bottom:8px;font-size:15px}.info p{color:var(--muted);font-size:13px;line-height:1.6}
+    .history{display:block;margin-top:20px;padding:16px;background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--gold);text-decoration:none;text-align:center;font-weight:bold}
+    footer{text-align:center;padding:20px;color:var(--muted);font-size:11px;border-top:1px solid var(--border)}
+    @media(max-width:380px){.categories{gap:7px}.category{padding:15px 4px}}
+    
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">GIRI<span>NATAN</span></div>
+  <a class="back" href="../index.html">← Beranda</a>
+</header>
+<main>
+  <section class="welcome">
+    <h1>GIRINATAN Market</h1>
+    <p>Semua kebutuhan digital dalam satu tempat. Pilih produk yang ingin kamu gunakan.</p>
+  </section>
 
+  <h2 class="section-title">🪙 Top Up Koin TikTok</h2>
+  <a class="coin-card" href="https://www.tiktok.com/coin?rc=L3NG388W&rie=" target="_blank" rel="noopener noreferrer">
+    <div class="coin-top">
+      <div class="coin-icon">🪙</div>
+      <div>
+        <h2>Beli Koin TikTok</h2>
+        <p>Isi ulang Koin TikTok melalui halaman resmi TikTok.</p>
+      </div>
+    </div>
+    <span class="coin-action">Lanjut Top Up di TikTok ↗</span>
+  </a>
+  <div class="notice">Pembelian dan pembayaran Koin TikTok dilakukan langsung di situs resmi TikTok. GIRINATAN belum menerima pembayaran atau memproses transaksi Koin TikTok.</div>
+
+  <h2 class="section-title">Pilih Kategori Lain</h2>
+  <div class="categories">
+    <a class="category" href="pulsa.html"><div class="icon">📱</div><h3>Pulsa</h3><p>Semua operator</p></a>
+    <a class="category" href="data.html"><div class="icon">🌐</div><h3>Paket Data</h3><p>Internet harian</p></a>
+    <a class="category" href="pln.html"><div class="icon">⚡</div><h3>Token PLN</h3><p>Listrik prabayar</p></a>
+  </div>
+
+  <section class="info">
+    <h3>✦ Belanja di GIRINATAN</h3>
+    <p>Pilih produk dan periksa detail pesanan sebelum melanjutkan. Fitur transaksi produk lainnya akan tersedia setelah sistem pembayaran dan pemrosesan pesanan siap.</p>
+  </section>
+  <a class="history" href="riwayat.html">📋 Riwayat Transaksi</a>
+</main>
+<footer>© 2026 GIRINATAN. Semua Hak Dilindungi.</footer>
+  
+</body>
+</html>

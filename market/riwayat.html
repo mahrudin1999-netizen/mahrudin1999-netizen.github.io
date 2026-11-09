@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
+  <title>Riwayat Transaksi | GIRINATAN</title>
+
+  <style>
+    :root {
+      --bg: #080808;
+      --panel: #151515;
+      --gold: #D6AD48;
+      --green: #00C875;
+      --text: #fff;
+      --muted: #A8ADA8;
+      --border: #343434;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header a {
+      color: var(--gold);
+      font-size: 26px;
+      text-decoration: none;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .intro h3 {
+      color: var(--gold);
+    }
+
+    .intro p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .filter {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .filter button {
+      padding: 9px 14px;
+      background: var(--panel);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .filter button.active {
+      background: var(--gold);
+      color: #080808;
+      border-color: var(--gold);
+      font-weight: bold;
+    }
+
+    .order {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 13px;
+    }
+
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .order-title {
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    .status {
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 20px;
+      background: #302715;
+      color: var(--gold);
+    }
+
+    .detail {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 7px 0;
+      font-size: 13px;
+    }
+
+    .detail span:first-child {
+      color: var(--muted);
+    }
+
+    .detail strong {
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .date {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 10px;
+    }
+
+    .empty {
+      text-align: center;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 35px 18px;
+      border-radius: 13px;
+      color: var(--muted);
+    }
+
+    .empty .icon {
+      font-size: 42px;
+    }
+
+    .shop-btn {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #E5C36A, #B88A2E);
+      color: #080808;
+      text-decoration: none;
+      border-radius: 9px;
+      font-weight: bold;
+    }
+
+    .notice {
+      margin-top: 20px;
+      padding: 13px;
+      background: #202820;
+      border: 1px solid #3C9B65;
+      border-radius: 10px;
+      color: var(--green);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .clear-btn {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      border: 1px solid #71332E;
+      background: #24100F;
+      color: #FF8A80;
+      border-radius: 9px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html">‹</a>
+  <h2>Riwayat Transaksi</h2>
+</header>
+
+<main class="container">
+
+  <div class="intro">
+    <h3>Aktivitas Pesanan</h3>
+    <p>
+      Daftar pesanan yang pernah diteruskan ke halaman
+      Checkout di perangkat dan browser ini.
+    </p>
+  </div>
+
+  <div class="filter">
+    <button class="active" data-filter="Semua">Semua</button>
+    <button data-filter="Menunggu">Menunggu</button>
+    <button data-filter="Diproses">Diproses</button>
+    <button data-filter="Berhasil">Berhasil</button>
+    <button data-filter="Gagal">Gagal</button>
+  </div>
+
+  <div id="historyList"></div>
+
+  <div class="notice">
+    Riwayat ini masih disimpan di browser. Status Menunggu
+    bukan bukti pembayaran atau keberhasilan transaksi.
+    Data belum tersinkron ke akun atau server.
+  </div>
+
+  <button class="clear-btn" onclick="clearHistory()">
+    Hapus Semua Riwayat
+  </button>
+
+</main>
+
+<script>
+  const historyKey = "girINATAN_market_history";
+  let currentFilter = "Semua";
+
+  function getHistory() {
+    try {
+      const data = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      return Array.isArray(data) ? data : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function rupiah(value) {
+    return "Rp" + Number(value).toLocaleString("id-ID");
+  }
+
+  function formatDate(value) {
+    const date = new Date(value);
+
+    if (isNaN(date.getTime())) return "-";
+
+    return date.toLocaleString("id-ID", {
+      dateStyle: "medium",
+      timeStyle: "short"
+    });
+  }
+
+  function renderHistory() {
+    const list = document.getElementById("historyList");
+    const history = getHistory();
+
+    const filtered = currentFilter === "Semua"
+      ? history
+      : history.filter(item => item.status === currentFilter);
+
+    if (filtered.length === 0) {
+      list.innerHTML = `
+        <div class="empty">
+          <div class="icon">📋</div>
+          <h3>Belum Ada Pesanan</h3>
+          <p>Pesanan yang tersimpan akan muncul di sini.</p>
+          <a href="index.html" class="shop-btn">Kembali ke Market</a>
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = "";
+
+    filtered.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "order";
+
+      const top = document.createElement("div");
+      top.className = "order-top";
+
+      const title = document.createElement("span");
+      title.className = "order-title";
+      title.textContent = item.product || item.type || "Pesanan";
+
+      const status = document.createElement("span");
+      status.className = "status";
+      status.textContent = item.status || "Menunggu";
+
+      top.append(title, status);
+
+      const details = [
+        ["Jenis", item.type || "-"],
+        ["Operator", item.operator || "-"],
+        ["Nomor Tujuan", item.customer || "-"],
+        ["Nominal", Number(item.amount) > 0 ? rupiah(item.amount) : "Belum ditentukan"]
+      ];
+
+      card.appendChild(top);
+
+      details.forEach(([label, value]) => {
+        const row = document.createElement("div");
+        row.className = "detail";
+
+        const left = document.createElement("span");
+        left.textContent = label;
+
+        const right = document.createElement("strong");
+        right.textContent = value;
+
+        row.append(left, right);
+        card.appendChild(row);
+      });
+
+      const date = document.createElement("div");
+      date.className = "date";
+      date.textContent = "Tanggal: " + formatDate(item.savedAt || item.createdAt);
+
+      card.appendChild(date);
+      list.appendChild(card);
+    });
+  }
+
+  document.querySelectorAll(".filter button").forEach(button => {
+    button.addEventListener("click", function() {
+      document.querySelectorAll(".filter button").forEach(item => {
+        item.classList.remove("active");
+      });
+
+      this.classList.add("active");
+      currentFilter = this.dataset.filter;
+      renderHistory();
+    });
+  });
+
+  function clearHistory() {
+    if (!confirm("Yakin ingin menghapus semua riwayat pesanan di browser ini?")) {
+      return;
+    }
+
+    localStorage.removeItem(historyKey);
+    renderHistory();
+  }
+
+  renderHistory();
+</script>
+
+</body>
+</html>
