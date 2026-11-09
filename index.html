@@ -492,7 +492,10 @@ footer{
 </head>
 
 <body>
-
+<button id="installAppBtn" hidden
+style="width:calc(100% - 32px);margin:18px auto;padding:15px;border:1px solid #806326;border-radius:13px;background:linear-gradient(135deg,#e5c36a,#b88a2e);color:#111;font-weight:bold;font-size:14px">
+📲 Download Aplikasi GIRINATAN
+</button>
 
 <!-- BERANDA -->
 
@@ -788,6 +791,48 @@ footer{
 </nav>
 
 <script>
+  // TOMBOL INSTAL GIRINATAN
+const installAppBtn = document.getElementById("installAppBtn");
+let deferredInstallPrompt = null;
+
+const isInstalledApp =
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
+
+if (installAppBtn) {
+  if (isInstalledApp) {
+    installAppBtn.hidden = true;
+  }
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+
+    if (!isInstalledApp) {
+      installAppBtn.hidden = false;
+    }
+  });
+
+  installAppBtn.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) return;
+
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+
+    deferredInstallPrompt = null;
+    installAppBtn.hidden = true;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    installAppBtn.hidden = true;
+    deferredInstallPrompt = null;
+  });
+}
+
+// DAFTARKAN SERVICE WORKER
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js");
+}
 const pages = [
   "homePage",
   "marketPage",
