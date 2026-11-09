@@ -2,9 +2,9 @@
 const CACHE_NAME = "girinatan-v3";
 
 const APP_FILES = [
-  "/Girishorts/",
-  "/Girishorts/index.html",
-  "/Girishorts/manifest.json"
+  "/"
+    "/index.html",
+     "/manifest.json"
 ];
 
 self.addEventListener("install", (event) => {
@@ -25,7 +25,7 @@ self.addEventListener("activate", (event) => {
           .filter(
             (key) =>
               (
-  key.startsWith("girishorts-") ||
+  key.startsWith("/") ||
   key.startsWith("girinatan-")
 ) &&
 key !== CACHE_NAME
@@ -67,7 +67,7 @@ self.addEventListener("fetch", (event) => {
           return (
             await caches.match(request)
           ) || (
-            await caches.match("/Girishorts/index.html")
+            await caches.match("/index.html")
           ) || new Response(
             "GIRINATAN sedang offline.",
             {
