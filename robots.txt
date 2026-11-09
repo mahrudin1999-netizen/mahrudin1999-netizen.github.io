@@ -1,4 +1,1 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://mahrudin1999-netizen.github.io/Girishorts/sitemap.xml
+Sitemap: https://mahrudin1999-netizen.github.io/sitemap.xml
