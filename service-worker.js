@@ -2,11 +2,11 @@
 const CACHE_NAME = "girinatan-v1";
 
 const APP_FILES = [
-  "/Girishorts/",
-  "/Girishorts/index.html",
-  "/Girishorts/manifest.json",
-  "/Girishorts/icon-192.png",
-  "/Girishorts/icon-512.png"
+  "/",
+"/index.html",
+"/manifest.json",
+"/icon-192.png",
+"/icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
