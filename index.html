@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<meta name="description" content="Ruang berkarya dan layanan digital untuk kreator Indonesia.">
+<title>GIRINATAN</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2478108831268968"
+     crossorigin="anonymous"></script>
+<link rel="manifest" href="/Girishorts/manifest.json">
+<link rel="icon" type="image/png" href="/Girishorts/icon-192.png">
+
+<style>
+:root{
+  --bg:#080808;
+  --panel:#151515;
+  --panel2:#202020;
+  --gold:#D6AD48;
+  --green:#00C875;
+  --muted:#A8ADA8;
+  --border:#343434;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(ellipse at 50% -15%,#292112 0%,#080808 55%);
+  color:white;
+  font-family:Arial,sans-serif;
+  padding-bottom:90px;
+}
+
+main{
+  width:min(100% - 32px,760px);
+  margin:auto;
+  padding:30px 0;
+}
+
+.page{display:none}
+.page.active{display:block}
+
+/* BERANDA */
+
+.intro{
+  text-align:center;
+  margin:25px 0 34px;
+}
+
+.eyebrow{
+  color:var(--green);
+  font-size:12px;
+  font-weight:bold;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+h1{
+  font-size:clamp(28px,6vw,42px);
+  margin:12px 0;
+}
+
+.intro p{
+  max-width:480px;
+  margin:auto;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.7;
+}
+
+.welcome-market{
+  padding:22px;
+  background:linear-gradient(135deg,#242015,#111);
+  border:1px solid #806326;
+  border-radius:17px;
+  text-align:center;
+}
+
+.welcome-market h2{
+  color:var(--gold);
+  margin:0 0 8px;
+}
+
+.welcome-market p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+
+/* MARKET */
+
+.market-welcome{
+  background:linear-gradient(135deg,#252015,#111);
+  border:1px solid #806326;
+  border-radius:16px;
+  padding:23px 18px;
+  margin-bottom:25px;
+}
+
+.market-welcome h1{
+  color:var(--gold);
+  font-size:25px;
+  margin:0 0 9px;
+}
+
+.market-welcome p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+}
+
+.section-title{
+  font-size:18px;
+  margin:24px 0 15px;
+}
+
+.coin-card{
+  display:block;
+  padding:19px;
+  background:linear-gradient(135deg,#211b0e,#151515);
+  border:1px solid #806326;
+  border-radius:15px;
+  text-decoration:none;
+  color:white;
+}
+
+.coin-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.coin-icon{font-size:36px}
+
+.coin-card h2{
+  color:var(--gold);
+  font-size:18px;
+  margin-bottom:6px;
+}
+
+.coin-card p{
+  font-size:13px;
+  line-height:1.55;
+  color:var(--muted);
+}
+
+.coin-action{
+  display:inline-block;
+  margin-top:15px;
+  padding:11px 15px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#e5c36a,#b88a2e);
+  color:#111;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.notice{
+  margin-top:12px;
+  padding:13px;
+  background:#101810;
+  border:1px solid #285C3C;
+  border-radius:12px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
+}
+
+.categories{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.category{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:19px 8px;
+  text-align:center;
+  text-decoration:none;
+  color:white;
+}
+
+.category:active{
+  transform:scale(.97);
+  border-color:var(--gold);
+}
+
+.category .icon{
+  font-size:30px;
+  margin-bottom:12px;
+}
+
+.category h3{
+  font-size:13px;
+  color:var(--gold);
+}
+
+.category p{
+  font-size:10px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.market-info{
+  margin-top:25px;
+  padding:17px;
+  background:#101810;
+  border:1px solid #285C3C;
+  border-radius:14px;
+}
+
+.market-info h3{
+  color:var(--green);
+  margin-bottom:8px;
+  font-size:15px;
+}
+
+.market-info p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+
+.history{
+  display:block;
+  margin-top:20px;
+  padding:16px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  color:var(--gold);
+  text-decoration:none;
+  text-align:center;
+  font-weight:bold;
+}
+
+/* BERKARYA */
+
+.karya-title{color:var(--gold)}
+
+.karya-description{
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.karya-menu{
+  display:grid;
+  gap:16px;
+  margin-top:25px;
+}
+
+.karya-item{
+  display:block;
+  padding:22px;
+  background:var(--panel);
+  border:1px solid #806326;
+  border-radius:15px;
+  text-decoration:none;
+  color:white;
+}
+
+.karya-item h2{
+  color:var(--gold);
+  margin:10px 0;
+}
+
+.karya-item p{
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.karya-status{
+  color:var(--green);
+  font-size:13px;
+}
+
+/* PROFIL */
+
+.profile-card{
+  background:linear-gradient(145deg,#1b1b1b,#101010);
+  border:1px solid #3b301b;
+  border-radius:22px;
+  padding:28px 20px;
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.avatar{
+  width:112px;
+  height:112px;
+  margin:0 auto 16px;
+  border-radius:50%;
+  border:3px solid var(--gold);
+  background:#29251b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  overflow:hidden;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.username{
+  font-size:23px;
+  font-weight:bold;
+  margin:0 0 9px;
+}
+
+.account-status{
+  display:inline-block;
+  padding:7px 13px;
+  border-radius:30px;
+  background:#102c20;
+  color:var(--green);
+  font-size:12px;
+  font-weight:bold;
+  margin-bottom:16px;
+}
+
+.bio{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+  margin:0;
+}
+
+.profile-info{
+  margin-top:22px;
+  padding-top:17px;
+  border-top:1px solid var(--border);
+  color:var(--muted);
+  font-size:12px;
+}
+
+.settings-button{
+  display:flex;
+  width:100%;
+  align-items:center;
+  gap:14px;
+  padding:17px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:#191919;
+  color:white;
+  text-align:left;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.settings-icon{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  background:#29251b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+}
+
+.settings-button small{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+/* PENGATURAN */
+
+.section-description{
+  color:var(--muted);
+  font-size:13px;
+  margin:0 0 22px;
+}
+
+.back-button{
+  background:none;
+  border:0;
+  color:var(--gold);
+  font-size:14px;
+  padding:10px 0;
+  cursor:pointer;
+  margin-bottom:12px;
+}
+
+.menu-item{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:17px;
+  margin-bottom:11px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#191919;
+  color:white;
+  text-align:left;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.menu-icon{
+  font-size:22px;
+  width:30px;
+  text-align:center;
+}
+
+.menu-item small{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+.menu-item.danger strong,
+.menu-item.danger .menu-icon{
+  color:#ff7777;
+}
+
+input,textarea{
+  font-family:Arial,sans-serif;
+}
+
+/* NAVIGASI BAWAH */
+
+.bottom-nav{
+  position:fixed;
+  z-index:100;
+  bottom:0;
+  left:0;
+  right:0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+  background:rgba(8,8,8,.97);
+  border-top:1px solid #665126;
+  backdrop-filter:blur(12px);
+}
+
+.nav-btn{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  min-height:58px;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  color:#999;
+  font-size:11px;
+  font-weight:bold;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.nav-icon{font-size:21px}
+
+.nav-btn.active{
+  color:var(--green);
+  background:#10251b;
+}
+
+.nav-btn:active,
+.menu-item:active,
+.settings-button:active{
+  transform:scale(.97);
+}
+
+footer{
+  text-align:center;
+  padding:20px;
+  color:#777;
+  font-size:11px;
+}
+
+@media(max-width:380px){
+  .categories{gap:7px}
+  .category{padding:15px 4px}
+}
+</style>
+</head>
+
+<body>
+
+
+<!-- BERANDA -->
+
+<section id="homePage" class="page active">
+  <div class="intro">
+    <div class="eyebrow">Ruang Kreator Digital</div>
+    <h1>Selamat datang</h1>
+    <p>
+      Pilih menu di bagian bawah untuk mulai berkarya
+      atau membuka layanan digital melalui GIRINATAN.
+    </p>
+  </div>
+
+  <section class="welcome-market">
+    <h2>✨ Selamat datang di GIRINATAN</h2>
+    <p>
+      Ruang untuk berkarya, menjelajahi layanan digital,
+      dan tumbuh bersama komunitas kreator.
+    </p>
+  </section>
+</section>
+
+<!-- MARKET -->
+<section id="marketPage" class="page">
+
+  <section class="market-welcome">
+    <h1>GIRINATAN Market</h1>
+    <p>Semua kebutuhan digital dalam satu tempat. Pilih produk yang ingin kamu gunakan.</p>
+  </section>
+
+  <h2 class="section-title">🪙 Top Up Koin TikTok</h2>
+
+  <a class="coin-card"
+     href="https://www.tiktok.com/coin?rc=L3NG388W&rie="
+     target="_blank" rel="noopener noreferrer">
+
+    <div class="coin-top">
+      <div class="coin-icon">🪙</div>
+      <div>
+        <h2>Beli Koin TikTok</h2>
+        <p>Isi ulang Koin TikTok melalui halaman resmi TikTok.</p>
+      </div>
+    </div>
+
+    <span class="coin-action">Lanjut Top Up di TikTok ↗</span>
+  </a>
+
+  <div class="notice">
+    Pembelian dan pembayaran Koin TikTok dilakukan langsung
+    di situs resmi TikTok. GIRINATAN belum menerima pembayaran
+    atau memproses transaksi Koin TikTok.
+  </div>
+
+  <h2 class="section-title">Pilih Kategori Lain</h2>
+
+  <div class="categories">
+    <a class="category" href="market/pulsa.html">
+      <div class="icon">📱</div>
+      <h3>Pulsa</h3>
+      <p>Semua operator</p>
+    </a>
+
+    <a class="category" href="market/data.html">
+      <div class="icon">🌐</div>
+      <h3>Paket Data</h3>
+      <p>Internet harian</p>
+    </a>
+
+    <a class="category" href="market/pln.html">
+      <div class="icon">⚡</div>
+      <h3>Token PLN</h3>
+      <p>Listrik prabayar</p>
+    </a>
+  </div>
+
+  <section class="market-info">
+    <h3>✦ Belanja di GIRINATAN</h3>
+    <p>
+      Pilih produk dan periksa detail pesanan sebelum melanjutkan.
+      Fitur transaksi produk lainnya akan tersedia setelah sistem
+      pembayaran dan pemrosesan pesanan siap.
+    </p>
+  </section>
+
+  <a class="history" href="market/riwayat.html">
+    📋 Riwayat Transaksi
+  </a>
+
+</section>
+
+<!-- BERKARYA -->
+<section id="karyaPage" class="page">
+
+  <h1 class="karya-title">Studio Kreator ✨</h1>
+  <p class="karya-description">
+    Wujudkan ide dan kreativitasmu menjadi karya digital.
+  </p>
+
+  <div class="karya-menu">
+
+    <a class="karya-item" href="karya/video-ai.html">
+      <div style="font-size:35px">🎬</div>
+      <h2>Video AI</h2>
+      <p>Ganti karakter dalam video menggunakan foto pilihanmu.</p>
+      <span class="karya-status">Buka Video AI →</span>
+    </a>
+
+    <div class="karya-item">
+      <div style="font-size:35px">🎨</div>
+      <h2>Gambar AI</h2>
+      <p>Ubah ide dan imajinasimu menjadi gambar.</p>
+      <span class="karya-status">Segera hadir</span>
+    </div>
+
+    <div class="karya-item">
+      <div style="font-size:35px">🧩</div>
+      <h2>Template Kreator</h2>
+      <p>Buat dan jelajahi template karya kreator.</p>
+      <span class="karya-status">Segera hadir</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROFIL -->
+<section id="accountPage" class="page">
+
+  <div class="profile-card">
+
+    <div class="avatar" id="profileAvatar">👤</div>
+
+    <h2 class="username" id="profileUsername">Username</h2>
+
+    <div class="account-status">● Akun Aktif</div>
+
+    <p class="bio" id="profileBio">
+      Belum ada bio. Perkenalkan dirimu di GIRINATAN.
+    </p>
+
+    <div class="profile-info">
+      Identitas akun pengguna
+    </div>
+
+  </div>
+
+  <button class="settings-button" onclick="showSettings()">
+    <div class="settings-icon">⚙️</div>
+    <div>
+      <strong>Pengaturan</strong>
+      <small>Kelola profil dan akun kamu</small>
+    </div>
+    <span style="margin-left:auto;color:#D6AD48">›</span>
+  </button>
+
+</section>
+
+<!-- PENGATURAN -->
+<section id="settingsPage" class="page">
+
+  <button class="back-button" onclick="showAccount()">
+    ← Kembali ke Profil
+  </button>
+
+  <h2 class="section-title">Pengaturan</h2>
+  <p class="section-description">
+    Kelola profil dan keamanan akun kamu.
+  </p>
+
+  <button class="menu-item" onclick="openEditProfile()">
+    <span class="menu-icon">👤</span>
+    <span>
+      <strong>Edit Profil</strong>
+      <small>Ubah foto, username, dan bio</small>
+    </span>
+    <span style="margin-left:auto">›</span>
+  </button>
+
+  <button class="menu-item" onclick="showMessage('Fitur keamanan akan dihubungkan dengan Firebase.')">
+    <span class="menu-icon">🛡️</span>
+    <span>
+      <strong>Keamanan Akun</strong>
+      <small>Kelola keamanan akun</small>
+    </span>
+    <span style="margin-left:auto">›</span>
+  </button>
+
+  <button class="menu-item" onclick="showMessage('Login Google akan dihubungkan dengan Firebase.')">
+    <span class="menu-icon">🔵</span>
+    <span>
+      <strong>Akun Google</strong>
+      <small>Informasi akun Google yang terhubung</small>
+    </span>
+    <span style="margin-left:auto">›</span>
+  </button>
+
+  <button class="menu-item danger" onclick="showMessage('Fitur keluar akan aktif setelah login Google tersedia.')">
+    <span class="menu-icon">🚪</span>
+    <span>
+      <strong>Keluar</strong>
+      <small>Keluar dari akun GIRINATAN</small>
+    </span>
+    <span style="margin-left:auto">›</span>
+  </button>
+
+  <button class="menu-item danger" onclick="showMessage('Penghapusan akun akan dibuat setelah sistem Firebase siap.')">
+    <span class="menu-icon">🗑️</span>
+    <span>
+      <strong>Hapus Akun</strong>
+      <small>Hapus akun dan data GIRINATAN</small>
+    </span>
+    <span style="margin-left:auto">›</span>
+  </button>
+
+</section>
+
+<!-- EDIT PROFIL -->
+<section id="editProfilePage" class="page">
+
+  <button class="back-button" onclick="showSettings()">
+    ← Kembali ke Pengaturan
+  </button>
+
+  <h2 class="section-title">Edit Profil</h2>
+  <p class="section-description">
+    Perbarui informasi profil kamu.
+  </p>
+
+  <div class="profile-card">
+    <div class="avatar" id="editAvatar">👤</div>
+    <p style="color:#A8ADA8;font-size:12px">
+      Foto profil akan tersedia setelah penyimpanan foto diaktifkan.
+    </p>
+  </div>
+
+  <label style="display:block;margin-bottom:8px;font-size:13px">
+    Username
+  </label>
+
+  <input id="editUsername" type="text" maxlength="30"
+    placeholder="Masukkan username"
+    style="width:100%;padding:14px;margin-bottom:18px;border-radius:10px;border:1px solid #343434;background:#151515;color:white">
+
+  <label style="display:block;margin-bottom:8px;font-size:13px">
+    Bio
+  </label>
+
+  <textarea id="editBio" maxlength="160" rows="4"
+    placeholder="Tuliskan tentang dirimu..."
+    style="width:100%;padding:14px;margin-bottom:18px;border-radius:10px;border:1px solid #343434;background:#151515;color:white;resize:vertical"></textarea>
+
+  <button class="settings-button"
+    onclick="saveProfilePreview()"
+    style="justify-content:center;background:linear-gradient(135deg,#e5c36a,#b88a2e);color:#111;font-weight:bold">
+    Simpan Perubahan
+  </button>
+
+  <p style="font-size:11px;color:#888;line-height:1.6;margin-top:12px">
+    Saat ini perubahan hanya tersimpan sementara di halaman ini.
+    Penyimpanan permanen akan dihubungkan ke Firebase.
+  </p>
+
+</section>
+
+</main>
+
+<!-- NAVIGASI TETAP -->
+<nav class="bottom-nav" aria-label="Navigasi utama">
+
+  <button class="nav-btn active" data-page="homePage"
+    onclick="showPage('homePage')">
+    <span class="nav-icon">🏠</span>
+    <span>Beranda</span>
+  </button>
+
+  <button class="nav-btn" data-page="marketPage"
+    onclick="showPage('marketPage')">
+    <span class="nav-icon">🛒</span>
+    <span>Market</span>
+  </button>
+
+  <button class="nav-btn" data-page="karyaPage"
+    onclick="showPage('karyaPage')">
+    <span class="nav-icon">✨</span>
+    <span>Berkarya</span>
+  </button>
+
+  <button class="nav-btn" data-page="accountPage"
+    onclick="showAccount()">
+    <span class="nav-icon">👤</span>
+    <span>Akun</span>
+  </button>
+
+</nav>
+
+<script>
+const pages = [
+  "homePage",
+  "marketPage",
+  "karyaPage",
+  "accountPage",
+  "settingsPage",
+  "editProfilePage"
+];
+
+function showPage(pageId){
+
+  pages.forEach(id=>{
+    document.getElementById(id).classList.toggle(
+      "active",id===pageId
+    );
+  });
+
+  const activeMenu =
+    pageId==="settingsPage" || pageId==="editProfilePage"
+      ? "accountPage"
+      : pageId;
+
+  document.querySelectorAll(".nav-btn").forEach(button=>{
+    button.classList.toggle(
+      "active",
+      button.dataset.page===activeMenu
+    );
+  });
+
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+function showAccount(){
+  showPage("accountPage");
+}
+
+function showSettings(){
+  showPage("settingsPage");
+}
+
+function openEditProfile(){
+
+  document.getElementById("editUsername").value =
+    document.getElementById("profileUsername").textContent;
+
+  const currentBio =
+    document.getElementById("profileBio").textContent;
+
+  document.getElementById("editBio").value =
+    currentBio==="Belum ada bio. Perkenalkan dirimu di GIRINATAN."
+      ? ""
+      : currentBio;
+
+  showPage("editProfilePage");
+}
+
+function saveProfilePreview(){
+
+  const username =
+    document.getElementById("editUsername").value.trim();
+
+  const bio =
+    document.getElementById("editBio").value.trim();
+
+  if(!username){
+    alert("Username tidak boleh kosong.");
+    return;
+  }
+
+  document.getElementById("profileUsername").textContent =
+    username;
+
+  document.getElementById("profileBio").textContent =
+    bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
+
+  alert("Perubahan tampilan profil berhasil diterapkan sementara.");
+
+  showAccount();
+}
+
+function showMessage(message){
+  alert(message);
+}
+</script>
+
+</body>
+</html>
