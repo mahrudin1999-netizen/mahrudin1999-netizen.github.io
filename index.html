@@ -983,6 +983,13 @@ getRedirectResult(auth)
   .then(result => {
     if (result && result.user) {
       alert("Firebase menerima login: " + result.user.email);
+      const buttons = document.getElementById("loginButtons");
+if (buttons) {
+  buttons.style.setProperty("display", "none", "important");
+}
+
+const status = document.querySelector(".account-status");
+if (status) status.textContent = "● Akun Google terhubung";
     } else {
       alert("Hasil redirect kosong. Firebase belum menerima sesi login.");
     }
