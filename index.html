@@ -979,9 +979,15 @@ window.signInGoogle = async function() {
   }
 };
 
-getRedirectResult(auth).catch(error => {
-  alert("Login Google gagal: " + error.message);
-});
+getRedirectResult(auth)
+  .then(result => {
+    if (result && result.user) {
+      console.log("Login Google berhasil:", result.user.email);
+    }
+  })
+  .catch(error => {
+    alert("Login Google gagal: " + error.message);
+  });
 
 function setAvatar(element, photoURL) {
   if (!element) return;
