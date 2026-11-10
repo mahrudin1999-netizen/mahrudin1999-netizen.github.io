@@ -937,8 +937,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/fireba
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
+  signInWithPopup,
   onAuthStateChanged,
   setPersistence,
   browserLocalPersistence,
@@ -976,25 +975,14 @@ try {
 } catch (error) {
   alert("Pengaturan sesi gagal: " + error.message);
 }
-
 window.signInGoogle = async function() {
   try {
-    await signInWithRedirect(auth, provider);
+    const result = await signInWithPopup(auth, provider);
+    alert("Login Google berhasil: " + result.user.email);
   } catch (error) {
-    alert("Login Google gagal: " + error.message);
+    alert("Login Google gagal: " + error.code + " | " + error.message);
   }
 };
-
-
-getRedirectResult(auth)
-  .then(result => {
-    if (result && result.user) {
-      console.log("Login Google berhasil:", result.user.email);
-    }
-  })
-  .catch(error => {
-    alert("Login Google gagal: " + error.code + " | " + error.message);
-  });
 
 
 function setAvatar(element, photoURL) {
