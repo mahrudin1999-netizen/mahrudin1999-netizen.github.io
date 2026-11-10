@@ -638,7 +638,21 @@ style="width:calc(100% - 32px);margin:18px auto;padding:15px;border:1px solid #8
     <div class="profile-info">
       Identitas akun pengguna
     </div>
+<div id="loginButtons" style="margin-top:20px">
 
+  <button class="settings-button"
+    onclick="window.signInGoogle()"
+    style="justify-content:center;margin-bottom:12px;border-color:#D6AD48">
+    <strong>🔵 Masuk dengan Google</strong>
+  </button>
+
+  <button class="settings-button"
+    onclick="showMessage('Login TikTok akan tersedia setelah integrasi TikTok disetujui dan diaktifkan.')"
+    style="justify-content:center">
+    <strong>🎵 Masuk dengan TikTok</strong>
+  </button>
+
+</div>
   </div>
 
   <button class="settings-button" onclick="showSettings()">
@@ -691,7 +705,7 @@ style="width:calc(100% - 32px);margin:18px auto;padding:15px;border:1px solid #8
     <span style="margin-left:auto">›</span>
   </button>
 
-  <button class="menu-item danger" onclick="showMessage('Fitur keluar akan aktif setelah login Google tersedia.')">
+  <button class="menu-item danger" onclick="window.logoutGoogle()">
     <span class="menu-icon">🚪</span>
     <span>
       <strong>Keluar</strong>
@@ -991,11 +1005,15 @@ function setAvatar(element, photoURL) {
 onAuthStateChanged(auth, async user => {
   const status = document.querySelector(".account-status");
 
-  if (!user) {
-    if (status) status.textContent = "● Belum masuk";
-    return;
-  }
+  const loginButtons = document.getElementById("loginButtons");
 
+if (!user) {
+  if (status) status.textContent = "● Belum masuk";
+  if (loginButtons) loginButtons.style.display = "block";
+  return;
+}
+
+if (loginButtons) loginButtons.style.display = "none";
   try {
     const userRef = doc(db, "users", user.uid);
     const snapshot = await getDoc(userRef);
