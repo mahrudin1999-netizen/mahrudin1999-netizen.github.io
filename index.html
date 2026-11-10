@@ -966,6 +966,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+  console.log("Domain:", location.hostname);
+console.log("Firebase current user:", auth.currentUser);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
