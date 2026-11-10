@@ -682,7 +682,7 @@ style="width:calc(100% - 32px);margin:18px auto;padding:15px;border:1px solid #8
     <span style="margin-left:auto">›</span>
   </button>
 
-  <button class="menu-item" onclick="showMessage('Login Google akan dihubungkan dengan Firebase.')">
+  <button class="menu-item" onclick="window.signInGoogle()">
     <span class="menu-icon">🔵</span>
     <span>
       <strong>Akun Google</strong>
@@ -917,6 +917,151 @@ function showMessage(message){
   alert(message);
 }
 </script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAoVrrEE0vQQALHFYkog4Xy2mgYIRahzB4",
+  authDomain: "girinatan-8d986.firebaseapp.com",
+  projectId: "girinatan-8d986",
+  storageBucket: "girinatan-8d986.firebasestorage.app",
+  messagingSenderId: "762607023765",
+  appId: "1:762607023765:web:5d4369ab2e46b244a6cd9c",
+  measurementId: "G-799CW1JRQ5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+await setPersistence(auth, browserLocalPersistence);
+
+window.signInGoogle = async function() {
+  try {
+    await signInWithRedirect(auth, provider);
+  } catch (error) {
+    alert("Login Google gagal: " + error.message);
+  }
+};
+
+getRedirectResult(auth).catch(error => {
+  alert("Login Google gagal: " + error.message);
+});
+
+function setAvatar(element, photoURL) {
+  if (!element) return;
+
+  element.replaceChildren();
+
+  if (photoURL) {
+    const img = document.createElement("img");
+    img.src = photoURL;
+    img.alt = "Foto profil";
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "cover";
+    img.style.borderRadius = "50%";
+    element.appendChild(img);
+  } else {
+    element.textContent = "👤";
+  }
+}
+
+onAuthStateChanged(auth, async user => {
+  const status = document.querySelector(".account-status");
+
+  if (!user) {
+    if (status) status.textContent = "● Belum masuk";
+    return;
+  }
+
+  try {
+    const userRef = doc(db, "users", user.uid);
+    const snapshot = await getDoc(userRef);
+
+    if (!snapshot.exists()) {
+      await setDoc(userRef, {
+        uid: user.uid,
+        displayName: user.displayName || "",
+        email: user.email || "",
+        photoURL: user.photoURL || "",
+        bio: "",
+        provider: "google",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+    }
+
+    const profile = snapshot.exists() ? snapshot.data() : { bio: "" };
+
+    document.getElementById("profileUsername").textContent =
+      user.displayName || "Pengguna Google";
+
+    document.getElementById("profileBio").textContent =
+      profile.bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
+
+    setAvatar(document.getElementById("profileAvatar"), user.photoURL);
+    setAvatar(document.getElementById("editAvatar"), user.photoURL);
+
+    if (status) status.textContent = "● Akun Google terhubung";
+
+  } catch (error) {
+    alert("Gagal memuat profil: " + error.message);
+  }
+});
+
+window.saveProfilePreview = async function() {
+  const user = auth.currentUser;
+
+  if (!user) {
+    alert("Silakan login Google terlebih dahulu.");
+    return;
+  }
+
+  const bio = document.getElementById("editBio").value.trim();
+
+  try {
+    await updateDoc(doc(db, "users", user.uid), {
+      bio: bio,
+      updatedAt: serverTimestamp()
+    });
+
+    document.getElementById("profileBio").textContent =
+      bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
+
+    alert("Bio berhasil disimpan!");
+    showAccount();
+
+  } catch (error) {
+    alert("Gagal menyimpan bio: " + error.message);
+  }
+};
+
+window.logoutGoogle = async function() {
+  await signOut(auth);
+  location.reload();
+};
+</script>
 </body>
 </html>
