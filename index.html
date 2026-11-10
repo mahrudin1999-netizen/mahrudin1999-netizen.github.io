@@ -1005,11 +1005,7 @@ function setAvatar(element, photoURL) {
 }
 
 onAuthStateChanged(auth, async user => {
-  alert(
-  user
-    ? "STATUS FIREBASE: LOGIN\n" + user.email
-    : "STATUS FIREBASE: BELUM LOGIN"
-);
+  
   const status = document.querySelector(".account-status");
 
   const loginButtons = document.getElementById("loginButtons");
