@@ -982,9 +982,14 @@ window.signInGoogle = async function() {
 getRedirectResult(auth)
   .then(result => {
     if (result && result.user) {
-      console.log("Login Google berhasil:", result.user.email);
+      alert("Firebase menerima login: " + result.user.email);
+    } else {
+      alert("Hasil redirect kosong. Firebase belum menerima sesi login.");
     }
   })
+  .catch(error => {
+    alert("Login Google gagal: " + error.code + " | " + error.message);
+  });
   .catch(error => {
     alert("Login Google gagal: " + error.message);
   });
