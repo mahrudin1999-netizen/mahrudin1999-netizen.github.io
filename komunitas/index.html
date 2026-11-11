@@ -354,12 +354,27 @@ if (!hasil.empty) {
     judul.style.color = "#F87171";
     keterangan.textContent = "Pengajuan belum disetujui. Periksa kembali bukti pengajuan, lalu ajukan ulang.";
   } else if (data.status === "approved") {
-    tombol.style.display = "none";
-    judul.textContent = "✅ PENGAJUAN DISETUJUI";
-    judul.style.color = "#00C875";
-    keterangan.textContent = "Grup agensi kamu sudah disetujui!";
+  tombol.style.display = "none";
+
+  const grup = await getDocs(
+    query(
+      collection(db, "agency_groups"),
+      where("ownerUid", "==", user.uid),
+      where("status", "==", "active")
+    )
+  );
+
+  if (!grup.empty) {
+    const idGrup = grup.docs[0].id;
+    location.replace("grup.html?id=" + idGrup);
+    return;
   }
-} else {
+
+  statusBox.style.display = "block";
+  judul.textContent = "GRUP BELUM DITEMUKAN";
+  keterangan.textContent = "Hubungi Super Admin.";
+}
+             } else {
   tombol.style.display = "block";
 
   document.getElementById("statusPengajuan").style.display = "none";
