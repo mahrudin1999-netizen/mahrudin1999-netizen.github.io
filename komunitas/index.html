@@ -356,25 +356,26 @@ if (!hasil.empty) {
   } else if (data.status === "approved") {
   tombol.style.display = "none";
 
-  const grup = await getDocs(
-    query(
-      collection(db, "agency_groups"),
-      where("ownerUid", "==", user.uid),
-      where("status", "==", "active")
-    )
-  );
+  if (user.uid !== SUPER_ADMIN_UID) {
+    const grup = await getDocs(
+      query(
+        collection(db, "agency_groups"),
+        where("ownerUid", "==", user.uid),
+        where("status", "==", "active")
+      )
+    );
 
-  if (!grup.empty) {
-    const idGrup = grup.docs[0].id;
-    location.replace("grup.html?id=" + idGrup);
-    return;
+    if (!grup.empty) {
+      location.replace("grup.html?id=" + grup.docs[0].id);
+      return;
+    }
   }
 
   statusBox.style.display = "block";
-  judul.textContent = "GRUP BELUM DITEMUKAN";
-  keterangan.textContent = "Hubungi Super Admin.";
+  judul.textContent = "✅ PENGAJUAN DISETUJUI";
+  keterangan.textContent = "Grup agensi kamu sudah disetujui!";
 }
-             } else {
+    } else {
   tombol.style.display = "block";
 
   document.getElementById("statusPengajuan").style.display = "none";
