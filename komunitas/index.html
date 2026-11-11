@@ -201,14 +201,14 @@ body {
 
 </div>
   <div id="daftarGrup" style="margin-top:25px;">
-
   <div style="text-align:center; padding:30px 15px; background:#151515; border-radius:12px;">
     <div style="font-size:38px;">👥</div>
-    <h3 style="color:#D6AD48;">Belum Ada Grup</h3>
+    <h3 style="color:#D6AD48;">Memuat Grup...</h3>
     <p style="color:#A8ADA8; font-size:13px;">
-      Grup agensi yang disetujui Super Admin akan muncul di sini.
+      Sedang mengambil daftar grup agensi.
     </p>
   </div>
+</div>
 
 </div>
 
@@ -257,7 +257,66 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 let penggunaLogin = null;
 const SUPER_ADMIN_UID = "yUkqaJXZ1ugBizgg18eRyYpwxkf1";
-  
+  async function muatDaftarGrup() {
+  const daftar = document.getElementById("daftarGrup");
+
+  try {
+    const hasil = await getDocs(
+      query(
+        collection(db, "agency_groups"),
+        where("status", "==", "active")
+      )
+    );
+
+    daftar.innerHTML = "";
+
+    if (hasil.empty) {
+      daftar.innerHTML = `
+        <div style="text-align:center;padding:30px 15px;background:#151515;border-radius:12px;">
+          <div style="font-size:38px;">👥</div>
+          <h3 style="color:#D6AD48;">Belum Ada Grup</h3>
+          <p style="color:#A8ADA8;font-size:13px;">
+            Belum ada grup agensi yang disetujui.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    hasil.forEach((dokumen) => {
+      const data = dokumen.data();
+
+      const kartu = document.createElement("div");
+      kartu.style.cssText =
+        "background:#151515;border:1px solid #806326;border-radius:12px;padding:16px;margin-bottom:12px;";
+
+      const nama = document.createElement("h3");
+      nama.style.color = "#D6AD48";
+      nama.textContent = "👥 " + (data.agencyName || "Agensi");
+
+      const pemilik = document.createElement("p");
+      pemilik.style.color = "#A8ADA8";
+      pemilik.style.fontSize = "13px";
+      pemilik.textContent = "Pemilik: " + (data.ownerEmail || "-");
+
+      const tombolMasuk = document.createElement("button");
+tombolMasuk.textContent = "Masuk Grup";
+tombolMasuk.className = "btn-ajukan";
+tombolMasuk.style.marginTop = "10px";
+
+tombolMasuk.onclick = () => {
+  location.href = "grup.html?id=" + dokumen.id;
+};
+
+kartu.append(nama, pemilik, tombolMasuk);
+      daftar.appendChild(kartu);
+    });
+
+  } catch (error) {
+    console.error("Gagal memuat grup:", error);
+    daftar.textContent = "Gagal memuat daftar grup. Silakan muat ulang halaman.";
+  }
+        }
 async function cekPengajuan(user) {
   const tombol = document.getElementById("tombolAjukan");
   const statusBox = document.getElementById("statusPengajuan");
@@ -318,9 +377,11 @@ if (!hasil.empty) {
   } else {
     tombolAdmin.style.display = "none";
   }
+if (user) {
+  muatDaftarGrup();
 
-  if (user) {
-    cekPengajuan(user).catch((error) => {
+  cekPengajuan(user).catch((error) => {
+  
       console.error("Gagal memeriksa pengajuan:", error);
     });
   } else {
