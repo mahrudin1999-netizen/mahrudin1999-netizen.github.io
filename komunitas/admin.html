@@ -86,7 +86,13 @@ header h2 {
   <div id="statusAdmin" class="muted">
     Memeriksa akses Super Admin...
   </div>
+<h3 style="color:#D6AD48; margin-top:25px;">
+  👥 Daftar Agensi Aktif
+</h3>
 
+<div id="daftarAgensi">
+  <p class="muted">Memuat daftar agensi...</p>
+</div>
   <div id="daftarPengajuan">
     <p class="muted">Memuat pengajuan...</p>
   </div>
@@ -125,6 +131,51 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const SUPER_ADMIN_UID = "yUkqaJXZ1ugBizgg18eRyYpwxkf1";
+  async function muatDaftarAgensi() {
+  const daftar = document.getElementById("daftarAgensi");
+
+  try {
+    const hasil = await getDocs(
+      query(
+        collection(db, "agency_groups"),
+        where("status", "==", "active")
+      )
+    );
+
+    daftar.innerHTML = "";
+
+    if (hasil.empty) {
+      daftar.innerHTML =
+        "<p class='muted'>Belum ada agensi yang disetujui.</p>";
+      return;
+    }
+
+    hasil.forEach((item) => {
+      const data = item.data();
+
+      const card = document.createElement("div");
+      card.className = "request-card";
+
+      const nama = document.createElement("h3");
+      nama.textContent = "👥 " + (data.agencyName || "Tanpa Nama");
+
+      const email = document.createElement("p");
+      email.className = "muted";
+      email.textContent = "Pemilik: " + (data.ownerEmail || "-");
+
+      const statusGrup = document.createElement("p");
+      statusGrup.style.color = "#00C875";
+      statusGrup.textContent = "● Agensi Aktif";
+
+      card.append(nama, email, statusGrup);
+      daftar.appendChild(card);
+    });
+
+  } catch (error) {
+    console.error("Gagal memuat agensi:", error);
+    daftar.textContent = "Gagal memuat daftar agensi.";
+  }
+}
 window.prosesPengajuan = async function(id, keputusan) {
   if (auth.currentUser?.uid !== SUPER_ADMIN_UID) {
     alert("Akses ditolak. Khusus Super Admin.");
@@ -196,7 +247,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   status.textContent = "Akses Super Admin berhasil.";
-
+muatDaftarAgensi();
   try {
     const q = query(
       collection(db, "agency_group_requests"),
