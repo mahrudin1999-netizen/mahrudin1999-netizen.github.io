@@ -174,6 +174,11 @@ body {
   <button onclick="ajukanGrup()" class="btn-ajukan">
   + Ajukan Pembuatan Grup Agensi
 </button>
+  <div id="statusPengajuan" style="display:none; margin-top:15px; padding:15px; background:#17251D; border:1px solid #D6AD48; border-radius:12px;">
+  <h3 style="color:#D6AD48;">⏳ PENGAJUAN DIPROSES</h3>
+  <p id="namaStatusPengajuan"></p>
+  <p style="color:#aaa;">Menunggu persetujuan.</p>
+</div>
   <div id="formPengajuan" style="display:none; margin-top:20px; background:#151515; padding:16px; border-radius:12px;">
 
   <h3>Pengajuan Grup Agensi</h3>
@@ -225,8 +230,12 @@ from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { getFirestore }
 from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import {
+  getFirestore,
   collection,
   addDoc,
+  getDocs,
+  query,
+  where,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 const firebaseConfig = {
@@ -258,7 +267,44 @@ onAuthStateChanged(auth, (user) => {
 
   console.log("Status login:", user ? user.uid : "Belum login");
 });
+  
+async function cekPengajuan(user) {
+  const tombol = document.querySelector(".btn-ajukan");
+  const statusBox = document.getElementById("statusPengajuan");
+  const namaStatus = document.getElementById("namaStatusPengajuan");
 
+  const hasil = await getDocs(
+    query(
+      collection(db, "agency_group_requests"),
+      where("ownerUid", "==", user.uid),
+      where("status", "==", "pending")
+    )
+  );
+
+  if (!hasil.empty) {
+    const data = hasil.docs[0].data();
+
+    tombol.style.display = "none";
+    statusBox.style.display = "block";
+    namaStatus.textContent = "Nama agensi: " + data.agencyName;
+  } else {
+    tombol.style.display = "block";
+    statusBox.style.display = "none";
+  }
+      }
+    onAuthStateChanged(auth, (user) => {
+  const tombol = document.querySelector(".btn-ajukan");
+  const statusBox = document.getElementById("statusPengajuan");
+
+  if (user) {
+    cekPengajuan(user).catch((error) => {
+      console.error("Gagal memeriksa pengajuan:", error);
+    });
+  } else {
+    tombol.style.display = "block";
+    statusBox.style.display = "none";
+  }
+});
     window.kirimPengajuan = async function() {
   const user = auth.currentUser;
   const nama = document.getElementById("namaAgensi").value.trim();
@@ -289,7 +335,7 @@ onAuthStateChanged(auth, (user) => {
       status: "pending",
       createdAt: serverTimestamp()
     });
-
+await cekPengajuan(user);
     alert("Pengajuan berhasil dikirim dan menunggu persetujuan Super Admin.");
     document.getElementById("namaAgensi").value = "";
     document.getElementById("linkAgensi").value = "";
