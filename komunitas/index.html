@@ -120,7 +120,12 @@ header h2 {
   <h2>👥 GIRINATAN KOMUNITAS</h2>
   <p>Ruang berkumpul para manajer dan kreator</p>
 </header>
-
+<div id="aksesAdmin" style="display:none; padding:16px;">
+  <button onclick="location.href='admin.html'"
+    class="btn-ajukan">
+    👑 Panel Super Admin
+  </button>
+</div>
 <div class="container">
   <div class="section-title">GRUP AGENSI</div>
 </div>
@@ -196,11 +201,22 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 let penggunaLogin = null;
+const SUPER_ADMIN_UID = "yUkqaJXZ1ugBizgg18eRyYpwxkf1";
 
 onAuthStateChanged(auth, (user) => {
   penggunaLogin = user;
+
+  const tombolAdmin = document.getElementById("aksesAdmin");
+
+  if (user && user.uid === SUPER_ADMIN_UID) {
+    tombolAdmin.style.display = "block";
+  } else {
+    tombolAdmin.style.display = "none";
+  }
+
   console.log("Status login:", user ? user.uid : "Belum login");
 });
+
     window.kirimPengajuan = async function() {
   const user = auth.currentUser;
   const nama = document.getElementById("namaAgensi").value.trim();
