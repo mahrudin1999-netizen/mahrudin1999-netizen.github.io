@@ -5,10 +5,118 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Komunitas GIRINATAN</title>
+  <style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #080808;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 18px;
+  background: #151515;
+  border-bottom: 1px solid #806326;
+}
+
+header h2 {
+  margin: 0;
+  color: #D6AD48;
+}
+
+.container {
+  padding: 16px;
+}
+
+.section-title {
+  color: #D6AD48;
+  font-size: 17px;
+  margin-bottom: 14px;
+}
+    .btn-ajukan {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #E5C36A, #B88A2E);
+  color: #080808;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+    #formPengajuan h3 {
+  color: #D6AD48;
+  margin-top: 0;
+}
+
+#formPengajuan label {
+  display: block;
+  margin: 14px 0 7px;
+  font-size: 14px;
+}
+
+#formPengajuan input {
+  width: 100%;
+  padding: 13px;
+  background: #202020;
+  color: white;
+  border: 1px solid #343434;
+  border-radius: 8px;
+  outline: none;
+  margin-bottom: 10px;
+}
+
+#formPengajuan input:focus {
+  border-color: #D6AD48;
+}
+
+#formPengajuan button {
+  margin-top: 12px;
+}
+</style>
 </head>
 <body>
+<header>
+  <h2>👥 GIRINATAN KOMUNITAS</h2>
+  <p>Ruang berkumpul para manajer dan kreator</p>
+</header>
 
+<div class="container">
+  <div class="section-title">GRUP AGENSI</div>
+</div>
+  <button onclick="ajukanGrup()" class="btn-ajukan">
+  + Ajukan Pembuatan Grup Agensi
+</button>
+  <div id="formPengajuan" style="display:none; margin-top:20px; background:#151515; padding:16px; border-radius:12px;">
+
+  <h3>Pengajuan Grup Agensi</h3>
+
+  <label>Nama Agensi</label>
+  <input id="namaAgensi" type="text" placeholder="Masukkan nama agensi">
+
+  <label>Tautan Pengajuan ke Agensi</label>
+  <input id="linkAgensi" type="url" placeholder="Tempel tautan bukti Anda">
+
+  <button onclick="kirimPengajuan()" class="btn-ajukan">
+    Kirim Pengajuan
+  </button>
+
+</div>
   <h1>Komunitas GIRINATAN</h1>
+<script>
+function ajukanGrup() {
+  const form = document.getElementById("formPengajuan");
 
+  if (form.style.display === "none") {
+    form.style.display = "block";
+  } else {
+    form.style.display = "none";
+  }
+}
+</script>
 </body>
 </html>
