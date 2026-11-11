@@ -934,6 +934,12 @@ function saveProfilePreview(){
 function showMessage(message){
   alert(message);
 }
+  // BUKA HALAMAN SESUAI TAUTAN NAVIGASI
+const halamanDariUrl = location.hash.replace("#", "");
+
+if (pages.includes(halamanDariUrl)) {
+  showPage(halamanDariUrl);
+}
 </script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
