@@ -102,11 +102,14 @@ from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import {
   getFirestore,
   collection,
-  getDocs,
+    getDocs,
+  
   query,
-  where
+  where,
+  doc,
+  writeBatch,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
 const firebaseConfig = {
   apiKey: "AIzaSyAoVrrEE0vQQALHFYkog4Xy2mgYIRahzB4",
   authDomain: "girinatan-8d986.firebaseapp.com",
@@ -122,7 +125,60 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const SUPER_ADMIN_UID = "yUkqaJXZ1ugBizgg18eRyYpwxkf1";
+window.prosesPengajuan = async function(id, keputusan) {
+  if (auth.currentUser?.uid !== SUPER_ADMIN_UID) {
+    alert("Akses ditolak. Khusus Super Admin.");
+    return;
+  }
 
+  const pesan = keputusan === "approved"
+    ? "Setujui pengajuan dan buat grup agensi?"
+    : "Tolak pengajuan agensi ini?";
+
+  if (!confirm(pesan)) return;
+
+  try {
+    const batch = writeBatch(db);
+    const requestRef = doc(db, "agency_group_requests", id);
+
+    if (keputusan === "approved") {
+      const snapshot = await getDoc(requestRef);
+
+if (!snapshot.exists() || snapshot.data().status !== "pending") {
+  alert("Pengajuan sudah diproses atau tidak ditemukan.");
+  return;
+}
+
+const data = snapshot.data();
+      const grupRef = doc(collection(db, "agency_groups"));
+
+      batch.set(grupRef, {
+        agencyName: data.agencyName,
+        ownerUid: data.ownerUid,
+        ownerEmail: data.ownerEmail,
+        status: "active",
+        createdAt: serverTimestamp()
+      });
+    }
+
+    batch.update(requestRef, {
+      status: keputusan,
+      reviewedAt: serverTimestamp()
+    });
+
+    await batch.commit();
+
+    alert(keputusan === "approved"
+      ? "Pengajuan disetujui dan grup berhasil dibuat!"
+      : "Pengajuan berhasil ditolak.");
+
+    location.reload();
+
+  } catch (error) {
+    console.error(error);
+    alert("Gagal memproses: " + error.message);
+  }
+};
 onAuthStateChanged(auth, async (user) => {
   const status = document.getElementById("statusAdmin");
   const daftar = document.getElementById("daftarPengajuan");
@@ -175,8 +231,26 @@ onAuthStateChanged(auth, async (user) => {
       link.rel = "noopener noreferrer";
       link.textContent = "Buka Bukti Pengajuan";
 
-      card.append(nama, email, link);
-      daftar.appendChild(card);
+      const tombolSetuju = document.createElement("button");
+tombolSetuju.className = "btn btn-approve";
+tombolSetuju.textContent = "Setujui";
+tombolSetuju.onclick = () =>
+  window.prosesPengajuan(item.id, "approved");
+
+const tombolTolak = document.createElement("button");
+tombolTolak.className = "btn btn-reject";
+tombolTolak.textContent = "Tolak";
+tombolTolak.onclick = () =>
+  window.prosesPengajuan(item.id, "rejected");
+
+card.append(
+  nama,
+  email,
+  link,
+  tombolSetuju,
+  tombolTolak
+);
+daftar.appendChild(card);
     });
 } catch (error) {
   console.error("ERROR FIREBASE:", error);
