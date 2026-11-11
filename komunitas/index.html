@@ -77,6 +77,42 @@ header h2 {
 #formPengajuan button {
   margin-top: 12px;
 }
+    .grup-card {
+  background: #151515;
+  border: 1px solid #343434;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.grup-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #202020;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+}
+
+.grup-info {
+  flex: 1;
+}
+
+.grup-info h3 {
+  margin: 0 0 6px;
+  color: #D6AD48;
+}
+
+.grup-info p {
+  margin: 0;
+  color: #A8ADA8;
+  font-size: 13px;
+}
 </style>
 </head>
 <body>
@@ -106,6 +142,19 @@ header h2 {
   </button>
 
 </div>
+  <div id="daftarGrup" style="margin-top:25px;">
+
+  <div style="text-align:center; padding:30px 15px; background:#151515; border-radius:12px;">
+    <div style="font-size:38px;">👥</div>
+    <h3 style="color:#D6AD48;">Belum Ada Grup</h3>
+    <p style="color:#A8ADA8; font-size:13px;">
+      Grup agensi yang disetujui Super Admin akan muncul di sini.
+    </p>
+  </div>
+
+</div>
+
+</div>
   <h1>Komunitas GIRINATAN</h1>
 <script>
 function ajukanGrup() {
@@ -117,6 +166,82 @@ function ajukanGrup() {
     form.style.display = "none";
   }
 }
+</script>
+  <script type="module">
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+import { getAuth }
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore }
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import {
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyAoVrrEE0vQQALHFYkog4Xy2mgYIRahzB4",
+  authDomain: "girinatan-8d986.firebaseapp.com",
+  projectId: "girinatan-8d986",
+  storageBucket: "girinatan-8d986.firebasestorage.app",
+  messagingSenderId: "762607023765",
+  appId: "1:762607023765:web:5d4369ab2e46b244a6cd9c",
+  measurementId: "G-799CW1JRQ5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let penggunaLogin = null;
+
+onAuthStateChanged(auth, (user) => {
+  penggunaLogin = user;
+  console.log("Status login:", user ? user.uid : "Belum login");
+});
+    window.kirimPengajuan = async function() {
+  const user = auth.currentUser;
+  const nama = document.getElementById("namaAgensi").value.trim();
+  const link = document.getElementById("linkAgensi").value.trim();
+
+  if (!user) {
+    alert("Silakan login terlebih dahulu.");
+    return;
+  }
+
+  if (!nama || !link) {
+    alert("Nama agensi dan tautan wajib diisi.");
+    return;
+  }
+
+  try {
+    const url = new URL(link);
+
+    if (!["http:", "https:"].includes(url.protocol)) {
+      throw new Error("Tautan tidak valid");
+    }
+
+    await addDoc(collection(db, "agency_group_requests"), {
+      agencyName: nama,
+      proofUrl: url.href,
+      ownerUid: user.uid,
+      ownerEmail: user.email || "",
+      status: "pending",
+      createdAt: serverTimestamp()
+    });
+
+    alert("Pengajuan berhasil dikirim dan menunggu persetujuan Super Admin.");
+    document.getElementById("namaAgensi").value = "";
+    document.getElementById("linkAgensi").value = "";
+
+  } catch (error) {
+    console.error(error);
+    alert("Pengajuan gagal dikirim. Periksa koneksi dan aturan keamanan Firebase.");
+  }
+};
+console.log("Firebase Komunitas terhubung");
 </script>
 </body>
 </html>
