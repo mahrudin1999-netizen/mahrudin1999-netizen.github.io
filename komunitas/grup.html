@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruang Grup - GIRINATAN</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#080808;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+header{
+  background:#151515;
+  padding:16px;
+  border-bottom:1px solid #806326;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+header h2{
+  color:#D6AD48;
+  margin:0;
+  font-size:18px;
+}
+header p{
+  color:#A8ADA8;
+  font-size:12px;
+  margin:6px 0 0;
+}
+.container{
+  padding:16px;
+  padding-bottom:90px;
+}
+.info-grup{
+  background:#151515;
+  border:1px solid #806326;
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:18px;
+}
+.info-grup h3{
+  color:#D6AD48;
+  margin-top:0;
+}
+.menu-grup{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.menu-item{
+  background:#151515;
+  border:1px solid #343434;
+  border-radius:10px;
+  padding:16px 8px;
+  text-align:center;
+  color:white;
+}
+.menu-item span{
+  display:block;
+  font-size:25px;
+  margin-bottom:8px;
+}
+.menu-item strong{
+  color:#D6AD48;
+  font-size:13px;
+}
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:space-around;
+  background:#101010;
+  border-top:1px solid #806326;
+  padding:10px 2px;
+}
+.nav-btn{
+  background:none;
+  border:0;
+  color:#A8ADA8;
+  font-size:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+}
+.nav-icon{font-size:19px}
+.nav-btn.active{color:#D6AD48}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2 id="namaGrup">GIRINATAN AGENCY</h2>
+  <p>Ruang komunikasi manajer dan kreator</p>
+</header>
+
+<div class="container">
+
+  <div class="info-grup">
+    <h3>Informasi Grup</h3>
+    <p id="pemilikGrup">Pemilik: Memuat...</p>
+    <p style="color:#A8ADA8;font-size:13px;">
+      Selamat datang di ruang komunitas agensi.
+    </p>
+  </div>
+
+  <div class="menu-grup">
+    <div class="menu-item">
+      <span>💬</span>
+      <strong>Chat Grup</strong>
+    </div>
+
+    <div class="menu-item">
+      <span>📢</span>
+      <strong>Pengumuman</strong>
+    </div>
+
+    <div class="menu-item">
+      <span>⚔️</span>
+      <strong>Jadwal PK</strong>
+    </div>
+
+    <div class="menu-item">
+      <span>📝</span>
+      <strong>Pendaftaran PK</strong>
+    </div>
+
+    <div class="menu-item">
+      <span>👥</span>
+      <strong>Anggota Grup</strong>
+    </div>
+
+    <div class="menu-item">
+      <span>⚠️</span>
+      <strong>Laporan Masalah</strong>
+    </div>
+  </div>
+
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-btn" onclick="location.href='../index.html'">
+    <span class="nav-icon">🏠</span>Beranda
+  </button>
+
+  <button class="nav-btn" onclick="location.href='index.html'">
+    <span class="nav-icon">👥</span>Komunitas
+  </button>
+
+  <button class="nav-btn active">
+    <span class="nav-icon">💬</span>Grup
+  </button>
+</nav>
+
+<script type="module">
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+import { getAuth, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAoVrrEE0vQQALHFYkog4Xy2mgYIRahzB4",
+  authDomain: "girinatan-8d986.firebaseapp.com",
+  projectId: "girinatan-8d986",
+  storageBucket: "girinatan-8d986.firebasestorage.app",
+  messagingSenderId: "762607023765",
+  appId: "1:762607023765:web:5d4369ab2e46b244a6cd9c",
+  measurementId: "G-799CW1JRQ5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const parameter = new URLSearchParams(window.location.search);
+const groupId = parameter.get("id");
+
+onAuthStateChanged(auth, async (user) => {
+  const nama = document.getElementById("namaGrup");
+  const pemilik = document.getElementById("pemilikGrup");
+
+  if (!user) {
+    nama.textContent = "Belum Login";
+    pemilik.textContent = "Silakan login terlebih dahulu.";
+    return;
+  }
+
+  if (!groupId) {
+    nama.textContent = "Grup Tidak Ditemukan";
+    pemilik.textContent = "ID grup tidak tersedia.";
+    return;
+  }
+
+  try {
+    const referensi = doc(db, "agency_groups", groupId);
+    const hasil = await getDoc(referensi);
+
+    if (!hasil.exists()) {
+      nama.textContent = "Grup Tidak Ditemukan";
+      pemilik.textContent = "Data grup tidak tersedia.";
+      return;
+    }
+
+    const data = hasil.data();
+
+    if (data.status !== "active") {
+      nama.textContent = "Grup Tidak Aktif";
+      pemilik.textContent = "Grup ini belum aktif.";
+      return;
+    }
+
+    nama.textContent = data.agencyName || "Agensi GIRINATAN";
+    pemilik.textContent = "Pemilik: " + (data.ownerEmail || "-");
+
+  } catch (error) {
+    console.error("Gagal mengambil data grup:", error);
+    nama.textContent = "Gagal Memuat Grup";
+    pemilik.textContent = "Periksa koneksi dan izin Firestore.";
+  }
+});
+</script>
+
+</body>
+</html>
