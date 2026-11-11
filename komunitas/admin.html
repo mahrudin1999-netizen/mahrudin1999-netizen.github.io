@@ -178,11 +178,15 @@ onAuthStateChanged(auth, async (user) => {
       card.append(nama, email, link);
       daftar.appendChild(card);
     });
+} catch (error) {
+  console.error("ERROR FIREBASE:", error);
 
-  } catch (error) {
-    console.error(error);
-    status.textContent = "Gagal memuat pengajuan. Periksa koneksi Firebase.";
-  }
+  status.textContent =
+    "Error: " + error.code + " | " + error.message;
+
+  daftar.innerHTML = "";
+}
+  
 });
 </script>
 </body>
