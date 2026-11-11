@@ -4,8 +4,186 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Super Admin - GIRINATAN</title>
+  <style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #080808;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 20px;
+  background: #151515;
+  border-bottom: 1px solid #806326;
+}
+
+header h2 {
+  margin: 0;
+  color: #D6AD48;
+}
+
+.container {
+  padding: 16px;
+}
+
+.request-card {
+  background: #151515;
+  border: 1px solid #343434;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.request-card h3 {
+  color: #D6AD48;
+  margin-top: 0;
+}
+
+.btn {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 5px 5px 5px 0;
+}
+
+.btn-approve {
+  background: #00C875;
+  color: #080808;
+}
+
+.btn-reject {
+  background: #B83232;
+  color: white;
+}
+
+.muted {
+  color: #A8ADA8;
+  font-size: 13px;
+}
+</style>
 </head>
 <body>
-  <h1>Panel Super Admin GIRINATAN</h1>
+
+<header>
+  <h2>👑 GIRINATAN SUPER ADMIN</h2>
+  <p>Panel Persetujuan Agensi</p>
+</header>
+
+<div class="container">
+
+  <h3 style="color:#D6AD48;">
+    Pengajuan Grup Agensi
+  </h3>
+
+  <div id="statusAdmin" class="muted">
+    Memeriksa akses Super Admin...
+  </div>
+
+  <div id="daftarPengajuan">
+    <p class="muted">Memuat pengajuan...</p>
+  </div>
+
+</div>
+<script type="module">
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+import { getAuth, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  where
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAoVrrEE0vQQALHFYkog4Xy2mgYIRahzB4",
+  authDomain: "girinatan-8d986.firebaseapp.com",
+  projectId: "girinatan-8d986",
+  storageBucket: "girinatan-8d986.firebasestorage.app",
+  messagingSenderId: "762607023765",
+  appId: "1:762607023765:web:5d4369ab2e46b244a6cd9c",
+  measurementId: "G-799CW1JRQ5"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const SUPER_ADMIN_UID = "yUkqaJXZ1ugBizgg18eRyYpwxkf1";
+
+onAuthStateChanged(auth, async (user) => {
+  const status = document.getElementById("statusAdmin");
+  const daftar = document.getElementById("daftarPengajuan");
+
+  if (!user) {
+    status.textContent = "Silakan login dengan akun Super Admin.";
+    daftar.innerHTML = "";
+    return;
+  }
+
+  if (user.uid !== SUPER_ADMIN_UID) {
+    status.textContent = "Akses ditolak. Khusus Super Admin.";
+    daftar.innerHTML = "";
+    return;
+  }
+
+  status.textContent = "Akses Super Admin berhasil.";
+
+  try {
+    const q = query(
+      collection(db, "agency_group_requests"),
+      where("status", "==", "pending")
+    );
+
+    const hasil = await getDocs(q);
+
+    if (hasil.empty) {
+      daftar.innerHTML = "<p class='muted'>Belum ada pengajuan baru.</p>";
+      return;
+    }
+
+    daftar.innerHTML = "";
+
+    hasil.forEach((item) => {
+      const data = item.data();
+
+      const card = document.createElement("div");
+      card.className = "request-card";
+
+      const nama = document.createElement("h3");
+      nama.textContent = data.agencyName;
+
+      const email = document.createElement("p");
+      email.className = "muted";
+      email.textContent = data.ownerEmail;
+
+      const link = document.createElement("a");
+      link.href = data.proofUrl;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Buka Bukti Pengajuan";
+
+      card.append(nama, email, link);
+      daftar.appendChild(card);
+    });
+
+  } catch (error) {
+    console.error(error);
+    status.textContent = "Gagal memuat pengajuan. Periksa koneksi Firebase.";
+  }
+});
+</script>
 </body>
 </html>
