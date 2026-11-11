@@ -113,6 +113,47 @@ header h2 {
   color: #A8ADA8;
   font-size: 13px;
 }
+    .bottom-nav {
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  background: rgba(8,8,8,.97);
+  border-top: 1px solid #665126;
+}
+
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  min-height: 58px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #999;
+  font-size: 11px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.nav-icon {
+  font-size: 21px;
+}
+
+.nav-btn.active {
+  color: #00C875;
+  background: #10251b;
+}
+
+body {
+  padding-bottom: 90px;
+}
 </style>
 </head>
 <body>
@@ -265,5 +306,33 @@ onAuthStateChanged(auth, (user) => {
 };
 console.log("Firebase Komunitas terhubung");
 </script>
+  <nav class="bottom-nav" aria-label="Navigasi utama">
+
+  <button class="nav-btn" onclick="location.href='../index.html'">
+    <span class="nav-icon">🏠</span>
+    <span>Beranda</span>
+  </button>
+
+  <button class="nav-btn" onclick="location.href='../index.html#marketPage'">
+    <span class="nav-icon">🛒</span>
+    <span>Market</span>
+  </button>
+
+  <button class="nav-btn" onclick="location.href='../index.html#karyaPage'">
+    <span class="nav-icon">✨</span>
+    <span>Berkarya</span>
+  </button>
+
+  <button class="nav-btn active">
+    <span class="nav-icon">👥</span>
+    <span>Komunitas</span>
+  </button>
+
+  <button class="nav-btn" onclick="location.href='../index.html#accountPage'">
+    <span class="nav-icon">👤</span>
+    <span>Akun</span>
+  </button>
+
+</nav>
 </body>
 </html>
