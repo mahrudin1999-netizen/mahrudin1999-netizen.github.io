@@ -175,9 +175,15 @@ body {
   + Ajukan Pembuatan Grup Agensi
 </button>
   <div id="statusPengajuan" style="display:none; margin-top:15px; padding:15px; background:#17251D; border:1px solid #D6AD48; border-radius:12px;">
-  <h3 style="color:#D6AD48;">⏳ PENGAJUAN DIPROSES</h3>
-  <p id="namaStatusPengajuan"></p>
-  <p style="color:#aaa;">Menunggu persetujuan.</p>
+  <h3 id="judulStatusPengajuan" style="color:#D6AD48;">
+  ⏳ PENGAJUAN DIPROSES
+</h3>
+
+<p id="namaStatusPengajuan"></p>
+
+<p id="keteranganStatusPengajuan" style="color:#aaa;">
+  Menunggu persetujuan Super Admin.
+</p>
 </div>
   <div id="formPengajuan" style="display:none; margin-top:20px; background:#151515; padding:16px; border-radius:12px;">
 
@@ -258,20 +264,44 @@ async function cekPengajuan(user) {
   const namaStatus = document.getElementById("namaStatusPengajuan");
 
   const hasil = await getDocs(
-    query(
-      collection(db, "agency_group_requests"),
-      where("ownerUid", "==", user.uid),
-      where("status", "==", "pending")
-    )
-  );
+  query(
+    collection(db, "agency_group_requests"),
+    where("ownerUid", "==", user.uid)
+  )
+);
 
-  if (!hasil.empty) {
-  const data = hasil.docs[0].data();
+const statusBox = document.getElementById("statusPengajuan");
+const judul = document.getElementById("judulStatusPengajuan");
+const keterangan = document.getElementById("keteranganStatusPengajuan");
 
-  tombol.style.display = "none";
+if (!hasil.empty) {
+  const data = hasil.docs
+    .map(d => d.data())
+    .sort((a, b) => {
+      const waktuA = a.createdAt?.seconds || 0;
+      const waktuB = b.createdAt?.seconds || 0;
+      return waktuB - waktuA;
+    })[0];
+
   statusBox.style.display = "block";
   namaStatus.textContent = "Nama agensi: " + data.agencyName;
 
+  if (data.status === "pending") {
+    tombol.style.display = "none";
+    judul.textContent = "⏳ PENGAJUAN DIPROSES";
+    judul.style.color = "#D6AD48";
+    keterangan.textContent = "Menunggu persetujuan Super Admin.";
+  } else if (data.status === "rejected") {
+    tombol.style.display = "block";
+    judul.textContent = "❌ PENGAJUAN DITOLAK";
+    judul.style.color = "#F87171";
+    keterangan.textContent = "Pengajuan belum disetujui. Periksa kembali bukti pengajuan, lalu ajukan ulang.";
+  } else if (data.status === "approved") {
+    tombol.style.display = "none";
+    judul.textContent = "✅ PENGAJUAN DISETUJUI";
+    judul.style.color = "#00C875";
+    keterangan.textContent = "Grup agensi kamu sudah disetujui!";
+  }
 } else {
   tombol.style.display = "block";
   statusBox.style.display = "none";
@@ -282,7 +312,7 @@ async function cekPengajuan(user) {
 
   const tombolAdmin = document.getElementById("aksesAdmin");
   const tombol = document.getElementById("tombolAjukan");
-  const statusBox = document.getElementById("statusPengajuan");
+  
 
   if (user && user.uid === SUPER_ADMIN_UID) {
     tombolAdmin.style.display = "block";
