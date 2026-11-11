@@ -171,7 +171,7 @@ body {
 <div class="container">
   <div class="section-title">GRUP AGENSI</div>
 </div>
-  <button onclick="ajukanGrup()" class="btn-ajukan">
+  <button id="tombolAjukan" onclick="ajukanGrup()" class="btn-ajukan">
   + Ajukan Pembuatan Grup Agensi
 </button>
   <div id="statusPengajuan" style="display:none; margin-top:15px; padding:15px; background:#17251D; border:1px solid #D6AD48; border-radius:12px;">
@@ -227,8 +227,6 @@ import { getAuth }
 from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { onAuthStateChanged }
 from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore }
-from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import {
   getFirestore,
   collection,
@@ -253,23 +251,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 let penggunaLogin = null;
 const SUPER_ADMIN_UID = "yUkqaJXZ1ugBizgg18eRyYpwxkf1";
-
-onAuthStateChanged(auth, (user) => {
-  penggunaLogin = user;
-
-  const tombolAdmin = document.getElementById("aksesAdmin");
-
-  if (user && user.uid === SUPER_ADMIN_UID) {
-    tombolAdmin.style.display = "block";
-  } else {
-    tombolAdmin.style.display = "none";
-  }
-
-  console.log("Status login:", user ? user.uid : "Belum login");
-});
   
 async function cekPengajuan(user) {
-  const tombol = document.querySelector(".btn-ajukan");
+  const tombol = document.getElementById("tombolAjukan");
   const statusBox = document.getElementById("statusPengajuan");
   const namaStatus = document.getElementById("namaStatusPengajuan");
 
@@ -282,19 +266,29 @@ async function cekPengajuan(user) {
   );
 
   if (!hasil.empty) {
-    const data = hasil.docs[0].data();
+  const data = hasil.docs[0].data();
 
-    tombol.style.display = "none";
-    statusBox.style.display = "block";
-    namaStatus.textContent = "Nama agensi: " + data.agencyName;
-  } else {
-    tombol.style.display = "block";
-    statusBox.style.display = "none";
-  }
+  tombol.style.display = "none";
+  statusBox.style.display = "block";
+  namaStatus.textContent = "Nama agensi: " + data.agencyName;
+
+} else {
+  tombol.style.display = "block";
+  statusBox.style.display = "none";
+}
       }
     onAuthStateChanged(auth, (user) => {
-  const tombol = document.querySelector(".btn-ajukan");
+  penggunaLogin = user;
+
+  const tombolAdmin = document.getElementById("aksesAdmin");
+  const tombol = document.getElementById("tombolAjukan");
   const statusBox = document.getElementById("statusPengajuan");
+
+  if (user && user.uid === SUPER_ADMIN_UID) {
+    tombolAdmin.style.display = "block";
+  } else {
+    tombolAdmin.style.display = "none";
+  }
 
   if (user) {
     cekPengajuan(user).catch((error) => {
@@ -304,6 +298,8 @@ async function cekPengajuan(user) {
     tombol.style.display = "block";
     statusBox.style.display = "none";
   }
+
+  console.log("Status login:", user ? user.uid : "Belum login");
 });
     window.kirimPengajuan = async function() {
   const user = auth.currentUser;
