@@ -269,8 +269,6 @@ async function cekPengajuan(user) {
     where("ownerUid", "==", user.uid)
   )
 );
-
-const statusBox = document.getElementById("statusPengajuan");
 const judul = document.getElementById("judulStatusPengajuan");
 const keterangan = document.getElementById("keteranganStatusPengajuan");
 
@@ -304,7 +302,8 @@ if (!hasil.empty) {
   }
 } else {
   tombol.style.display = "block";
-  statusBox.style.display = "none";
+
+  document.getElementById("statusPengajuan").style.display = "none";
 }
       }
     onAuthStateChanged(auth, (user) => {
