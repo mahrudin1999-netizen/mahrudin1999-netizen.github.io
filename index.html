@@ -1047,7 +1047,7 @@ if (loginButtons) loginButtons.style.display = "none";
     const profile = snapshot.exists() ? snapshot.data() : { bio: "" };
 
     document.getElementById("profileUsername").textContent =
-      user.displayName || "Pengguna Google";
+  profile.displayName || user.displayName || "Pengguna Google";
 
     document.getElementById("profileBio").textContent =
       profile.bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
@@ -1062,6 +1062,7 @@ if (loginButtons) loginButtons.style.display = "none";
   }
 });
 
+
 window.saveProfilePreview = async function() {
   const user = auth.currentUser;
 
@@ -1070,24 +1071,40 @@ window.saveProfilePreview = async function() {
     return;
   }
 
+  const username = document.getElementById("editUsername").value.trim();
   const bio = document.getElementById("editBio").value.trim();
+
+  if (!username) {
+    alert("Nama tidak boleh kosong.");
+    return;
+  }
+
+  if (username.length > 30) {
+    alert("Nama maksimal 30 karakter.");
+    return;
+  }
 
   try {
     await updateDoc(doc(db, "users", user.uid), {
+      displayName: username,
       bio: bio,
       updatedAt: serverTimestamp()
     });
 
+    document.getElementById("profileUsername").textContent = username;
+
     document.getElementById("profileBio").textContent =
       bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
 
-    alert("Bio berhasil disimpan!");
+    alert("Nama dan bio profil berhasil disimpan!");
+
     showAccount();
 
   } catch (error) {
-    alert("Gagal menyimpan bio: " + error.message);
+    alert("Gagal menyimpan profil: " + error.message);
   }
 };
+
 
 window.logoutGoogle = async function() {
   await signOut(auth);
