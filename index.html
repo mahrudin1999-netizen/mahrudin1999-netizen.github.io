@@ -739,9 +739,19 @@ style="width:calc(100% - 32px);margin:18px auto;padding:15px;border:1px solid #8
 
   <div class="profile-card">
     <div class="avatar" id="editAvatar">👤</div>
-    <p style="color:#A8ADA8;font-size:12px">
-      Foto profil akan tersedia setelah penyimpanan foto diaktifkan.
-    </p>
+
+<label for="profilePhotoInput" class="photo-upload-btn">
+  📷 Ganti Foto Profil
+</label>
+
+<input
+  type="file"
+  id="profilePhotoInput"
+  accept="image/jpeg,image/png,image/webp"
+  hidden
+>
+
+<p>Format JPG, PNG, atau WEBP.</p>
   </div>
 
   <label style="display:block;margin-bottom:8px;font-size:13px">
@@ -995,72 +1005,51 @@ window.signInGoogle = async function() {
 };
 
 
-function setAvatar(element, photoURL) {
+async function setAvatar(element, photoFileName, user) {
   if (!element) return;
 
   element.replaceChildren();
 
-  if (photoURL) {
+  if (!photoFileName) {
+    element.textContent = "👤";
+    return;
+  }
+
+  try {
+    const token = await user.getIdToken();
+
+    const response = await fetch(
+      "https://girinatan-media-api.mahrudin1999.workers.dev/profile-photo-view?file=" +
+      encodeURIComponent(photoFileName),
+      {
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Foto belum dapat dimuat.");
+    }
+
+    const blob = await response.blob();
+    const imageUrl = URL.createObjectURL(blob);
+
     const img = document.createElement("img");
-    img.src = photoURL;
+    img.src = imageUrl;
     img.alt = "Foto profil";
     img.style.width = "100%";
     img.style.height = "100%";
     img.style.objectFit = "cover";
     img.style.borderRadius = "50%";
-    element.appendChild(img);
-  } else {
-    element.textContent = "👤";
-  }
-}
 
-onAuthStateChanged(auth, async user => {
-  
-  const status = document.querySelector(".account-status");
-
-  const loginButtons = document.getElementById("loginButtons");
-
-if (!user) {
-  if (status) status.textContent = "● Belum masuk";
-  if (loginButtons) loginButtons.style.display = "block";
-  return;
-}
-
-if (loginButtons) loginButtons.style.display = "none";
-  try {
-    const userRef = doc(db, "users", user.uid);
-    const snapshot = await getDoc(userRef);
-
-    if (!snapshot.exists()) {
-      await setDoc(userRef, {
-        uid: user.uid,
-        displayName: user.displayName || "",
-        email: user.email || "",
-        photoURL: user.photoURL || "",
-        bio: "",
-        provider: "google",
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      });
-    }
-
-    const profile = snapshot.exists() ? snapshot.data() : { bio: "" };
-
-    document.getElementById("profileUsername").textContent =
-  profile.displayName || user.displayName || "Pengguna Google";
-
-    document.getElementById("profileBio").textContent =
-      profile.bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
-
-    setAvatar(document.getElementById("profileAvatar"), user.photoURL);
-    setAvatar(document.getElementById("editAvatar"), user.photoURL);
-
-    if (status) status.textContent = "● Akun Google terhubung";
+    element.replaceChildren(img);
 
   } catch (error) {
-    alert("Gagal memuat profil: " + error.message);
+    element.textContent = "👤";
+    console.error("Gagal memuat foto profil:", error);
   }
-});
+}
 
 
 window.saveProfilePreview = async function() {
@@ -1104,6 +1093,83 @@ window.saveProfilePreview = async function() {
     alert("Gagal menyimpan profil: " + error.message);
   }
 };
+
+const photoInput = document.getElementById("profilePhotoInput");
+
+if (photoInput) {
+  photoInput.addEventListener("change", async function() {
+    const file = this.files[0];
+    const user = auth.currentUser;
+
+    if (!file) return;
+
+    if (!user) {
+      alert("Silakan login Google terlebih dahulu.");
+      this.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Ukuran foto maksimal 5 MB.");
+      this.value = "";
+      return;
+    }
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      alert("Gunakan foto JPG, PNG, atau WEBP.");
+      this.value = "";
+      return;
+    }
+
+    try {
+      const token = await user.getIdToken();
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      const response = await fetch(
+        "https://girinatan-media-api.mahrudin1999.workers.dev/profile-photo",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token
+          },
+          body: formData
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Upload foto gagal.");
+      }
+
+      await updateDoc(doc(db, "users", user.uid), {
+        photoFileName: result.fileName,
+        updatedAt: serverTimestamp()
+      });
+
+      await setAvatar(
+        document.getElementById("profileAvatar"),
+        result.fileName,
+        user
+      );
+
+      await setAvatar(
+        document.getElementById("editAvatar"),
+        result.fileName,
+        user
+      );
+
+      alert("Foto profil berhasil diperbarui!");
+
+    } catch (error) {
+      alert("Gagal mengganti foto: " + error.message);
+    } finally {
+      this.value = "";
+    }
+  });
+}
 
 
 window.logoutGoogle = async function() {
