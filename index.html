@@ -1146,29 +1146,11 @@ window.saveProfilePreview = async function() {
       displayName: username,
       bio: bio,
       updatedAt: serverTimestamp()
-    });
-    if (oldFileName && oldFileName !== result.fileName) {
-  try {
-    const cleanupResponse = await fetch(
-      "https://girinatan-media-api.mahrudin1999.workers.dev/profile-photo-cleanup-schedule",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer " + token,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          oldFileName: oldFileName,
-          newFileName: result.fileName
-        })
-      }
-    );
-
-    const cleanupResult = await cleanupResponse.json();
-
-    if (!cleanupResponse.ok) {
-      console.warn("Antrean foto lama:", cleanupResult.error);
-    }
+    });   
+} catch (error) {
+  console.error("Gagal menyimpan profil:", error);
+}
+    
   } catch (cleanupError) {
     console.warn("Penjadwalan foto lama gagal:", cleanupError);
   }
@@ -1216,9 +1198,14 @@ if (photoInput) {
     }
 
     try {
-      const token = await user.getIdToken();
-      const formData = new FormData();
+      const userRef = doc(db, "users", user.uid);
+const oldSnapshot = await getDoc(userRef);
 
+const oldFileName = oldSnapshot.exists()
+  ? oldSnapshot.data().photoFileName || null
+  : null;
+      const token = await user.getIdToken();
+const formData = new FormData(); 
       formData.append("file", file);
 
       const response = await fetch(
@@ -1242,7 +1229,32 @@ if (photoInput) {
         photoFileName: result.fileName,
         updatedAt: serverTimestamp()
       });
+if (oldFileName && oldFileName !== result.fileName) {
+  try {
+    const cleanupResponse = await fetch(
+      "https://girinatan-media-api.mahrudin1999.workers.dev/profile-photo-cleanup-schedule",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          oldFileName: oldFileName,
+          newFileName: result.fileName
+        })
+      }
+    );
 
+    const cleanupResult = await cleanupResponse.json();
+
+    if (!cleanupResponse.ok) {
+      console.warn("Antrean foto lama:", cleanupResult.error);
+    }
+  } catch (cleanupError) {
+    console.warn("Penjadwalan foto lama gagal:", cleanupError);
+  }
+}
       await setAvatar(
         document.getElementById("profileAvatar"),
         result.fileName,
