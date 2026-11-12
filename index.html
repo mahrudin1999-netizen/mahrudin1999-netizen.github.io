@@ -1117,9 +1117,7 @@ const oldFileName = oldSnapshot.exists()
     element.textContent = "👤";
     console.error("Gagal memuat foto profil:", error);
   }
-}
-
-
+  
 window.saveProfilePreview = async function() {
   const user = auth.currentUser;
 
@@ -1146,15 +1144,7 @@ window.saveProfilePreview = async function() {
       displayName: username,
       bio: bio,
       updatedAt: serverTimestamp()
-    });   
-} catch (error) {
-  console.error("Gagal menyimpan profil:", error);
-}
-    
-  } catch (cleanupError) {
-    console.warn("Penjadwalan foto lama gagal:", cleanupError);
-  }
-}
+    });
 
     document.getElementById("profileUsername").textContent = username;
 
@@ -1169,6 +1159,7 @@ window.saveProfilePreview = async function() {
     alert("Gagal menyimpan profil: " + error.message);
   }
 };
+
 
 const photoInput = document.getElementById("profilePhotoInput");
 
