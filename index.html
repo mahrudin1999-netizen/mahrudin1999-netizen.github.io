@@ -1004,7 +1004,69 @@ window.signInGoogle = async function() {
   }
 };
 
+onAuthStateChanged(auth, async user => {
+  const status = document.querySelector(".account-status");
+  const loginButtons = document.getElementById("loginButtons");
+  const profileInfo = document.querySelector(".profile-info");
 
+  if (!user) {
+    status.textContent = "● Belum login";
+    loginButtons.style.display = "block";
+    profileInfo.textContent = "Identitas akun pengguna";
+    document.getElementById("profileUsername").textContent = "Username";
+    document.getElementById("profileBio").textContent =
+      "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
+    return;
+  }
+
+  loginButtons.style.display = "none";
+  status.textContent = "● Akun Google terhubung";
+  profileInfo.textContent = "ID Firebase: " + user.uid;
+
+  try {
+    const userRef = doc(db, "users", user.uid);
+    let snapshot = await getDoc(userRef);
+
+    if (!snapshot.exists()) {
+      await setDoc(userRef, {
+        uid: user.uid,
+        displayName: user.displayName || "",
+        email: user.email || "",
+        photoURL: user.photoURL || "",
+        bio: "",
+        provider: "google",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+
+      snapshot = await getDoc(userRef);
+    }
+
+    const profile = snapshot.data();
+
+    document.getElementById("profileUsername").textContent =
+      profile.displayName || user.displayName || "Pengguna Google";
+
+    document.getElementById("profileBio").textContent =
+      profile.bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
+
+    await setAvatar(
+      document.getElementById("profileAvatar"),
+      profile.photoFileName,
+      user
+    );
+
+    await setAvatar(
+      document.getElementById("editAvatar"),
+      profile.photoFileName,
+      user
+    );
+
+  } catch (error) {
+    console.error("Gagal memuat profil:", error);
+    alert("Gagal memuat profil: " + error.message);
+  }
+});
 async function setAvatar(element, photoFileName, user) {
   if (!element) return;
 
