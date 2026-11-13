@@ -1075,16 +1075,16 @@ window.signInTikTok = function() {
   location.href = TIKTOK_WORKER + "/auth/tiktok";
 };
   async function finishTikTokLogin() {
-  const params = new URLSearchParams(location.hash.slice(1));
+  const params = new URLSearchParams(location.search);
   const code = params.get("tiktok_code");
 alert("Pemeriksaan login TikTok: " + (code ? "KODE DITERIMA" : "KODE TIDAK DITEMUKAN"));
   if (!code) return;
 
-  history.replaceState(
-    null,
-    "",
-    location.pathname + location.search
-  );
+history.replaceState(
+  null,
+  "",
+  location.pathname
+);
 
   try {
     const response = await fetch(
