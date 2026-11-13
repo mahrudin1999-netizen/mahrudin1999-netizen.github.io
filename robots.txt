@@ -1,1 +1,6 @@
+
+User-agent: *
+Allow: /
+
 Sitemap: https://mahrudin1999-netizen.github.io/sitemap.xml
+
