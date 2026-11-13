@@ -722,7 +722,7 @@ style="width:calc(100% - 32px);margin:18px auto;padding:15px;border:1px solid #8
   </button>
 
   <button class="settings-button"
-    onclick="showMessage('Login TikTok akan tersedia setelah integrasi TikTok disetujui dan diaktifkan.')"
+   onclick="window.signInTikTok()"="showMessage('Login TikTok akan tersedia setelah integrasi TikTok disetujui dan diaktifkan.')"
     style="justify-content:center">
     <strong>🎵 Masuk dengan TikTok</strong>
   </button>
@@ -1032,7 +1032,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/fireba
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
+    signInWithPopup,
+  signInWithCustomToken,
   onAuthStateChanged,
   setPersistence,
   browserLocalPersistence,
@@ -1067,6 +1068,65 @@ const provider = new GoogleAuthProvider();
 
 try {
   await setPersistence(auth, browserLocalPersistence);
+  const TIKTOK_WORKER =
+  "https://girinatan-tiktok-auth.mahrudin1999.workers.dev";
+
+window.signInTikTok = function() {
+  location.href = TIKTOK_WORKER + "/auth/tiktok";
+};
+  async function finishTikTokLogin() {
+  const params = new URLSearchParams(location.hash.slice(1));
+  const code = params.get("tiktok_code");
+
+  if (!code) return;
+
+  history.replaceState(
+    null,
+    "",
+    location.pathname + location.search
+  );
+
+  try {
+    const response = await fetch(
+      TIKTOK_WORKER + "/auth/tiktok/exchange",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ code })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Gagal menerima data login.");
+    }
+
+    const credential = await signInWithCustomToken(
+      auth,
+      result.customToken
+    );
+
+    const user = credential.user;
+
+    await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      displayName: result.profile.displayName,
+      photoURL: result.profile.photoURL,
+      provider: "tiktok",
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+
+    alert("Login TikTok berhasil!");
+
+  } catch (error) {
+    alert("Login TikTok gagal: " + error.message);
+  }
+}
+
+finishTikTokLogin();
 } catch (error) {
   alert("Pengaturan sesi gagal: " + error.message);
 }
@@ -1092,10 +1152,16 @@ onAuthStateChanged(auth, async user => {
     document.getElementById("profileBio").textContent =
       "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
     return;
-  }
+    }
+
+  const accountProvider = user.uid.startsWith("tt_")
+    ? "tiktok"
+    : "google";
 
   loginButtons.style.display = "none";
-  status.textContent = "● Akun Google terhubung";
+status.textContent = accountProvider === "tiktok"
+  ? "● Akun TikTok terhubung"
+  : "● Akun Google terhubung";
   profileInfo.textContent = "ID Firebase: " + user.uid;
 
   try {
@@ -1109,7 +1175,7 @@ onAuthStateChanged(auth, async user => {
         email: user.email || "",
         photoURL: user.photoURL || "",
         bio: "",
-        provider: "google",
+        provider: accountProvider,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
       });
@@ -1120,32 +1186,51 @@ onAuthStateChanged(auth, async user => {
     const profile = snapshot.data();
 
     document.getElementById("profileUsername").textContent =
-      profile.displayName || user.displayName || "Pengguna Google";
+      profile.displayName ||
+user.displayName ||
+(accountProvider === "tiktok" ? "Kreator TikTok" : "Pengguna Google");
 
     document.getElementById("profileBio").textContent =
       profile.bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
 
     await setAvatar(
-      document.getElementById("profileAvatar"),
-      profile.photoFileName,
-      user
-    );
+  document.getElementById("profileAvatar"),
+  profile.photoFileName,
+  user,
+  profile.photoURL || user.photoURL || ""
+);
 
-    await setAvatar(
-      document.getElementById("editAvatar"),
-      profile.photoFileName,
-      user
-    );
+await setAvatar(
+  document.getElementById("editAvatar"),
+  profile.photoFileName,
+  user,
+  profile.photoURL || user.photoURL || ""
+);
 
   } catch (error) {
     console.error("Gagal memuat profil:", error);
     alert("Gagal memuat profil: " + error.message);
   }
 });
-async function setAvatar(element, photoFileName, user) {
+async function setAvatar(element, photoFileName, user, photoURL = "") {
   if (!element) return;
 
   element.replaceChildren();
+
+  // Jika pengguna belum mengunggah foto sendiri,
+  // gunakan foto profil dari TikTok.
+  if (!photoFileName && photoURL) {
+    const img = document.createElement("img");
+    img.src = photoURL;
+    img.alt = "Foto profil";
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "cover";
+    img.style.borderRadius = "50%";
+
+    element.replaceChildren(img);
+    return;
+  }
 
   if (!photoFileName) {
     element.textContent = "👤";
@@ -1153,12 +1238,6 @@ async function setAvatar(element, photoFileName, user) {
   }
 
   try {
-    const userRef = doc(db, "users", user.uid);
-const oldSnapshot = await getDoc(userRef);
-
-const oldFileName = oldSnapshot.exists()
-  ? oldSnapshot.data().photoFileName || null
-  : null;
     const token = await user.getIdToken();
 
     const response = await fetch(
