@@ -1162,7 +1162,7 @@ onAuthStateChanged(auth, async user => {
 status.textContent = accountProvider === "tiktok"
   ? "● Akun TikTok terhubung"
   : "● Akun Google terhubung";
-  profileInfo.textContent = "ID Firebase: " + user.uid;
+  profileInfo.textContent = "";
 
   try {
     const userRef = doc(db, "users", user.uid);
