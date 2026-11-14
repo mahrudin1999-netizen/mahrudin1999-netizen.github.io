@@ -50,23 +50,55 @@ main{
 .sender{font-size:11px;color:#D6AD48;font-weight:bold;margin-bottom:5px}
 .message p{margin:0;white-space:pre-wrap;font-size:14px;line-height:1.4}
 .time{text-align:right;color:#aaa;font-size:10px;margin-top:6px}
-.composer{display:flex;gap:8px;margin-top:10px}
-textarea{flex:1;resize:none;min-height:46px;max-height:110px;background:#151515;color:white;border:1px solid #806326;border-radius:10px;padding:12px;font:14px Arial}
-button{
-  flex:0 0 85px;
-  min-width:85px;
+.composer{
+  display:flex;
+  flex:0 0 auto;
+  align-items:stretch;
+  gap:8px;
+  margin-top:10px;
+  width:100%;
+  min-width:0;
+}
+
+textarea{
+  flex:1 1 0;
+  width:0;
+  min-width:0;
+  resize:none;
   min-height:46px;
+  max-height:110px;
+  background:#151515;
+  color:white;
+  border:1px solid #806326;
+  border-radius:10px;
+  padding:12px;
+  font:14px Arial;
+}
+
+button{
+  display:block;
+  flex:0 0 76px;
+  width:76px;
+  min-width:76px;
+  height:46px;
   background:linear-gradient(135deg,#E5C36A,#B88A2E);
   color:#080808;
   border:0;
   border-radius:10px;
-  padding:0 10px;
+  padding:0 8px;
   font-weight:bold;
   white-space:nowrap;
 }
+
 button:disabled{opacity:.5}
-.small{font-size:11px;color:#888;margin-top:7px}
-  .composer{
+
+.small{
+  flex:0 0 auto;
+  font-size:11px;
+  color:#888;
+  margin-top:7px;
+}
+          .composer{
   display:flex;
   flex-shrink:0;
   align-items:stretch;
@@ -74,12 +106,7 @@ button:disabled{opacity:.5}
   margin-top:10px;
   width:100%;
 }
-    .small{
-  flex-shrink:0;
-  font-size:11px;
-  color:#888;
-  margin-top:7px;
-}
+    
 </style>
 </head>
 <body>
@@ -88,7 +115,7 @@ button:disabled{opacity:.5}
 <h2 id="groupName">💬 Chat Grup </h2>
 <p>Ruang komunikasi khusus anggota agensi</p>
 </header>
-
+<main>
 
 <div id="status">Memeriksa akses...</div>
 <section id="chatBox"></section>
