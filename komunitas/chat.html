@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>Chat Grup - GIRINATAN</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:white;font-family:Arial}
+header{background:#151515;padding:15px;border-bottom:1px solid #806326;position:sticky;top:0}
+header h2{color:#D6AD48;margin:0;font-size:18px}
+header p{color:#A8ADA8;font-size:12px;margin:5px 0 0}
+main{max-width:800px;margin:auto;padding:12px}
+.info{background:#151515;border:1px solid #343434;border-radius:10px;padding:10px;color:#aaa;font-size:12px;margin-bottom:10px}
+#status{font-size:13px;color:#D6AD48;margin:10px 2px}
+#chatBox{height:calc(100dvh - 230px);min-height:300px;overflow-y:auto;background:#101010;border:1px solid #343434;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.message{max-width:85%;align-self:flex-start;background:#202020;border:1px solid #343434;border-radius:12px;padding:10px;overflow-wrap:anywhere}
+.message.mine{align-self:flex-end;background:#243326;border-color:#386344}
+.sender{font-size:11px;color:#D6AD48;font-weight:bold;margin-bottom:5px}
+.message p{margin:0;white-space:pre-wrap;font-size:14px;line-height:1.4}
+.time{text-align:right;color:#aaa;font-size:10px;margin-top:6px}
+.composer{display:flex;gap:8px;margin-top:10px}
+textarea{flex:1;resize:none;min-height:46px;max-height:110px;background:#151515;color:white;border:1px solid #806326;border-radius:10px;padding:12px;font:14px Arial}
+button{background:linear-gradient(135deg,#E5C36A,#B88A2E);color:#080808;border:0;border-radius:10px;padding:0 17px;font-weight:bold}
+button:disabled{opacity:.5}
+.small{font-size:11px;color:#888;margin-top:7px}
+</style>
+</head>
+<body>
+
+<header>
+<h2 id="groupName">💬 Chat Grup GIRINATAN</h2>
+<p>Ruang komunikasi khusus anggota agensi</p>
+</header>
+
+<main>
+<div class="info">
+Pesan hanya dapat dibaca oleh pemilik dan anggota grup.
+Pesan akan kedaluwarsa setelah 30 hari.
+</div>
+
+<div id="status">Memeriksa akses...</div>
+<section id="chatBox"></section>
+
+<div class="composer">
+<textarea id="messageInput" maxlength="1000"
+placeholder="Tulis pesan..." disabled></textarea>
+<button id="sendBtn" disabled>Kirim</button>
+</div>
+<div class="small">Maksimal 1.000 karakter. Gunakan chat dengan sopan.</div>
+</main>
+
+<script type="module">
+import {initializeApp} from
+"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+import {getAuth,onAuthStateChanged} from
+"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+import {
+getFirestore,doc,getDoc,collection,addDoc,
+query,orderBy,limit,onSnapshot,serverTimestamp,Timestamp
+} from
+"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyAoVrrEE0vQQALHFYkog4Xy2mgYIRahzB4",
+authDomain:"girinatan-8d986.firebaseapp.com",
+projectId:"girinatan-8d986",
+storageBucket:"girinatan-8d986.firebasestorage.app",
+messagingSenderId:"762607023765",
+appId:"1:762607023765:web:5d4369ab2e46b244a6cd9c",
+measurementId:"G-799CW1JRQ5"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+const groupId=new URLSearchParams(location.search).get("id");
+const statusEl=document.getElementById("status");
+const chatBox=document.getElementById("chatBox");
+const input=document.getElementById("messageInput");
+const sendBtn=document.getElementById("sendBtn");
+
+let userAktif=null;
+let usernameAktif="Anggota";
+let stopChat=null;
+let sedangKirim=false;
+
+function status(teks,error=false){
+statusEl.textContent=teks;
+statusEl.style.color=error?"#ff7777":"#D6AD48";
+}
+
+function waktu(timestamp){
+if(!timestamp?.toDate)return "Baru saja";
+return timestamp.toDate().toLocaleString("id-ID",{
+day:"2-digit",month:"short",
+hour:"2-digit",minute:"2-digit"
+});
+}
+
+function tampilkanPesan(snapshot){
+chatBox.replaceChildren();
+
+if(snapshot.empty){
+const kosong=document.createElement("p");
+kosong.textContent="Belum ada pesan. Mulai percakapan pertama!";
+kosong.style.color="#aaa";
+chatBox.appendChild(kosong);
+return;
+}
+
+snapshot.forEach(item=>{
+const data=item.data();
+
+const kotak=document.createElement("article");
+kotak.className="message"+
+(data.uid===userAktif.uid?" mine":"");
+
+const nama=document.createElement("div");
+nama.className="sender";
+nama.textContent=data.uid===userAktif.uid?
+"Anda":(data.username||"Anggota");
+
+const isi=document.createElement("p");
+isi.textContent=data.text||"";
+
+const jam=document.createElement("div");
+jam.className="time";
+jam.textContent=waktu(data.createdAt);
+
+kotak.append(nama,isi,jam);
+chatBox.appendChild(kotak);
+});
+
+chatBox.scrollTop=chatBox.scrollHeight;
+}
+
+async function bukaChat(user){
+if(!groupId)throw Error("ID grup tidak ditemukan.");
+
+const grupRef=doc(db,"agency_groups",groupId);
+const grupSnap=await getDoc(grupRef);
+
+if(!grupSnap.exists())throw Error("Grup tidak ditemukan.");
+
+const grup=grupSnap.data();
+
+if(grup.status!=="active")
+throw Error("Grup tidak aktif.");
+
+const pemilik=grup.ownerUid===user.uid;
+
+const anggotaRef=doc(
+db,"agency_groups",groupId,"members",user.uid
+);
+
+const anggotaSnap=await getDoc(anggotaRef);
+
+if(!pemilik&&!anggotaSnap.exists())
+throw Error("Akses ditolak. Kamu bukan anggota grup.");
+
+document.getElementById("groupName").textContent=
+"💬 "+(grup.agencyName||"Chat Grup");
+
+if(anggotaSnap.exists()){
+usernameAktif=anggotaSnap.data().username||
+user.displayName||"Anggota";
+}else{
+usernameAktif=user.displayName||
+(user.email?user.email.split("@")[0]:"Pemilik");
+}
+
+userAktif=user;
+input.disabled=false;
+sendBtn.disabled=false;
+status("Terhubung sebagai "+usernameAktif);
+
+const pesanRef=collection(
+db,"agency_groups",groupId,"messages"
+);
+
+const q=query(
+pesanRef,orderBy("createdAt","asc"),limit(100)
+);
+
+stopChat=onSnapshot(q,tampilkanPesan,error=>{
+console.error(error);
+status("Gagal memuat pesan. Periksa aturan Firestore.",true);
+});
+}
+
+async function kirimPesan(){
+const teks=input.value.trim();
+
+if(!teks||!userAktif||sedangKirim)return;
+if(teks.length>1000)return;
+
+sedangKirim=true;
+sendBtn.disabled=true;
+
+try{
+const kedaluwarsa=new Date(
+Date.now()+30*24*60*60*1000
+);
+
+await addDoc(
+collection(db,"agency_groups",groupId,"messages"),
+{
+uid:userAktif.uid,
+username:usernameAktif,
+text:teks,
+createdAt:serverTimestamp(),
+expiresAt:Timestamp.fromDate(kedaluwarsa)
+}
+);
+
+input.value="";
+status("Pesan terkirim.");
+
+}catch(error){
+console.error(error);
+status("Gagal mengirim pesan. Periksa aturan Firestore.",true);
+}finally{
+sedangKirim=false;
+sendBtn.disabled=false;
+input.focus();
+}
+}
+
+sendBtn.addEventListener("click",kirimPesan);
+
+input.addEventListener("keydown",event=>{
+if(event.key==="Enter"&&!event.shiftKey){
+event.preventDefault();
+kirimPesan();
+}
+});
+
+onAuthStateChanged(auth,async user=>{
+if(stopChat){stopChat();stopChat=null;}
+
+if(!user){
+input.disabled=true;
+sendBtn.disabled=true;
+status("Silakan login terlebih dahulu.",true);
+return;
+}
+
+try{
+await bukaChat(user);
+}catch(error){
+console.error(error);
+input.disabled=true;
+sendBtn.disabled=true;
+status(error.message||"Gagal membuka chat.",true);
+}
+});
+
+window.addEventListener("beforeunload",()=>{
+if(stopChat)stopChat();
+});
+</script>
+</body>
+</html>
