@@ -108,6 +108,42 @@ h1{
   line-height:1.6;
 }
 
+.entertainment-menu{
+  display:grid;
+  gap:13px;
+  margin-top:22px;
+}
+
+.entertainment-btn{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  width:100%;
+  padding:18px;
+  background:linear-gradient(135deg,#202020,#111);
+  border:1px solid #806326;
+  border-radius:15px;
+  color:white;
+  text-decoration:none;
+}
+
+.entertainment-btn .icon{
+  font-size:30px;
+}
+
+.entertainment-btn strong{
+  display:block;
+  color:var(--gold);
+  font-size:16px;
+}
+
+.entertainment-btn small{
+  display:block;
+  color:var(--muted);
+  margin-top:5px;
+  font-size:12px;
+}
+
 /* MARKET */
 
 .market-welcome{
@@ -535,10 +571,40 @@ style="width:calc(100% - 32px);margin:18px auto;padding:15px;border:1px solid #8
       dan tumbuh bersama komunitas kreator.
     </p>
 
- </section>
+
+  </section>
+
+  <div class="entertainment-menu">
+
+    <a class="entertainment-btn" href="youtube.html">
+      <span class="icon">▶️</span>
+      <span>
+        <strong>YouTube</strong>
+        <small>Menonton video YouTube</small>
+      </span>
+    </a>
+
+    <a class="entertainment-btn" href="youtube-mp3.html">
+      <span class="icon">🎵</span>
+      <span>
+        <strong>YouTube MP3</strong>
+        <small>Mendengarkan lagu dari YouTube</small>
+      </span>
+    </a>
+
+    <a class="entertainment-btn" href="film-drama.html">
+      <span class="icon">🎬</span>
+      <span>
+        <strong>Film & Drama</strong>
+        <small>Menjelajahi film dan drama</small>
+      </span>
+    </a>
+
+  </div>
 </section>
 
 <!-- MARKET -->
+
 <section id="marketPage" class="page">
 
   <section class="market-welcome">
