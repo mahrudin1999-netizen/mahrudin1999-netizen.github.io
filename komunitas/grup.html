@@ -192,7 +192,9 @@ from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import {
   getFirestore,
   doc,
-  getDoc
+  getDoc,
+  setDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -272,7 +274,79 @@ onAuthStateChanged(auth, async (user) => {
     nama.textContent = data.agencyName || "Agensi GIRINATAN";
     pemilik.textContent =
       "Pemilik: " + (data.ownerEmail || "-");
+// Fitur tambah anggota khusus pemilik grup
+if (isOwner) {
+  document.getElementById("kelolaAnggota").style.display = "block";
 
+  const tombol = document.getElementById("tambahAnggotaBtn");
+  const input = document.getElementById("usernameAnggota");
+  const pesan = document.getElementById("pesanAnggota");
+
+  tombol.onclick = async () => {
+    const username = input.value.trim();
+
+    if (!username) {
+      pesan.textContent = "Masukkan username terlebih dahulu.";
+      return;
+    }
+
+    tombol.disabled = true;
+    pesan.textContent = "Memeriksa username...";
+
+    try {
+      const usernameRef = doc(db, "usernames", username);
+      const usernameSnap = await getDoc(usernameRef);
+
+      if (!usernameSnap.exists()) {
+        pesan.textContent = "Username tidak ditemukan.";
+        return;
+      }
+
+      const akun = usernameSnap.data();
+
+      if (akun.username !== username || !akun.uid) {
+        pesan.textContent = "Data username tidak valid.";
+        return;
+      }
+
+      if (akun.uid === user.uid) {
+        pesan.textContent = "Kamu adalah pemilik grup.";
+        return;
+      }
+
+      const memberRef = doc(
+        db,
+        "agency_groups",
+        groupId,
+        "members",
+        akun.uid
+      );
+
+      const memberSnap = await getDoc(memberRef);
+
+      if (memberSnap.exists()) {
+        pesan.textContent = "Pengguna sudah menjadi anggota.";
+        return;
+      }
+
+      await setDoc(memberRef, {
+        uid: akun.uid,
+        username: username,
+        role: "member",
+        joinedAt: serverTimestamp()
+      });
+
+      pesan.textContent = "Anggota berhasil ditambahkan!";
+      input.value = "";
+
+    } catch (error) {
+      console.error(error);
+      pesan.textContent = "Gagal menambahkan anggota. Periksa izin Firestore.";
+    } finally {
+      tombol.disabled = false;
+    }
+  };
+}
   } catch (error) {
     console.error("Gagal memuat grup:", error);
     nama.textContent = "Gagal Memuat Grup";
