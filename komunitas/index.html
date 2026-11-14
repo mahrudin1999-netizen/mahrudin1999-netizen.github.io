@@ -398,11 +398,9 @@ if (!hasil.empty) {
 }
     } else {
   tombol.style.display = "block";
-  document.getElementById("statusPengajuan").style.display = "none";
-  document.getElementById("daftarGrup").textContent =
-    "Silakan login untuk melihat grup agensi.";
+  statusBox.style.display = "none";
 }
-      }
+}
     async function cekKeanggotaanAgensi(user) {
   const tombol = document.getElementById("tombolAjukan");
   const form = document.getElementById("formPengajuan");
