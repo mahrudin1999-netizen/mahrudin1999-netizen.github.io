@@ -329,11 +329,16 @@ if (isOwner || memberSnap.exists()) {
 }
       daftar.appendChild(kartu);
     });
+} catch (error) {
+  console.error("Gagal memuat grup:", error);
 
-  } catch (error) {
-    console.error("Gagal memuat grup:", error);
-    daftar.textContent = "Gagal memuat daftar grup. Silakan muat ulang halaman.";
-  }
+  daftar.innerHTML = `
+    <div style="background:#301515;padding:15px;border-radius:10px;color:white;">
+      <h3 style="color:#ff7777;">Gagal Memuat Grup</h3>
+      <p>${error.message || "Kesalahan tidak diketahui"}</p>
+    </div>
+  `;
+}
         }
 async function cekPengajuan(user) {
   const tombol = document.getElementById("tombolAjukan");
