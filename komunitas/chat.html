@@ -61,7 +61,8 @@ import {getAuth,onAuthStateChanged} from
 
 import {
 getFirestore,doc,getDoc,collection,addDoc,
-query,orderBy,limit,onSnapshot,serverTimestamp,Timestamp
+query,orderBy,limit,onSnapshot,serverTimestamp,Timestamp,
+getDocs,deleteDoc
 } from
 "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
@@ -139,7 +140,40 @@ chatBox.appendChild(kotak);
 
 chatBox.scrollTop=chatBox.scrollHeight;
 }
+async function bersihkanPesanKedaluwarsa(pesanRef){
+  let totalDihapus = 0;
 
+  for(let i = 0; i < 5; i++){
+    const qLama = query(
+      pesanRef,
+      orderBy("expiresAt","asc"),
+      limit(100)
+    );
+
+    const hasil = await getDocs(qLama);
+
+    if(hasil.empty) break;
+
+    const sekarang = Timestamp.now();
+
+    const pesanLama = hasil.docs.filter(item => {
+      const data = item.data();
+
+      return data.expiresAt &&
+        data.expiresAt.toMillis() <= sekarang.toMillis();
+    });
+
+    if(pesanLama.length === 0) break;
+
+    await Promise.all(
+      pesanLama.map(item => deleteDoc(item.ref))
+    );
+
+    totalDihapus += pesanLama.length;
+  }
+
+  return totalDihapus;
+}
 async function bukaChat(user){
 if(!groupId)throw Error("ID grup tidak ditemukan.");
 
@@ -183,7 +217,16 @@ status("Terhubung sebagai "+usernameAktif);
 const pesanRef=collection(
 db,"agency_groups",groupId,"messages"
 );
+try{
+  const jumlahDihapus =
+    await bersihkanPesanKedaluwarsa(pesanRef);
 
+  if(jumlahDihapus > 0){
+    status(jumlahDihapus + " pesan kedaluwarsa dibersihkan.");
+  }
+}catch(error){
+  console.error("Pembersihan pesan gagal:",error);
+}
 const q=query(
 pesanRef,orderBy("createdAt","asc"),limit(100)
 );
