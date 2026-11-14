@@ -949,29 +949,114 @@ function openEditProfile(){
   showPage("editProfilePage");
 }
 
-function saveProfilePreview(){
 
-  const username =
-    document.getElementById("editUsername").value.trim();
+async function simpanUsernameUnik(user, username, bio) {
+  username = username.trim();
 
-  const bio =
-    document.getElementById("editBio").value.trim();
+  if (!username || username.length > 30 || username.includes("/")) {
+    throw new Error("Username harus 1-30 karakter dan tidak boleh mengandung /.");
+  }
 
-  if(!username){
+  const userRef = doc(db, "users", user.uid);
+  const usernameRef = doc(db, "usernames", username);
+
+  await runTransaction(db, async (transaction) => {
+    const userSnap = await transaction.get(userRef);
+    const usernameSnap = await transaction.get(usernameRef);
+
+    const oldUsername = userSnap.exists()
+      ? userSnap.data().username || ""
+      : "";
+
+    let oldSnap = null;
+    let oldRef = null;
+
+    if (oldUsername && oldUsername !== username) {
+      oldRef = doc(db, "usernames", oldUsername);
+      oldSnap = await transaction.get(oldRef);
+    }
+
+    if (
+      usernameSnap.exists() &&
+      usernameSnap.data().uid !== user.uid
+    ) {
+      throw new Error("Username sudah digunakan. Silakan pilih nama lain.");
+    }
+
+    if (
+      oldRef &&
+      oldSnap.exists() &&
+      oldSnap.data().uid === user.uid
+    ) {
+      transaction.delete(oldRef);
+    }
+
+    transaction.set(usernameRef, {
+      uid: user.uid,
+      username: username,
+      createdAt: serverTimestamp()
+    });
+
+    transaction.set(userRef, {
+      uid: user.uid,
+      username: username,
+      displayName: username,
+      bio: bio,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  });
+}
+
+
+async function saveProfilePreview() {
+  const user = auth.currentUser;
+
+  if (!user) {
+    alert("Silakan login terlebih dahulu.");
+    return;
+  }
+
+  const username = document
+    .getElementById("editUsername")
+    .value.trim();
+
+  const bio = document
+    .getElementById("editBio")
+    .value.trim();
+
+  if (!username) {
     alert("Username tidak boleh kosong.");
     return;
   }
 
-  document.getElementById("profileUsername").textContent =
-    username;
+  if (username.length > 30 || username.includes("/")) {
+    alert("Username maksimal 30 karakter dan tidak boleh mengandung /.");
+    return;
+  }
 
-  document.getElementById("profileBio").textContent =
-    bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
+  if (bio.length > 160) {
+    alert("Bio maksimal 160 karakter.");
+    return;
+  }
 
-  alert("Perubahan tampilan profil berhasil diterapkan sementara.");
+  try {
+    await simpanUsernameUnik(user, username, bio);
 
-  showAccount();
+    document.getElementById("profileUsername").textContent = username;
+
+    document.getElementById("profileBio").textContent =
+      bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
+
+    alert("Username dan profil berhasil disimpan.");
+
+    showAccount();
+
+  } catch (error) {
+    console.error("Gagal menyimpan profil:", error);
+    alert(error.message || "Gagal menyimpan profil.");
+  }
 }
+
 
 function showMessage(message){
   alert(message);
@@ -1003,7 +1088,8 @@ import {
   getDoc,
   setDoc,
   updateDoc,
-  serverTimestamp
+  serverTimestamp,
+  runTransaction
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
