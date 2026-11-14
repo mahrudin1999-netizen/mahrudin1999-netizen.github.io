@@ -468,10 +468,10 @@ if (user) {
   .catch((error) => {
     console.error("Gagal memeriksa pengajuan atau keanggotaan:", error);
   });
-  
-} else {
+  } else {
   tombol.style.display = "block";
   document.getElementById("statusPengajuan").style.display = "none";
+  muatDaftarGrup();
 }
   console.log("Status login:", user ? user.uid : "Belum login");
 });
