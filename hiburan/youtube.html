@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube - GIRINATAN</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#080808;
+  color:white;
+  font-family:Arial,sans-serif;
+  padding-bottom:85px;
+}
+header{
+  padding:18px;
+  background:#141414;
+  border-bottom:1px solid #806326;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+header a{color:#D6AD48;text-decoration:none}
+.brand{font-size:20px;font-weight:bold}
+.brand span{color:#D6AD48}
+main{padding:18px;max-width:760px;margin:auto}
+h2{color:#D6AD48}
+p{color:#A8ADA8;font-size:14px;line-height:1.6}
+input{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid #343434;
+  background:#151515;
+  color:white;
+  margin:12px 0;
+}
+button{
+  width:100%;
+  padding:14px;
+  border:0;
+  border-radius:10px;
+  background:linear-gradient(135deg,#E5C36A,#B88A2E);
+  color:#080808;
+  font-weight:bold;
+  font-size:15px;
+}
+.player{
+  margin-top:20px;
+  width:100%;
+  aspect-ratio:16/9;
+  background:#151515;
+  border-radius:12px;
+  overflow:hidden;
+}
+iframe{width:100%;height:100%;border:0}
+nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  background:#111;
+  border-top:1px solid #806326;
+  padding:12px 4px;
+  text-align:center;
+}
+nav a{
+  color:#A8ADA8;
+  text-decoration:none;
+  font-size:11px;
+}
+nav a span{display:block;font-size:19px;margin-bottom:4px}
+nav a.active{color:#D6AD48}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="../index.html">← Kembali</a>
+  <div class="brand">GIRI<span>NATAN</span></div>
+</header>
+
+<main>
+  <h2>YouTube</h2>
+  <p>Tonton video YouTube langsung melalui GIRINATAN.</p>
+
+  <input
+    type="text"
+    id="youtubeUrl"
+    placeholder="Tempel link video YouTube di sini"
+  >
+
+  <button onclick="putarVideo()">PUTAR VIDEO</button>
+
+  <div class="player" id="player">
+    <p style="text-align:center;padding:25px">
+      Video YouTube akan ditampilkan di sini.
+    </p>
+  </div>
+</main>
+
+<nav>
+  <a href="../index.html"><span>⌂</span>Beranda</a>
+  <a href="../index.html#marketPage"><span>▣</span>Market</a>
+  <a href="../index.html#karyaPage"><span>✦</span>Berkarya</a>
+  <a href="../komunitas/index.html"><span>♧</span>Komunitas</a>
+  <a href="../index.html#accountPage"><span>♙</span>Akun</a>
+</nav>
+
+<script>
+function putarVideo(){
+  const url=document.getElementById("youtubeUrl").value.trim();
+  let id="";
+
+  try{
+    const link=new URL(url);
+
+    if(link.hostname==="youtu.be"){
+      id=link.pathname.slice(1).split("/")[0];
+    }else if(
+      link.hostname.includes("youtube.com") ||
+      link.hostname==="m.youtube.com"
+    ){
+      if(link.pathname==="/watch"){
+        id=link.searchParams.get("v")||"";
+      }else if(link.pathname.startsWith("/embed/")){
+        id=link.pathname.split("/")[2]||"";
+      }else if(link.pathname.startsWith("/shorts/")){
+        id=link.pathname.split("/")[2]||"";
+      }
+    }
+  }catch(e){}
+
+  if(!/^[a-zA-Z0-9_-]{11}$/.test(id)){
+    alert("Link YouTube tidak valid. Periksa kembali link video.");
+    return;
+  }
+
+  document.getElementById("player").innerHTML=
+    '<iframe src="https://www.youtube-nocookie.com/embed/'+id+
+    '" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
+}
+</script>
+
+</body>
+</html>
