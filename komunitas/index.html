@@ -238,6 +238,8 @@ import {
   collection,
   addDoc,
   getDocs,
+  getDoc,
+  doc,
   query,
   where,
   serverTimestamp
@@ -299,16 +301,32 @@ const SUPER_ADMIN_UID = "yUkqaJXZ1ugBizgg18eRyYpwxkf1";
       pemilik.style.fontSize = "13px";
       pemilik.textContent = "Pemilik: " + (data.ownerEmail || "-");
 
-      const tombolMasuk = document.createElement("button");
+    const tombolMasuk = document.createElement("button");
 tombolMasuk.textContent = "Masuk Grup";
 tombolMasuk.className = "btn-ajukan";
 tombolMasuk.style.marginTop = "10px";
 
-tombolMasuk.onclick = () => {
-  location.href = "grup.html?id=" + dokumen.id;
-};
+const isOwner = data.ownerUid === penggunaLogin.uid;
 
-kartu.append(nama, pemilik, tombolMasuk);
+const memberRef = doc(
+  db,
+  "agency_groups",
+  dokumen.id,
+  "members",
+  penggunaLogin.uid
+);
+
+const memberSnap = await getDoc(memberRef);
+
+if (isOwner || memberSnap.exists()) {
+  tombolMasuk.onclick = () => {
+    location.href = "grup.html?id=" + dokumen.id;
+  };
+
+  kartu.append(nama, pemilik, tombolMasuk);
+} else {
+  kartu.append(nama, pemilik);
+}
       daftar.appendChild(kartu);
     });
 
@@ -381,6 +399,48 @@ if (!hasil.empty) {
   document.getElementById("statusPengajuan").style.display = "none";
 }
       }
+    async function cekKeanggotaanAgensi(user) {
+  const tombol = document.getElementById("tombolAjukan");
+  const form = document.getElementById("formPengajuan");
+
+  const hasil = await getDocs(
+    query(
+      collection(db, "agency_groups"),
+      where("status", "==", "active")
+    )
+  );
+
+  let sudahPunyaAgensi = false;
+
+  for (const grup of hasil.docs) {
+    const data = grup.data();
+
+    if (data.ownerUid === user.uid) {
+      sudahPunyaAgensi = true;
+      break;
+    }
+
+    const memberRef = doc(
+      db,
+      "agency_groups",
+      grup.id,
+      "members",
+      user.uid
+    );
+
+    const memberSnap = await getDoc(memberRef);
+
+    if (memberSnap.exists()) {
+      sudahPunyaAgensi = true;
+      break;
+    }
+  }
+
+  if (sudahPunyaAgensi) {
+    tombol.style.display = "none";
+    form.style.display = "none";
+  }
+}
     onAuthStateChanged(auth, (user) => {
   penggunaLogin = user;
 
@@ -396,10 +456,11 @@ if (!hasil.empty) {
 if (user) {
   muatDaftarGrup();
 
-  cekPengajuan(user).catch((error) => {
-  
-      console.error("Gagal memeriksa pengajuan:", error);
-    });
+  cekPengajuan(user)
+  .then(() => cekKeanggotaanAgensi(user))
+  .catch((error) => {
+    console.error("Gagal memeriksa pengajuan atau keanggotaan:", error);
+  });
   } else {
     tombol.style.display = "block";
     statusBox.style.display = "none";
