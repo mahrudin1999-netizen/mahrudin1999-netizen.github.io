@@ -1166,14 +1166,17 @@ const savedUsername = existingProfile.exists()
   ? existingProfile.data().username || ""
   : "";
 
+
 await setDoc(profileRef, {
   uid: user.uid,
   displayName: savedUsername || result.profile.displayName,
   photoURL: result.profile.photoURL,
+  bio: existingProfile.exists()
+    ? existingProfile.data().bio || ""
+    : "",
   provider: "tiktok",
   updatedAt: serverTimestamp()
 }, { merge: true });
-
     alert("Login TikTok berhasil!");
 
   } catch (error) {
