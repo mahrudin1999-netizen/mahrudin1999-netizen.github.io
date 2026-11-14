@@ -12,48 +12,163 @@ body{
   margin:0;background:#080808;color:white;
   font-family:Arial,sans-serif;padding-bottom:80px;
 }
+
 header{
-  padding:16px;background:#141414;
-  border-bottom:1px solid #806326;
-  display:flex;align-items:center;justify-content:space-between;
+  padding:17px 16px;
+  background:#080808;
+  border-bottom:1px solid #292929;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:100;
 }
+
+.brand{
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:.5px;
+}
+
+.brand span{
+  color:#D6AD48;
+}
+
 .brand{font-size:20px;font-weight:bold}
 .brand span{color:#D6AD48}
 main{max-width:760px;margin:auto;padding:15px}
 h2{color:#D6AD48;margin-top:10px}
+
 .search{
-  display:flex;gap:8px;margin:15px 0;
+  display:flex;
+  gap:9px;
+  margin:17px 0;
 }
+
 input{
-  min-width:0;flex:1;padding:13px;
-  border-radius:10px;border:1px solid #343434;
-  background:#151515;color:white;
+  min-width:0;
+  flex:1;
+  padding:14px 16px;
+  border-radius:25px;
+  border:1px solid #343434;
+  background:#151515;
+  color:white;
+  font-size:14px;
+  outline:none;
 }
+
+input:focus{
+  border-color:#D6AD48;
+}
+
+.search button{
+  border-radius:25px;
+  padding:0 20px;
+  background:linear-gradient(135deg,#E5C36A,#B88A2E);
+  color:#080808;
+}
+
 button{
   border:0;border-radius:9px;padding:12px;
   background:#D6AD48;color:#080808;font-weight:bold;
 }
-.tabs{display:flex;gap:8px;overflow-x:auto;margin:15px 0}
-.tabs button{white-space:nowrap;background:#202020;color:white}
-.tabs button.active{background:#D6AD48;color:#080808}
+
+.tabs{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  margin:18px 0 22px;
+  padding-bottom:5px;
+  scrollbar-width:none;
+}
+
+.tabs::-webkit-scrollbar{
+  display:none;
+}
+
+.tabs button{
+  white-space:nowrap;
+  padding:10px 17px;
+  border-radius:9px;
+  background:#202020;
+  color:#ddd;
+  border:1px solid #343434;
+  font-size:13px;
+  transition:.2s;
+}
+
+.tabs button.active{
+  background:#D6AD48;
+  color:#080808;
+  border-color:#D6AD48;
+  font-weight:bold;
+}
+
 #message{color:#A8ADA8;font-size:13px}
+
 .video{
-  margin-bottom:22px;cursor:pointer;
+  margin-bottom:25px;
+  cursor:pointer;
+  overflow:hidden;
+  transition:transform .2s ease;
 }
+
+.video:active{
+  transform:scale(.98);
+}
+
 .thumb{
-  width:100%;aspect-ratio:16/9;object-fit:cover;
-  border-radius:12px;background:#202020;
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  border-radius:15px;
+  background:#202020;
+  border:1px solid #292929;
+  display:block;
 }
-.video h3{font-size:15px;margin:9px 0 5px}
-.video small{color:#A8ADA8}
+
+.video h3{
+  font-size:15px;
+  line-height:1.5;
+  margin:11px 0 5px;
+  color:#fff;
+  font-weight:600;
+}
+
+.video small{
+  color:#A8ADA8;
+  font-size:12px;
+}
+
+
 #playerBox{
-  display:none;margin:15px 0 22px;
+  display:none;
+  margin:18px 0 25px;
+  padding:10px;
+  background:#151515;
+  border:1px solid #343434;
+  border-radius:16px;
+  box-shadow:0 8px 25px rgba(0,0,0,.35);
 }
+
 #player{
-  width:100%;aspect-ratio:16/9;border:0;
-  border-radius:12px;background:#151515;
+  width:100%;
+  aspect-ratio:16/9;
+  border:0;
+  border-radius:11px;
+  background:#000;
+  display:block;
 }
-#playingTitle{color:#D6AD48;font-size:15px}
+
+#playingTitle{
+  color:#D6AD48;
+  font-size:15px;
+  line-height:1.5;
+  margin:12px 3px 5px;
+  font-weight:bold;
+}
+
 nav{
   position:fixed;bottom:0;left:0;width:100%;
   display:grid;grid-template-columns:repeat(5,1fr);
@@ -79,7 +194,9 @@ nav a span{display:block;font-size:19px;margin-bottom:4px}
     <input id="searchInput" placeholder="Cari video YouTube...">
     <button onclick="cariVideo()">Cari</button>
   </div>
-
+<button id="homeButton" onclick="kembaliBeranda()">
+  🏠 Beranda Video
+</button>
   <div class="tabs">
     <button class="active" onclick="beranda(this)">Untuk Anda</button>
     <button onclick="kategori('musik',this)">Musik</button>
@@ -197,15 +314,26 @@ async function ambilVideo(action, kata = "") {
     tampilkanVideo(data.items);
 
   } catch (error) {
-    tampilkanPesan("Gagal memuat video: " + error.message);
-  }
+  tampilkanPesan("Gagal memuat video: " + error.message);
+
+  list.innerHTML = "";
+
+  const retry = document.createElement("button");
+  retry.textContent = "↻ Coba Lagi";
+  retry.onclick = () => ambilVideo(action, kata);
+
+  list.appendChild(retry);
+}
 }
 
 function beranda(button) {
   pilihTab(button);
   ambilVideo("popular");
 }
-
+function kembaliBeranda(){
+  document.getElementById("searchInput").value = "";
+  beranda(document.querySelector(".tabs button"));
+  }
 function cariVideo() {
   const kata = document.getElementById("searchInput").value.trim();
 
