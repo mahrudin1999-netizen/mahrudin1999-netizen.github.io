@@ -108,133 +108,135 @@ nav a span{display:block;font-size:19px;margin-bottom:4px}
 </nav>
 
 <script>
-const API_KEY = 
+const WORKER_URL = "https://girinatanyoutube.mahrudin1999.workers.dev";
 
 const list = document.getElementById("videoList");
 const message = document.getElementById("message");
 
-function tampilkanPesan(teks){
-  message.textContent=teks;
+function tampilkanPesan(teks) {
+  message.textContent = teks;
 }
 
-function tampilkanVideo(videos){
-  list.innerHTML="";
+function tampilkanVideo(videos) {
+  list.innerHTML = "";
 
-  if(!videos || videos.length===0){
+  if (!videos || videos.length === 0) {
     tampilkanPesan("Video tidak ditemukan.");
     return;
   }
 
   tampilkanPesan("");
 
-  videos.forEach(video=>{
-    const id=video.id.videoId || video.id;
-    const data=video.snippet;
+  videos.forEach(video => {
+    const id = typeof video.id === "object"
+      ? video.id.videoId
+      : video.id;
 
-    const card=document.createElement("div");
-    card.className="video";
+    const data = video.snippet;
+    if (!id || !data) return;
 
-    const img=document.createElement("img");
-    img.className="thumb";
-    img.src=data.thumbnails.medium.url;
-    img.alt=data.title;
+    const card = document.createElement("div");
+    card.className = "video";
 
-    const title=document.createElement("h3");
-    title.textContent=data.title;
+    const img = document.createElement("img");
+    img.className = "thumb";
+    img.src = data.thumbnails.medium.url;
+    img.alt = data.title;
 
-    const channel=document.createElement("small");
-    channel.textContent=data.channelTitle;
+    const title = document.createElement("h3");
+    title.textContent = data.title;
 
-    card.append(img,title,channel);
+    const channel = document.createElement("small");
+    channel.textContent = data.channelTitle;
 
-    card.onclick=()=>putarVideo(id,data.title);
+    card.append(img, title, channel);
+    card.onclick = () => putarVideo(id, data.title);
 
     list.appendChild(card);
   });
+
+  if (!list.children.length) {
+    tampilkanPesan("Video tidak ditemukan.");
+  }
 }
 
-function putarVideo(id,title){
-  document.getElementById("playerBox").style.display="block";
-  document.getElementById("player").src=
-    "https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id);
-  document.getElementById("playingTitle").textContent=title;
+function putarVideo(id, title) {
+  document.getElementById("playerBox").style.display = "block";
+  document.getElementById("player").src =
+    "https://www.youtube-nocookie.com/embed/" +
+    encodeURIComponent(id);
+
+  document.getElementById("playingTitle").textContent = title;
 
   document.getElementById("playerBox").scrollIntoView({
-    behavior:"smooth"
+    behavior: "smooth"
   });
 }
 
-async function ambilVideo(url){
-  try{
+async function ambilVideo(action, kata = "") {
+  try {
     tampilkanPesan("Memuat video...");
+    list.innerHTML = "";
 
-    const response=await fetch(url);
-    const data=await response.json();
+    const url = new URL(WORKER_URL);
+    url.searchParams.set("action", action);
 
-    if(!response.ok || data.error){
+    if (kata) {
+      url.searchParams.set("q", kata);
+    }
+
+    const response = await fetch(url.toString());
+    const data = await response.json();
+
+    if (!response.ok || data.error) {
       throw new Error(
         data.error?.message || "Gagal mengambil video."
       );
     }
 
     tampilkanVideo(data.items);
-  }catch(error){
-    tampilkanPesan("Gagal memuat: "+error.message);
+
+  } catch (error) {
+    tampilkanPesan("Gagal memuat video: " + error.message);
   }
 }
 
-function beranda(button){
+function beranda(button) {
   pilihTab(button);
-  const url=
-    "https://www.googleapis.com/youtube/v3/videos"+
-    "?part=snippet&chart=mostPopular&regionCode=ID"+
-    "&maxResults=15&key="+API_KEY;
-
-  ambilVideo(url);
+  ambilVideo("popular");
 }
 
-function cariVideo(){
-  const kata=document.getElementById("searchInput").value.trim();
+function cariVideo() {
+  const kata = document.getElementById("searchInput").value.trim();
 
-  if(!kata){
+  if (!kata) {
     tampilkanPesan("Masukkan kata pencarian.");
     return;
   }
 
-  const url=
-    "https://www.googleapis.com/youtube/v3/search"+
-    "?part=snippet&type=video&maxResults=15"+
-    "&q="+encodeURIComponent(kata)+
-    "&regionCode=ID&key="+API_KEY;
-
-  ambilVideo(url);
+  ambilVideo("search", kata);
 }
 
-function kategori(kata,button){
+function kategori(kata, button) {
   pilihTab(button);
-  document.getElementById("searchInput").value=kata;
+  document.getElementById("searchInput").value = kata;
   cariVideo();
 }
 
-function pilihTab(button){
-  document.querySelectorAll(".tabs button").forEach(b=>{
+function pilihTab(button) {
+  document.querySelectorAll(".tabs button").forEach(b => {
     b.classList.remove("active");
   });
+
   button.classList.add("active");
 }
 
 document.getElementById("searchInput")
-.addEventListener("keydown",event=>{
-  if(event.key==="Enter")cariVideo();
-});
+  .addEventListener("keydown", event => {
+    if (event.key === "Enter") cariVideo();
+  });
 
-if(API_KEY===
-  ){
-  tampilkanPesan("API Key belum dipasang.");
-}else{
-  beranda(document.querySelector(".tabs button"));
-}
+beranda(document.querySelector(".tabs button"));
 </script>
-
 </body>
 </html>
