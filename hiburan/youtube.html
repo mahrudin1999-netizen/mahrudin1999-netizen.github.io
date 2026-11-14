@@ -3,106 +3,100 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>YouTube - GIRINATAN</title>
 
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;
-  background:#080808;
-  color:white;
-  font-family:Arial,sans-serif;
-  padding-bottom:85px;
+  margin:0;background:#080808;color:white;
+  font-family:Arial,sans-serif;padding-bottom:80px;
 }
 header{
-  padding:18px;
-  background:#141414;
+  padding:16px;background:#141414;
   border-bottom:1px solid #806326;
-  display:flex;
-  align-items:center;
-  gap:12px;
+  display:flex;align-items:center;justify-content:space-between;
 }
-header a{color:#D6AD48;text-decoration:none}
 .brand{font-size:20px;font-weight:bold}
 .brand span{color:#D6AD48}
-main{padding:18px;max-width:760px;margin:auto}
-h2{color:#D6AD48}
-p{color:#A8ADA8;font-size:14px;line-height:1.6}
+main{max-width:760px;margin:auto;padding:15px}
+h2{color:#D6AD48;margin-top:10px}
+.search{
+  display:flex;gap:8px;margin:15px 0;
+}
 input{
-  width:100%;
-  padding:14px;
-  border-radius:10px;
-  border:1px solid #343434;
-  background:#151515;
-  color:white;
-  margin:12px 0;
+  min-width:0;flex:1;padding:13px;
+  border-radius:10px;border:1px solid #343434;
+  background:#151515;color:white;
 }
 button{
-  width:100%;
-  padding:14px;
-  border:0;
-  border-radius:10px;
-  background:linear-gradient(135deg,#E5C36A,#B88A2E);
-  color:#080808;
-  font-weight:bold;
-  font-size:15px;
+  border:0;border-radius:9px;padding:12px;
+  background:#D6AD48;color:#080808;font-weight:bold;
 }
-.player{
-  margin-top:20px;
-  width:100%;
-  aspect-ratio:16/9;
-  background:#151515;
-  border-radius:12px;
-  overflow:hidden;
+.tabs{display:flex;gap:8px;overflow-x:auto;margin:15px 0}
+.tabs button{white-space:nowrap;background:#202020;color:white}
+.tabs button.active{background:#D6AD48;color:#080808}
+#message{color:#A8ADA8;font-size:13px}
+.video{
+  margin-bottom:22px;cursor:pointer;
 }
-iframe{width:100%;height:100%;border:0}
+.thumb{
+  width:100%;aspect-ratio:16/9;object-fit:cover;
+  border-radius:12px;background:#202020;
+}
+.video h3{font-size:15px;margin:9px 0 5px}
+.video small{color:#A8ADA8}
+#playerBox{
+  display:none;margin:15px 0 22px;
+}
+#player{
+  width:100%;aspect-ratio:16/9;border:0;
+  border-radius:12px;background:#151515;
+}
+#playingTitle{color:#D6AD48;font-size:15px}
 nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  background:#111;
-  border-top:1px solid #806326;
-  padding:12px 4px;
-  text-align:center;
+  position:fixed;bottom:0;left:0;width:100%;
+  display:grid;grid-template-columns:repeat(5,1fr);
+  background:#111;border-top:1px solid #806326;
+  padding:11px 4px;text-align:center;
 }
 nav a{
-  color:#A8ADA8;
-  text-decoration:none;
-  font-size:11px;
+  color:#A8ADA8;text-decoration:none;font-size:11px;
 }
 nav a span{display:block;font-size:19px;margin-bottom:4px}
-nav a.active{color:#D6AD48}
 </style>
 </head>
 
 <body>
 
 <header>
-  <a href="../index.html">← Kembali</a>
   <div class="brand">GIRI<span>NATAN</span></div>
+  <strong style="color:#D6AD48">▶ YouTube</strong>
 </header>
 
 <main>
-  <h2>YouTube</h2>
-  <p>Tonton video YouTube langsung melalui GIRINATAN.</p>
-
-  <input
-    type="text"
-    id="youtubeUrl"
-    placeholder="Tempel link video YouTube di sini"
-  >
-
-  <button onclick="putarVideo()">PUTAR VIDEO</button>
-
-  <div class="player" id="player">
-    <p style="text-align:center;padding:25px">
-      Video YouTube akan ditampilkan di sini.
-    </p>
+  <div class="search">
+    <input id="searchInput" placeholder="Cari video YouTube...">
+    <button onclick="cariVideo()">Cari</button>
   </div>
+
+  <div class="tabs">
+    <button class="active" onclick="beranda(this)">Untuk Anda</button>
+    <button onclick="kategori('musik',this)">Musik</button>
+    <button onclick="kategori('hiburan',this)">Hiburan</button>
+    <button onclick="kategori('olahraga',this)">Olahraga</button>
+    <button onclick="kategori('berita',this)">Berita</button>
+  </div>
+
+  <div id="playerBox">
+    <iframe id="player" allowfullscreen
+      allow="accelerometer; autoplay; encrypted-media; picture-in-picture">
+    </iframe>
+    <h3 id="playingTitle"></h3>
+  </div>
+
+  <p id="message">Memuat video...</p>
+  <div id="videoList"></div>
 </main>
 
 <nav>
@@ -114,37 +108,130 @@ nav a.active{color:#D6AD48}
 </nav>
 
 <script>
-function putarVideo(){
-  const url=document.getElementById("youtubeUrl").value.trim();
-  let id="";
+const API_KEY = "MASUKKAN_API_KEY_KAMU_DI_SINI";
 
-  try{
-    const link=new URL(url);
+const list = document.getElementById("videoList");
+const message = document.getElementById("message");
 
-    if(link.hostname==="youtu.be"){
-      id=link.pathname.slice(1).split("/")[0];
-    }else if(
-      link.hostname.includes("youtube.com") ||
-      link.hostname==="m.youtube.com"
-    ){
-      if(link.pathname==="/watch"){
-        id=link.searchParams.get("v")||"";
-      }else if(link.pathname.startsWith("/embed/")){
-        id=link.pathname.split("/")[2]||"";
-      }else if(link.pathname.startsWith("/shorts/")){
-        id=link.pathname.split("/")[2]||"";
-      }
-    }
-  }catch(e){}
+function tampilkanPesan(teks){
+  message.textContent=teks;
+}
 
-  if(!/^[a-zA-Z0-9_-]{11}$/.test(id)){
-    alert("Link YouTube tidak valid. Periksa kembali link video.");
+function tampilkanVideo(videos){
+  list.innerHTML="";
+
+  if(!videos || videos.length===0){
+    tampilkanPesan("Video tidak ditemukan.");
     return;
   }
 
-  document.getElementById("player").innerHTML=
-    '<iframe src="https://www.youtube-nocookie.com/embed/'+id+
-    '" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
+  tampilkanPesan("");
+
+  videos.forEach(video=>{
+    const id=video.id.videoId || video.id;
+    const data=video.snippet;
+
+    const card=document.createElement("div");
+    card.className="video";
+
+    const img=document.createElement("img");
+    img.className="thumb";
+    img.src=data.thumbnails.medium.url;
+    img.alt=data.title;
+
+    const title=document.createElement("h3");
+    title.textContent=data.title;
+
+    const channel=document.createElement("small");
+    channel.textContent=data.channelTitle;
+
+    card.append(img,title,channel);
+
+    card.onclick=()=>putarVideo(id,data.title);
+
+    list.appendChild(card);
+  });
+}
+
+function putarVideo(id,title){
+  document.getElementById("playerBox").style.display="block";
+  document.getElementById("player").src=
+    "https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id);
+  document.getElementById("playingTitle").textContent=title;
+
+  document.getElementById("playerBox").scrollIntoView({
+    behavior:"smooth"
+  });
+}
+
+async function ambilVideo(url){
+  try{
+    tampilkanPesan("Memuat video...");
+
+    const response=await fetch(url);
+    const data=await response.json();
+
+    if(!response.ok || data.error){
+      throw new Error(
+        data.error?.message || "Gagal mengambil video."
+      );
+    }
+
+    tampilkanVideo(data.items);
+  }catch(error){
+    tampilkanPesan("Gagal memuat: "+error.message);
+  }
+}
+
+function beranda(button){
+  pilihTab(button);
+  const url=
+    "https://www.googleapis.com/youtube/v3/videos"+
+    "?part=snippet&chart=mostPopular&regionCode=ID"+
+    "&maxResults=15&key="+API_KEY;
+
+  ambilVideo(url);
+}
+
+function cariVideo(){
+  const kata=document.getElementById("searchInput").value.trim();
+
+  if(!kata){
+    tampilkanPesan("Masukkan kata pencarian.");
+    return;
+  }
+
+  const url=
+    "https://www.googleapis.com/youtube/v3/search"+
+    "?part=snippet&type=video&maxResults=15"+
+    "&q="+encodeURIComponent(kata)+
+    "&regionCode=ID&key="+API_KEY;
+
+  ambilVideo(url);
+}
+
+function kategori(kata,button){
+  pilihTab(button);
+  document.getElementById("searchInput").value=kata;
+  cariVideo();
+}
+
+function pilihTab(button){
+  document.querySelectorAll(".tabs button").forEach(b=>{
+    b.classList.remove("active");
+  });
+  button.classList.add("active");
+}
+
+document.getElementById("searchInput")
+.addEventListener("keydown",event=>{
+  if(event.key==="Enter")cariVideo();
+});
+
+if(API_KEY==="MASUKKAN_API_KEY_KAMU_DI_SINI"){
+  tampilkanPesan("API Key belum dipasang.");
+}else{
+  beranda(document.querySelector(".tabs button"));
 }
 </script>
 
