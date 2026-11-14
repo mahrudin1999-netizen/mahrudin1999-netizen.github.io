@@ -400,8 +400,9 @@ if (!hasil.empty) {
 }
     } else {
   tombol.style.display = "block";
-
   document.getElementById("statusPengajuan").style.display = "none";
+  document.getElementById("daftarGrup").textContent =
+    "Silakan login untuk melihat grup agensi.";
 }
       }
     async function cekKeanggotaanAgensi(user) {
@@ -459,6 +460,8 @@ if (!hasil.empty) {
     tombolAdmin.style.display = "none";
   }
 if (user) {
+  console.log("Pengguna login:", user.uid);
+
   muatDaftarGrup();
 
   cekPengajuan(user)
