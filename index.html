@@ -998,12 +998,13 @@ async function simpanUsernameUnik(user, username, bio) {
 });
 
     transaction.set(userRef, {
-      uid: user.uid,
-      username: username,
-      displayName: username,
-      bio: bio,
-      updatedAt: serverTimestamp()
-    }, { merge: true });
+  uid: user.uid,
+  username: username,
+  displayName: username,
+  bio: bio,
+  provider: user.uid.startsWith("tt_") ? "tiktok" : "google",
+  updatedAt: serverTimestamp()
+}, { merge: true });
   });
 }
 
