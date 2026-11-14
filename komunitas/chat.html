@@ -8,14 +8,43 @@
 <title>Chat Grup - GIRINATAN</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080808;color:white;font-family:Arial}
+body{
+  margin:0;
+  background:#080808;
+  color:white;
+  font-family:Arial;
+  height:100dvh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
 header{background:#151515;padding:15px;border-bottom:1px solid #806326;position:sticky;top:0}
 header h2{color:#D6AD48;margin:0;font-size:18px}
 header p{color:#A8ADA8;font-size:12px;margin:5px 0 0}
-main{max-width:800px;margin:auto;padding:12px}
+main{
+  max-width:800px;
+  width:100%;
+  margin:auto;
+  padding:12px;
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
 .info{background:#151515;border:1px solid #343434;border-radius:10px;padding:10px;color:#aaa;font-size:12px;margin-bottom:10px}
 #status{font-size:13px;color:#D6AD48;margin:10px 2px}
-#chatBox{height:calc(100dvh - 230px);min-height:300px;overflow-y:auto;background:#101010;border:1px solid #343434;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+#chatBox{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  background:#101010;
+  border:1px solid #343434;
+  border-radius:12px;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
 .message{max-width:85%;align-self:flex-start;background:#202020;border:1px solid #343434;border-radius:12px;padding:10px;overflow-wrap:anywhere}
 .message.mine{align-self:flex-end;background:#243326;border-color:#386344}
 .sender{font-size:11px;color:#D6AD48;font-weight:bold;margin-bottom:5px}
@@ -26,6 +55,19 @@ textarea{flex:1;resize:none;min-height:46px;max-height:110px;background:#151515;
 button{background:linear-gradient(135deg,#E5C36A,#B88A2E);color:#080808;border:0;border-radius:10px;padding:0 17px;font-weight:bold}
 button:disabled{opacity:.5}
 .small{font-size:11px;color:#888;margin-top:7px}
+  .composer{
+  flex-shrink:0;
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.small{
+  flex-shrink:0;
+  font-size:11px;
+  color:#888;
+  margin-top:7px;
+}
 </style>
 </head>
 <body>
