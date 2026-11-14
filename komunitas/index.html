@@ -207,7 +207,7 @@ body {
     <p style="color:#A8ADA8; font-size:13px;">
       Sedang mengambil daftar grup agensi.
     </p>
-  </div>
+  
 </div>
 
 </div>
@@ -285,7 +285,7 @@ const SUPER_ADMIN_UID = "yUkqaJXZ1ugBizgg18eRyYpwxkf1";
       return;
     }
 
-    hasil.forEach((dokumen) => {
+    for (const dokumen of hasil.docs) {
       const data = dokumen.data();
 
       const kartu = document.createElement("div");
@@ -328,7 +328,7 @@ if (isOwner || memberSnap.exists()) {
   kartu.append(nama, pemilik);
 }
       daftar.appendChild(kartu);
-    });
+}
 } catch (error) {
   console.error("Gagal memuat grup:", error);
 
@@ -469,11 +469,11 @@ if (user) {
   .catch((error) => {
     console.error("Gagal memeriksa pengajuan atau keanggotaan:", error);
   });
-  } else {
-    tombol.style.display = "block";
-    statusBox.style.display = "none";
-  }
-
+  
+} else {
+  tombol.style.display = "block";
+  document.getElementById("statusPengajuan").style.display = "none";
+}
   console.log("Status login:", user ? user.uid : "Belum login");
 });
     window.kirimPengajuan = async function() {
