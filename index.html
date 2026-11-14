@@ -1166,13 +1166,6 @@ const savedUsername = existingProfile.exists()
   ? existingProfile.data().username || ""
   : "";
 
-const profileRef = doc(db, "users", user.uid);
-const existingProfile = await getDoc(profileRef);
-
-const savedUsername = existingProfile.exists()
-  ? existingProfile.data().username || ""
-  : "";
-
 await setDoc(profileRef, {
   uid: user.uid,
   displayName: savedUsername || result.profile.displayName,
