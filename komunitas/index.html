@@ -299,33 +299,36 @@ const SUPER_ADMIN_UID = "yUkqaJXZ1ugBizgg18eRyYpwxkf1";
       pemilik.style.fontSize = "13px";
       pemilik.textContent = "Pemilik: " + (data.ownerEmail || "-");
 
-    const tombolMasuk = document.createElement("button");
-tombolMasuk.textContent = "Masuk Grup";
-tombolMasuk.className = "btn-ajukan";
-tombolMasuk.style.marginTop = "10px";
+    kartu.append(nama, pemilik);
 
-const isOwner = data.ownerUid === penggunaLogin.uid;
+if (penggunaLogin) {
+  const tombolMasuk = document.createElement("button");
+  tombolMasuk.textContent = "Masuk Grup";
+  tombolMasuk.className = "btn-ajukan";
+  tombolMasuk.style.marginTop = "10px";
 
-const memberRef = doc(
-  db,
-  "agency_groups",
-  dokumen.id,
-  "members",
-  penggunaLogin.uid
-);
+  const isOwner = data.ownerUid === penggunaLogin.uid;
 
-const memberSnap = await getDoc(memberRef);
+  const memberRef = doc(
+    db,
+    "agency_groups",
+    dokumen.id,
+    "members",
+    penggunaLogin.uid
+  );
 
-if (isOwner || memberSnap.exists()) {
-  tombolMasuk.onclick = () => {
-    location.href = "grup.html?id=" + dokumen.id;
-  };
+  const memberSnap = await getDoc(memberRef);
 
-  kartu.append(nama, pemilik, tombolMasuk);
-} else {
-  kartu.append(nama, pemilik);
+  if (isOwner || memberSnap.exists()) {
+    tombolMasuk.onclick = () => {
+      location.href = "grup.html?id=" + dokumen.id;
+    };
+
+    kartu.appendChild(tombolMasuk);
+  }
 }
-      daftar.appendChild(kartu);
+
+daftar.appendChild(kartu);
 }
 } catch (error) {
   console.error("Gagal memuat grup:", error);
