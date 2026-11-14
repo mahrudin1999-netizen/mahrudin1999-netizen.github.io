@@ -160,10 +160,10 @@ header p{
       <strong>Pendaftaran PK</strong>
     </div>
 
-    <div class="menu-item">
-      <span>👥</span>
-      <strong>Anggota Grup</strong>
-    </div>
+    <div class="menu-item" id="menuAnggota" style="cursor:pointer;">
+  <span>👥</span>
+  <strong>Anggota Grup</strong>
+</div>
 
     <div class="menu-item">
       <span>⚠️</span>
@@ -265,6 +265,10 @@ const groupId = parameter.get("id");
 document.getElementById("menuChat").onclick = () => {
   if (!groupId) return;
   location.href = "chat.html?id=" + encodeURIComponent(groupId);
+};
+  document.getElementById("menuAnggota").onclick = () => {
+  if (!groupId) return;
+  location.href = "anggota.html?id=" + encodeURIComponent(groupId);
 };
 onAuthStateChanged(auth, async (user) => {
   const nama = document.getElementById("namaGrup");
