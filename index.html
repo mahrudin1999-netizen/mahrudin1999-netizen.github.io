@@ -1108,7 +1108,12 @@ const auth = getAuth(app);
 console.log("Firebase current user:", auth.currentUser);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
-
+// Hubungkan Firebase dengan fungsi profil
+window.auth = auth;
+window.db = db;
+window.doc = doc;
+window.runTransaction = runTransaction;
+window.serverTimestamp = serverTimestamp;
 try {
   await setPersistence(auth, browserLocalPersistence);
   const TIKTOK_WORKER =
