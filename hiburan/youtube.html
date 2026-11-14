@@ -262,11 +262,15 @@ function tampilkanVideo(videos) {
 
     const title = document.createElement("h3");
     title.textContent = data.title;
+const channel = document.createElement("small");
+channel.textContent = data.channelTitle;
 
-    const channel = document.createElement("small");
-    channel.textContent = data.channelTitle;
+const tanggal = document.createElement("small");
+tanggal.textContent = new Date(data.publishedAt)
+  .toLocaleDateString("id-ID");
 
-    card.append(img, title, channel);
+card.append(img, title, channel, tanggal);
+  
     card.onclick = () => putarVideo(id, data.title);
 
     list.appendChild(card);
