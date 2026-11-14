@@ -196,12 +196,17 @@ from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
 import {
   getFirestore,
-  doc,
-  getDoc,
+doc,
+getDoc,
 getDocs,
 collection,
 setDoc,
-serverTimestamp
+serverTimestamp,
+query,
+orderBy,
+limit,
+Timestamp,
+deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -217,7 +222,47 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+async function bersihkanPesanKedaluwarsa(groupId){
+  const pesanRef = collection(
+    db,
+    "agency_groups",
+    groupId,
+    "messages"
+  );
 
+  let totalDihapus = 0;
+
+  for(let i = 0; i < 5; i++){
+    const qLama = query(
+      pesanRef,
+      orderBy("expiresAt","asc"),
+      limit(100)
+    );
+
+    const hasil = await getDocs(qLama);
+
+    if(hasil.empty) break;
+
+    const sekarang = Timestamp.now();
+
+    const pesanLama = hasil.docs.filter(item => {
+      const data = item.data();
+
+      return data.expiresAt &&
+        data.expiresAt.toMillis() <= sekarang.toMillis();
+    });
+
+    if(pesanLama.length === 0) break;
+
+    await Promise.all(
+      pesanLama.map(item => deleteDoc(item.ref))
+    );
+
+    totalDihapus += pesanLama.length;
+  }
+
+  return totalDihapus;
+}
 
 const parameter = new URLSearchParams(window.location.search);
 const groupId = parameter.get("id");
@@ -284,6 +329,22 @@ onAuthStateChanged(auth, async (user) => {
     nama.textContent = data.agencyName || "Agensi GIRINATAN";
     pemilik.textContent =
       "Pemilik: " + (data.ownerEmail || "-");
+    // Bersihkan pesan chat yang sudah kedaluwarsa
+try {
+  const jumlahDihapus =
+    await bersihkanPesanKedaluwarsa(groupId);
+
+  if (jumlahDihapus > 0) {
+    console.log(
+      jumlahDihapus + " pesan kedaluwarsa dibersihkan."
+    );
+  }
+} catch (error) {
+  console.error(
+    "Pembersihan pesan gagal:",
+    error
+  );
+}
     // Memuat daftar anggota grup ini
 const daftarRef = collection(
   db,
