@@ -1161,6 +1161,13 @@ const savedUsername = existingProfile.exists()
   ? existingProfile.data().username || ""
   : "";
 
+const profileRef = doc(db, "users", user.uid);
+const existingProfile = await getDoc(profileRef);
+
+const savedUsername = existingProfile.exists()
+  ? existingProfile.data().username || ""
+  : "";
+
 await setDoc(profileRef, {
   uid: user.uid,
   displayName: savedUsername || result.profile.displayName,
@@ -1322,49 +1329,9 @@ async function setAvatar(element, photoFileName, user, photoURL = "") {
     element.textContent = "👤";
     console.error("Gagal memuat foto profil:", error);
   }
+  
 }
-window.saveProfilePreview = async function() {
-  const user = auth.currentUser;
-
-  if (!user) {
-    alert("Silakan login Google terlebih dahulu.");
-    return;
-  }
-
-  const username = document.getElementById("editUsername").value.trim();
-  const bio = document.getElementById("editBio").value.trim();
-
-  if (!username) {
-    alert("Nama tidak boleh kosong.");
-    return;
-  }
-
-  if (username.length > 30) {
-    alert("Nama maksimal 30 karakter.");
-    return;
-  }
-
-  try {
-    await updateDoc(doc(db, "users", user.uid), {
-      displayName: username,
-      bio: bio,
-      updatedAt: serverTimestamp()
-    });
-
-    document.getElementById("profileUsername").textContent = username;
-
-    document.getElementById("profileBio").textContent =
-      bio || "Belum ada bio. Perkenalkan dirimu di GIRINATAN.";
-
-    alert("Nama dan bio profil berhasil disimpan!");
-
-    showAccount();
-
-  } catch (error) {
-    alert("Gagal menyimpan profil: " + error.message);
-  }
-};
-
+window.saveProfilePreview = saveProfilePreview;
 
 const photoInput = document.getElementById("profilePhotoInput");
 
