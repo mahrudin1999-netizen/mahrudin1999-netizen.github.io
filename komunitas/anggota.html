@@ -1,0 +1,541 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+
+<title>Anggota Grup - GIRINATAN</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#080808;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+
+header{
+  background:#151515;
+  padding:16px;
+  border-bottom:1px solid #806326;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+header h2{
+  margin:0;
+  color:#D6AD48;
+  font-size:18px;
+}
+
+header p{
+  margin:6px 0 0;
+  color:#A8ADA8;
+  font-size:12px;
+}
+
+.container{
+  max-width:760px;
+  margin:auto;
+  padding:16px;
+  padding-bottom:30px;
+}
+
+.back{
+  display:inline-block;
+  margin-bottom:14px;
+  color:#D6AD48;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.summary{
+  background:#151515;
+  border:1px solid #806326;
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:15px;
+}
+
+.summary h3{
+  margin:0 0 7px;
+  color:#D6AD48;
+  font-size:16px;
+}
+
+.summary p{
+  margin:0;
+  color:#A8ADA8;
+  font-size:13px;
+}
+
+.member-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.member{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:#151515;
+  border:1px solid #343434;
+  border-radius:12px;
+  padding:12px;
+}
+
+.avatar{
+  width:48px;
+  height:48px;
+  flex:0 0 48px;
+  border-radius:50%;
+  background:#242424;
+  border:1px solid #806326;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  font-size:21px;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.details{
+  flex:1;
+  min-width:0;
+}
+
+.name{
+  font-size:14px;
+  font-weight:bold;
+  overflow-wrap:anywhere;
+}
+
+.username{
+  font-size:12px;
+  color:#A8ADA8;
+  margin-top:5px;
+  overflow-wrap:anywhere;
+}
+
+.role{
+  font-size:11px;
+  color:#D6AD48;
+  background:#302716;
+  border:1px solid #665126;
+  border-radius:20px;
+  padding:6px 9px;
+  white-space:nowrap;
+}
+
+.message{
+  padding:20px;
+  text-align:center;
+  background:#151515;
+  border:1px solid #343434;
+  border-radius:12px;
+  color:#A8ADA8;
+  font-size:13px;
+}
+
+footer{
+  text-align:center;
+  color:#777;
+  font-size:11px;
+  padding:20px 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>👥 Anggota Grup</h2>
+  <p id="namaGrup">Memuat informasi grup...</p>
+</header>
+
+<main class="container">
+
+  <a class="back" id="tombolKembali" href="index.html">
+    ← Kembali ke Grup
+  </a>
+
+  <section class="summary">
+    <h3>Daftar Anggota</h3>
+    <p id="jumlahAnggota">Memuat anggota...</p>
+  </section>
+
+  <section id="daftarAnggota" class="member-list">
+    <div class="message">
+      Sedang memuat daftar anggota...
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  GIRINATAN COMMUNITY
+</footer>
+
+<script type="module">
+
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAoVrrEE0vQQALHFYkog4Xy2mgYIRahzB4",
+  authDomain: "girinatan-8d986.firebaseapp.com",
+  projectId: "girinatan-8d986",
+  storageBucket: "girinatan-8d986.firebasestorage.app",
+  messagingSenderId: "762607023765",
+  appId: "1:762607023765:web:5d4369ab2e46b244a6cd9c",
+  measurementId: "G-799CW1JRQ5"
+};
+
+
+/* FIREBASE INITIALIZATION */
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
+/* ELEMENTS */
+
+const parameter = new URLSearchParams(location.search);
+const groupId = parameter.get("id");
+
+const namaGrup = document.getElementById("namaGrup");
+const jumlahAnggota = document.getElementById("jumlahAnggota");
+const daftar = document.getElementById("daftarAnggota");
+
+document.getElementById("tombolKembali").href =
+  groupId
+    ? "grup.html?id=" + encodeURIComponent(groupId)
+    : "index.html";
+
+
+/* MESSAGE */
+
+function tampilkanPesan(teks){
+
+  daftar.replaceChildren();
+
+  const elemen = document.createElement("div");
+
+  elemen.className = "message";
+  elemen.textContent = teks;
+
+  daftar.appendChild(elemen);
+}
+
+
+/* PROFILE DATA */
+
+async function ambilProfil(uid){
+
+  if(!uid) return {};
+
+  try{
+
+    const hasil = await getDoc(
+      doc(db,"users",uid)
+    );
+
+    return hasil.exists()
+      ? hasil.data()
+      : {};
+
+  }catch(error){
+
+    console.error("Gagal mengambil profil:",error);
+
+    return {};
+  }
+}
+
+
+/* CREATE MEMBER CARD */
+
+function buatKartu(data){
+
+  const kartu = document.createElement("article");
+  kartu.className = "member";
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+
+  if(data.foto){
+
+    const img = document.createElement("img");
+
+    img.src = data.foto;
+    img.alt = "Foto profil";
+
+    img.onerror = () => {
+      avatar.textContent = "👤";
+    };
+
+    avatar.appendChild(img);
+
+  }else{
+
+    avatar.textContent = "👤";
+
+  }
+
+  const detail = document.createElement("div");
+  detail.className = "details";
+
+  const nama = document.createElement("div");
+  nama.className = "name";
+  nama.textContent = data.nama;
+
+  const username = document.createElement("div");
+  username.className = "username";
+
+  username.textContent = data.username
+    ? "@" + data.username
+    : "Anggota GIRINATAN";
+
+  detail.append(nama,username);
+
+  const jabatan = document.createElement("span");
+  jabatan.className = "role";
+  jabatan.textContent = data.role;
+
+  kartu.append(avatar,detail,jabatan);
+
+  return kartu;
+}
+
+
+/* LOAD GROUP MEMBERS */
+
+async function muatAnggota(user){
+
+  if(!groupId){
+
+    throw new Error("ID grup tidak ditemukan.");
+  }
+
+  const grupRef = doc(
+    db,
+    "agency_groups",
+    groupId
+  );
+
+  const grupSnap = await getDoc(grupRef);
+
+  if(!grupSnap.exists()){
+
+    throw new Error("Grup tidak ditemukan.");
+  }
+
+  const grup = grupSnap.data();
+
+  if(grup.status !== "active"){
+
+    throw new Error("Grup ini tidak aktif.");
+  }
+
+
+  /* CHECK GROUP ACCESS */
+
+  const isOwner = grup.ownerUid === user.uid;
+
+  const memberRef = doc(
+    db,
+    "agency_groups",
+    groupId,
+    "members",
+    user.uid
+  );
+
+  const memberSnap = await getDoc(memberRef);
+
+  if(!isOwner && !memberSnap.exists()){
+
+    throw new Error(
+      "Akses ditolak. Kamu bukan anggota grup ini."
+    );
+  }
+
+
+  /* GROUP NAME */
+
+  namaGrup.textContent =
+    grup.agencyName || "Grup GIRINATAN";
+
+
+  /* MEMBER COLLECTION */
+
+  const daftarRef = collection(
+    db,
+    "agency_groups",
+    groupId,
+    "members"
+  );
+
+  const hasilAnggota = await getDocs(daftarRef);
+
+
+  /* OWNER PROFILE */
+
+  const anggota = [];
+
+  const profilPemilik = await ambilProfil(
+    grup.ownerUid
+  );
+
+  anggota.push({
+
+    nama:
+      profilPemilik.username ||
+      profilPemilik.displayName ||
+      grup.ownerEmail ||
+      "Pemilik Grup",
+
+    username:
+      profilPemilik.username || "",
+
+    foto:
+      profilPemilik.photoURL || "",
+
+    role:"Pemilik"
+
+  });
+
+
+  /* OTHER MEMBERS */
+
+  for(const dokumen of hasilAnggota.docs){
+
+    const info = dokumen.data();
+
+    const profil = await ambilProfil(dokumen.id);
+
+    const role = info.role || "member";
+
+    let jabatan = "Anggota";
+
+    if(role === "admin"){
+      jabatan = "Admin";
+    }
+
+    if(role === "moderator"){
+      jabatan = "Moderator";
+    }
+
+    anggota.push({
+
+      nama:
+        profil.username ||
+        profil.displayName ||
+        info.username ||
+        "Pengguna",
+
+      username:
+        profil.username ||
+        info.username ||
+        "",
+
+      foto:
+        profil.photoURL || "",
+
+      role:jabatan
+
+    });
+
+  }
+
+
+  /* DISPLAY MEMBERS */
+
+  jumlahAnggota.textContent =
+    "Total: " + anggota.length + " orang";
+
+  daftar.replaceChildren();
+
+  anggota.forEach(data => {
+
+    daftar.appendChild(
+      buatKartu(data)
+    );
+
+  });
+
+}
+
+
+/* AUTHENTICATION */
+
+onAuthStateChanged(auth,async user => {
+
+  if(!user){
+
+    namaGrup.textContent = "Belum Login";
+
+    jumlahAnggota.textContent = "";
+
+    tampilkanPesan(
+      "Silakan login untuk melihat anggota grup."
+    );
+
+    return;
+  }
+
+  try{
+
+    await muatAnggota(user);
+
+  }catch(error){
+
+    console.error(error);
+
+    namaGrup.textContent = "Daftar Anggota";
+
+    jumlahAnggota.textContent = "";
+
+    tampilkanPesan(
+      error.message || "Gagal memuat anggota grup."
+    );
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
