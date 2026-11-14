@@ -187,6 +187,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+
 const parameter = new URLSearchParams(window.location.search);
 const groupId = parameter.get("id");
 
@@ -224,16 +225,41 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
 
+    // Periksa apakah pengguna pemilik grup
+    const isOwner = data.ownerUid === user.uid;
+
+    // Periksa apakah pengguna terdaftar sebagai anggota
+    const memberRef = doc(
+      db,
+      "agency_groups",
+      groupId,
+      "members",
+      user.uid
+    );
+
+    const memberResult = await getDoc(memberRef);
+
+    if (!isOwner && !memberResult.exists()) {
+      nama.textContent = "Akses Ditolak";
+      pemilik.textContent =
+        "Kamu bukan anggota grup agensi ini.";
+      return;
+    }
+
+    // Pengguna berhak masuk
     nama.textContent = data.agencyName || "Agensi GIRINATAN";
-    pemilik.textContent = "Pemilik: " + (data.ownerEmail || "-");
+    pemilik.textContent =
+      "Pemilik: " + (data.ownerEmail || "-");
 
   } catch (error) {
-    console.error("Gagal mengambil data grup:", error);
+    console.error("Gagal memuat grup:", error);
     nama.textContent = "Gagal Memuat Grup";
-    pemilik.textContent = "Periksa koneksi dan izin Firestore.";
+    pemilik.textContent =
+      "Periksa koneksi dan izin Firestore.";
   }
 });
-</script>
+
+                                      </script>
 
 </body>
 </html>
