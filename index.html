@@ -1154,13 +1154,20 @@ history.replaceState(
 
     const user = credential.user;
 
-    await setDoc(doc(db, "users", user.uid), {
-      uid: user.uid,
-      displayName: result.profile.displayName,
-      photoURL: result.profile.photoURL,
-      provider: "tiktok",
-      updatedAt: serverTimestamp()
-    }, { merge: true });
+    const profileRef = doc(db, "users", user.uid);
+const existingProfile = await getDoc(profileRef);
+
+const savedUsername = existingProfile.exists()
+  ? existingProfile.data().username || ""
+  : "";
+
+await setDoc(profileRef, {
+  uid: user.uid,
+  displayName: savedUsername || result.profile.displayName,
+  photoURL: result.profile.photoURL,
+  provider: "tiktok",
+  updatedAt: serverTimestamp()
+}, { merge: true });
 
     alert("Login TikTok berhasil!");
 
@@ -1229,7 +1236,8 @@ status.textContent = accountProvider === "tiktok"
     const profile = snapshot.data();
 
     document.getElementById("profileUsername").textContent =
-      profile.displayName ||
+      profile.username ||
+profile.displayName ||
 user.displayName ||
 (accountProvider === "tiktok" ? "Kreator TikTok" : "Pengguna Google");
 
