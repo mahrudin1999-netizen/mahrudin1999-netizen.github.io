@@ -134,11 +134,7 @@ header p{
 
   <p id="pesanAnggota" style="font-size:13px;"></p>
 </div>
-  <div class="info-grup" id="daftarAnggota">
-  <h3>👥 Anggota Grup</h3>
-  <p id="jumlahAnggota">Memuat anggota...</p>
-  <div id="isiDaftarAnggota"></div>
-</div>
+  
   <div class="menu-grup">
   <div class="menu-item" id="menuChat" style="cursor:pointer;">
   <span>💬</span>
@@ -345,36 +341,7 @@ try {
     error
   );
 }
-    // Memuat daftar anggota grup ini
-const daftarRef = collection(
-  db,
-  "agency_groups",
-  groupId,
-  "members"
-);
-
-const hasilAnggota = await getDocs(daftarRef);
-
-const jumlah = document.getElementById("jumlahAnggota");
-const isi = document.getElementById("isiDaftarAnggota");
-
-jumlah.textContent =
-  "Total: " + (hasilAnggota.size + 1) + " orang";
-
-isi.innerHTML = "";
-
-const pemilikItem = document.createElement("p");
-pemilikItem.textContent =
-  "👑 Pemilik: " + (data.ownerEmail || "-");
-isi.appendChild(pemilikItem);
-
-hasilAnggota.forEach((anggota) => {
-  const info = anggota.data();
-
-  const item = document.createElement("p");
-  item.textContent = "👤 " + (info.username || "Pengguna");
-  isi.appendChild(item);
-});
+  
 // Fitur tambah anggota khusus pemilik grup
 if (isOwner) {
   document.getElementById("kelolaAnggota").style.display = "block";
