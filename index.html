@@ -991,11 +991,11 @@ async function simpanUsernameUnik(user, username, bio) {
       transaction.delete(oldRef);
     }
 
-    transaction.set(usernameRef, {
-      uid: user.uid,
-      username: username,
-      createdAt: serverTimestamp()
-    });
+  transaction.set(usernameRef, {
+  uid: user.uid,
+  username: username,
+  updatedAt: serverTimestamp()
+});
 
     transaction.set(userRef, {
       uid: user.uid,
