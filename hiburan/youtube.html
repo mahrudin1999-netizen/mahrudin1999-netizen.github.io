@@ -238,6 +238,10 @@ nav a span{display:block;font-size:19px;margin-bottom:4px}
     <button onclick="kategori('hiburan',this)">Hiburan</button>
     <button onclick="kategori('olahraga',this)">Olahraga</button>
     <button onclick="kategori('berita',this)">Berita</button>
+    <button onclick="kategori('gaming',this)">Gaming</button>
+<button onclick="kategori('pendidikan',this)">Pendidikan</button>
+<button onclick="kategori('teknologi',this)">Teknologi</button>
+<button onclick="kategori('kuliner',this)">Kuliner</button>
   </div>
 
   <div id="playerBox">
@@ -380,16 +384,15 @@ function beranda(button) {
 }
 
   function shorts(button) {
-  pilihTab(button);list.classList.remove("shorts-grid");
-
+  pilihTab(button);
   list.classList.add("shorts-grid");
 
   document.getElementById("searchInput").value =
     "YouTube Shorts Indonesia";
 
-  cariVideo();
+  ambilVideo("search", "YouTube Shorts Indonesia");
 }
-    function kembaliBeranda){
+    function kembaliBeranda(){
   document.getElementById("searchInput").value = "";
   beranda(document.querySelector(".tabs button"));
   }
