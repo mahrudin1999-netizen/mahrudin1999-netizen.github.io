@@ -4,226 +4,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
 <title>YouTube - GIRINATAN</title>
 
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;background:#080808;color:white;
-  font-family:Arial,sans-serif;padding-bottom:80px;
+* {
+  box-sizing: border-box;
 }
 
-header{
-  padding:17px 16px;
-  background:#080808;
-  border-bottom:1px solid #292929;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  position:sticky;
-  top:0;
-  z-index:100;
+body {
+  margin: 0;
+  padding-bottom: 80px;
+  background: #080808;
+  color: #fff;
+  font-family: Arial, sans-serif;
 }
 
-.brand{
-  font-size:22px;
-  font-weight:800;
-  letter-spacing:.5px;
+header {
+  padding: 17px 16px;
+  background: #080808;
+  border-bottom: 1px solid #292929;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.brand span{
-  color:#D6AD48;
+.brand {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: .5px;
 }
 
-.brand{font-size:20px;font-weight:bold}
-.brand span{color:#D6AD48}
-main{
-  width:100%;
-  max-width:1200px;
-  margin:auto;
-  padding:15px;
-}
-h2{color:#D6AD48;margin-top:10px}
-
-.search{
-  display:flex;
-  gap:9px;
-  margin:17px 0;
+.brand span {
+  color: #D6AD48;
 }
 
-input{
-  min-width:0;
-  flex:1;
-  padding:14px 16px;
-  border-radius:25px;
-  border:1px solid #343434;
-  background:#151515;
-  color:white;
-  font-size:14px;
-  outline:none;
+header strong {
+  color: #D6AD48;
 }
 
-input:focus{
-  border-color:#D6AD48;
+main {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 15px;
 }
 
-.search button{
-  border-radius:25px;
-  padding:0 20px;
-  background:linear-gradient(135deg,#E5C36A,#B88A2E);
-  color:#080808;
+h2 {
+  color: #D6AD48;
 }
 
-button{
-  border:0;border-radius:9px;padding:12px;
-  background:#D6AD48;color:#080808;font-weight:bold;
+.search {
+  display: flex;
+  gap: 9px;
+  margin: 17px 0;
 }
 
-.tabs{
-  display:flex;
-  gap:10px;
-  overflow-x:auto;
-  margin:18px 0 22px;
-  padding-bottom:5px;
-  scrollbar-width:none;
+input {
+  min-width: 0;
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 25px;
+  border: 1px solid #343434;
+  background: #151515;
+  color: white;
+  font-size: 14px;
+  outline: none;
 }
 
-.tabs::-webkit-scrollbar{
-  display:none;
+input:focus {
+  border-color: #D6AD48;
 }
 
-.tabs button{
-  white-space:nowrap;
-  padding:10px 17px;
-  border-radius:9px;
-  background:#202020;
-  color:#ddd;
-  border:1px solid #343434;
-  font-size:13px;
-  transition:.2s;
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 12px;
+  background: #D6AD48;
+  color: #080808;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.tabs button.active{
-  background:linear-gradient(135deg,#E5C36A,#B88A2E);
-  color:#080808;
-  border-color:#D6AD48;
-  font-weight:bold;
-  box-shadow:0 3px 12px rgba(214,173,72,.2);
-  transform:translateY(-1px);
+.search button {
+  border-radius: 25px;
+  padding: 0 20px;
+  background: linear-gradient(135deg, #E5C36A, #B88A2E);
 }
 
-#message{color:#A8ADA8;font-size:13px}
-
-.video{
-  margin-bottom:25px;
-  cursor:pointer;
-  overflow:hidden;
-  transition:transform .2s ease;
+/* Tombol beranda video */
+#homeButton {
+  background: #202020;
+  color: #D6AD48;
+  border: 1px solid #806326;
+  padding: 10px 14px;
 }
 
-.video:active{
-  transform:scale(.98);
+/* Kategori horizontal */
+.tabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 18px 0 22px;
+  padding: 3px 2px 10px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
-.thumb{
-  width:100%;
-  aspect-ratio:16/9;
-  object-fit:cover;
-  border-radius:15px;
-  background:#202020;
-  border:1px solid #292929;
-  display:block;
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 
-.video h3{
-  font-size:15px;
-  line-height:1.5;
-  margin:11px 0 5px;
-  color:#fff;
-  font-weight:600;
+.tabs button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 10px 17px;
+  border-radius: 20px;
+  background: #202020;
+  color: #ddd;
+  border: 1px solid #343434;
+  font-size: 13px;
 }
 
-.video small{
-  display:block;
-  color:#A8ADA8;
-  font-size:12px;
-  line-height:1.7;
-  margin-top:3px;
+.tabs button.active {
+  background: linear-gradient(135deg, #E5C36A, #B88A2E);
+  color: #080808;
+  border-color: #D6AD48;
+  box-shadow: 0 3px 12px rgba(214,173,72,.2);
 }
 
-#playerBox{
-  display:none;
-  margin:18px 0 25px;
-  padding:10px;
-  background:#151515;
-  border:1px solid #343434;
-  border-radius:16px;
-  box-shadow:0 8px 25px rgba(0,0,0,.35);
+/* Pesan */
+#message {
+  color: #A8ADA8;
+  font-size: 13px;
+  margin: 12px 0;
 }
 
-#player{
-  width:100%;
-  aspect-ratio:16/9;
-  border:0;
-  border-radius:11px;
-  background:#000;
-  display:block;
+/* Daftar video */
+.video-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px 16px;
 }
 
-#playingTitle{
-  color:#D6AD48;
-  font-size:15px;
-  line-height:1.5;
-  margin:12px 3px 5px;
-  font-weight:bold;
+.video {
+  min-width: 0;
+  margin-bottom: 5px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform .2s ease;
 }
 
-nav{
-  position:fixed;bottom:0;left:0;width:100%;
-  display:grid;grid-template-columns:repeat(5,1fr);
-  background:#111;border-top:1px solid #806326;
-  padding:11px 4px;text-align:center;
-}
-nav a{
-  color:#A8ADA8;text-decoration:none;font-size:11px;
-}
-nav a span{display:block;font-size:19px;margin-bottom:4px}
-  .video-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:20px 15px;
+.video:active {
+  transform: scale(.98);
 }
 
-@media (min-width:600px){
-  .video-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
+.thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 13px;
+  background: #202020;
+  border: 1px solid #292929;
+  display: block;
 }
 
-@media (min-width:1000px){
-  .video-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-}
-  .video.shorts-mode .thumb{
-  aspect-ratio:9/16;
-  object-fit:cover;
-  max-height:420px;
-  width:100%;
-  border-radius:14px;
+.video h3 {
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 11px 0 5px;
+  color: #fff;
+  font-weight: 600;
 }
 
-.video.shorts-mode{
-  max-width:260px;
-  margin-left:auto;
-  margin-right:auto;
+.video small {
+  display: block;
+  color: #A8ADA8;
+  font-size: 12px;
+  line-height: 1.7;
+  margin-top: 3px;
 }
-  #playerBox {
+
+/* Tampilan kartu Shorts */
+.video.shorts-mode {
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+.video.shorts-mode .thumb {
+  aspect-ratio: 9 / 16;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+/* Pemutar YouTube */
+#playerBox {
   display: none;
   width: 100%;
   margin: 20px auto;
-  background: #141414;
   padding: 12px;
+  background: #141414;
   border: 1px solid #D6AD48;
   border-radius: 12px;
 }
@@ -234,12 +220,88 @@ nav a span{display:block;font-size:19px;margin-bottom:4px}
   aspect-ratio: 16 / 9;
   border: none;
   border-radius: 8px;
+  background: #000;
 }
 
 #playingTitle {
   color: #D6AD48;
   font-size: 16px;
+  line-height: 1.5;
   margin: 12px 0 4px;
+}
+
+.close-player {
+  background: #202020;
+  color: #D6AD48;
+  border: 1px solid #D6AD48;
+  padding: 9px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.close-player:hover {
+  background: #D6AD48;
+  color: #080808;
+}
+
+/* Navigasi bawah */
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: #111;
+  border-top: 1px solid #806326;
+  padding: 11px 4px;
+  text-align: center;
+  z-index: 200;
+}
+
+nav a {
+  color: #A8ADA8;
+  text-decoration: none;
+  font-size: 11px;
+}
+
+nav a span {
+  display: block;
+  font-size: 19px;
+  margin-bottom: 4px;
+}
+
+/* Tablet */
+@media (min-width: 600px) {
+  .video-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Komputer */
+@media (min-width: 1000px) {
+  .video-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Tampilan Shorts di layar besar */
+.shorts-grid {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(180px, 1fr)
+  );
+  align-items: start;
+}
+
+@media (max-width: 599px) {
+  .shorts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .video.shorts-mode {
+    max-width: 100%;
+  }
 }
 </style>
 </head>
@@ -248,17 +310,24 @@ nav a span{display:block;font-size:19px;margin-bottom:4px}
 
 <header>
   <div class="brand">GIRI<span>NATAN</span></div>
-  <strong style="color:#D6AD48">▶ YouTube</strong>
+  <strong>▶ YouTube</strong>
 </header>
 
 <main>
+
   <div class="search">
-    <input id="searchInput" placeholder="Cari video YouTube...">
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="Cari video YouTube..."
+    >
     <button onclick="cariVideo()">Cari</button>
   </div>
-<button id="homeButton" onclick="kembaliBeranda()">
-  🏠 Beranda Video
-</button>
+
+  <button id="homeButton" onclick="kembaliBeranda()">
+    🏠 Beranda Video
+  </button>
+
   <div class="tabs">
     <button class="active" onclick="beranda(this)">Untuk Anda</button>
     <button onclick="shorts(this)">▶ Shorts</button>
@@ -267,36 +336,66 @@ nav a span{display:block;font-size:19px;margin-bottom:4px}
     <button onclick="kategori('olahraga',this)">Olahraga</button>
     <button onclick="kategori('berita',this)">Berita</button>
     <button onclick="kategori('gaming',this)">Gaming</button>
-<button onclick="kategori('pendidikan',this)">Pendidikan</button>
-<button onclick="kategori('teknologi',this)">Teknologi</button>
-<button onclick="kategori('kuliner',this)">Kuliner</button>
-    
+    <button onclick="kategori('pendidikan',this)">Pendidikan</button>
+    <button onclick="kategori('teknologi',this)">Teknologi</button>
+    <button onclick="kategori('kuliner',this)">Kuliner</button>
   </div>
 
   <div id="playerBox">
-    <iframe id="player" allowfullscreen
-      allow="accelerometer; autoplay; encrypted-media; picture-in-picture">
-    </iframe>
+    <button
+      onclick="tutupPemutar()"
+      class="close-player"
+    >
+      ✕ Tutup Pemutar
+    </button>
+
+    <iframe
+      id="player"
+      allowfullscreen
+      allow="accelerometer; autoplay; encrypted-media; picture-in-picture"
+      referrerpolicy="strict-origin-when-cross-origin"
+    ></iframe>
+
     <h3 id="playingTitle"></h3>
   </div>
 
   <p id="message">Memuat video...</p>
+
   <div id="videoList" class="video-grid"></div>
+
 </main>
 
 <nav>
-  <a href="../index.html"><span>⌂</span>Beranda</a>
-  <a href="../index.html#marketPage"><span>▣</span>Market</a>
-  <a href="../index.html#karyaPage"><span>✦</span>Berkarya</a>
-  <a href="../komunitas/index.html"><span>♧</span>Komunitas</a>
-  <a href="../index.html#accountPage"><span>♙</span>Akun</a>
+  <a href="../index.html">
+    <span>⌂</span>Beranda
+  </a>
+
+  <a href="../index.html#marketPage">
+    <span>▣</span>Market
+  </a>
+
+  <a href="../index.html#karyaPage">
+    <span>✦</span>Berkarya
+  </a>
+
+  <a href="../komunitas/index.html">
+    <span>♧</span>Komunitas
+  </a>
+
+  <a href="../index.html#accountPage">
+    <span>♙</span>Akun
+  </a>
 </nav>
 
 <script>
-const WORKER_URL = "https://girinatanyoutube.mahrudin1999.workers.dev";
+const WORKER_URL =
+  "https://girinatanyoutube.mahrudin1999.workers.dev";
 
 const list = document.getElementById("videoList");
 const message = document.getElementById("message");
+const searchInput = document.getElementById("searchInput");
+const playerBox = document.getElementById("playerBox");
+const player = document.getElementById("player");
 
 function tampilkanPesan(teks) {
   message.textContent = teks;
@@ -310,70 +409,87 @@ function tampilkanVideo(videos) {
     return;
   }
 
-  tampilkanPesan("");
+  let jumlahVideo = 0;
 
   videos.forEach(video => {
     const id = typeof video.id === "object"
-      ? video.id.videoId
+      ? video.id?.videoId
       : video.id;
 
     const data = video.snippet;
+
     if (!id || !data) return;
+
+    const thumbnail =
+      data.thumbnails?.medium?.url ||
+      data.thumbnails?.default?.url;
+
+    if (!thumbnail) return;
 
     const card = document.createElement("div");
     card.className = "video";
-if (list.classList.contains("shorts-grid")) {
-  card.classList.add("shorts-mode");
-}
+
+    if (list.classList.contains("shorts-grid")) {
+      card.classList.add("shorts-mode");
+    }
+
     const img = document.createElement("img");
     img.className = "thumb";
     img.loading = "lazy";
-img.decoding = "async";
-    img.src =
-  data.thumbnails?.medium?.url ||
-  data.thumbnails?.default?.url ||
-  "";
-    img.alt = data.title;
+    img.decoding = "async";
+    img.src = thumbnail;
+    img.alt = data.title || "Video YouTube";
 
     const title = document.createElement("h3");
-    title.textContent = data.title;
+    title.textContent = data.title || "Video tanpa judul";
 
-const channel = document.createElement("small");
-channel.textContent = data.channelTitle;
+    const channel = document.createElement("small");
+    channel.textContent = data.channelTitle || "Kanal YouTube";
 
-const views = document.createElement("small");
-const jumlah = video.statistics?.viewCount;
+    const views = document.createElement("small");
+    const jumlah = video.statistics?.viewCount;
 
-views.textContent = jumlah
-  ? Number(jumlah).toLocaleString("id-ID") + " penayangan"
-  : "Jumlah penayangan tidak tersedia";
+    views.textContent = jumlah
+      ? Number(jumlah).toLocaleString("id-ID") + " penayangan"
+      : "Jumlah penayangan tidak tersedia";
 
-const tanggal = document.createElement("small");
-tanggal.textContent = new Date(data.publishedAt)
-  .toLocaleDateString("id-ID");
+    const tanggal = document.createElement("small");
 
-  card.append(img, title, channel, views, tanggal);
+    tanggal.textContent = data.publishedAt
+      ? new Date(data.publishedAt).toLocaleDateString("id-ID")
+      : "Tanggal tidak tersedia";
+
+    card.append(img, title, channel, views, tanggal);
+
     card.onclick = () => putarVideo(id, data.title);
 
     list.appendChild(card);
+    jumlahVideo++;
   });
 
-  if (!list.children.length) {
-    tampilkanPesan("Video tidak ditemukan.");
-  }
+  tampilkanPesan(
+    jumlahVideo ? "" : "Video tidak ditemukan."
+  );
 }
 
 function putarVideo(id, title) {
-  document.getElementById("playerBox").style.display = "block";
-  document.getElementById("player").src =
+  playerBox.style.display = "block";
+
+  player.src =
     "https://www.youtube-nocookie.com/embed/" +
     encodeURIComponent(id);
 
   document.getElementById("playingTitle").textContent = title;
 
-  document.getElementById("playerBox").scrollIntoView({
-    behavior: "smooth"
+  playerBox.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
   });
+}
+
+function tutupPemutar() {
+  player.src = "";
+  playerBox.style.display = "none";
 }
 
 async function ambilVideo(action, kata = "") {
@@ -382,6 +498,7 @@ async function ambilVideo(action, kata = "") {
     list.innerHTML = "";
 
     const url = new URL(WORKER_URL);
+
     url.searchParams.set("action", action);
 
     if (kata) {
@@ -400,38 +517,52 @@ async function ambilVideo(action, kata = "") {
     tampilkanVideo(data.items);
 
   } catch (error) {
-  tampilkanPesan("Gagal memuat video: " + error.message);
+    tampilkanPesan(
+      "Gagal memuat video: " + error.message
+    );
 
-  list.innerHTML = "";
+    list.innerHTML = "";
 
-  const retry = document.createElement("button");
-  retry.textContent = "↻ Coba Lagi";
-  retry.onclick = () => ambilVideo(action, kata);
+    const retry = document.createElement("button");
+    retry.textContent = "↻ Coba Lagi";
 
-  list.appendChild(retry);
+    retry.onclick = () => ambilVideo(action, kata);
+
+    list.appendChild(retry);
+  }
 }
+
+function pilihTab(button) {
+  document.querySelectorAll(".tabs button").forEach(b => {
+    b.classList.remove("active");
+  });
+
+  button.classList.add("active");
 }
+
 function beranda(button) {
   pilihTab(button);
   list.classList.remove("shorts-grid");
+  searchInput.value = "";
+
   ambilVideo("popular");
 }
 
-  function shorts(button) {
+function shorts(button) {
   pilihTab(button);
   list.classList.add("shorts-grid");
 
-  document.getElementById("searchInput").value =
-    "YouTube Shorts Indonesia";
+  searchInput.value = "YouTube Shorts Indonesia";
 
   ambilVideo("search", "YouTube Shorts Indonesia");
 }
-    function kembaliBeranda(){
-  document.getElementById("searchInput").value = "";
+
+function kembaliBeranda() {
   beranda(document.querySelector(".tabs button"));
-  }
+}
+
 function cariVideo() {
-  const kata = document.getElementById("searchInput").value.trim();
+  const kata = searchInput.value.trim();
 
   if (!kata) {
     tampilkanPesan("Masukkan kata pencarian.");
@@ -439,9 +570,15 @@ function cariVideo() {
   }
 
   list.classList.remove("shorts-grid");
+
+  document.querySelectorAll(".tabs button").forEach(b => {
+    b.classList.remove("active");
+  });
+
   ambilVideo("search", kata);
 }
-  function kategori(kata, button) {
+
+function kategori(kata, button) {
   const kataKunci = {
     musik: "musik Indonesia terbaru",
     hiburan: "hiburan Indonesia",
@@ -456,25 +593,23 @@ function cariVideo() {
   pilihTab(button);
   list.classList.remove("shorts-grid");
 
-  document.getElementById("searchInput").value =
-    kataKunci[kata] || kata;
+  const pencarian = kataKunci[kata] || kata;
 
-  ambilVideo("search", kataKunci[kata] || kata);
-}
-  function pilihTab(button) {
-  document.querySelectorAll(".tabs button").forEach(b => {
-    b.classList.remove("active");
-  });
+  searchInput.value = pencarian;
 
-  button.classList.add("active");
+  ambilVideo("search", pencarian);
 }
 
-document.getElementById("searchInput")
-  .addEventListener("keydown", event => {
-    if (event.key === "Enter") cariVideo();
-  });
+searchInput.addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    cariVideo();
+  }
+});
 
+/* Muat video populer saat halaman dibuka */
 beranda(document.querySelector(".tabs button"));
+
 </script>
+
 </body>
 </html>
