@@ -2,430 +2,810 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#080808">
 <title>YouTube - GIRINATAN</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+:root{
+  --bg:#080808;
+  --panel:#151515;
+  --panel2:#202020;
+  --gold:#D6AD48;
+  --green:#00C875;
+  --text:#fff;
+  --muted:#A8ADA8;
+  --border:#343434;
 }
 
-:root {
-  --bg: #080808;
-  --panel: #151515;
-  --panel2: #202020;
-  --gold: #D6AD48;
-  --green: #00C875;
-  --text: #fff;
-  --muted: #A8ADA8;
-  --border: #343434;
+body{
+  margin:0;
+  padding:0 0 calc(76px + env(safe-area-inset-bottom));
+  background:var(--bg);
+  color:var(--text);
+  font-family:Roboto,Arial,sans-serif;
 }
 
-body {
-  margin: 0;
-  padding-bottom: 82px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, sans-serif;
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:2px;
 }
 
-button, input {
-  font-family: inherit;
+[hidden]{display:none!important}
+
+/* HEADER */
+header{
+  position:sticky;
+  top:0;
+  z-index:500;
+  min-height:62px;
+  padding:10px 14px;
+  padding-top:max(10px,env(safe-area-inset-top));
+  background:#080808;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
-button {
-  cursor: pointer;
+.brand{
+  flex:0 0 auto;
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:-.8px;
+  white-space:nowrap;
 }
 
-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  padding: 15px 16px;
-  background: rgba(8,8,8,.97);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.brand span{color:var(--gold)}
+
+.header-search{
+  flex:1;
+  min-width:0;
+  display:flex;
+  gap:5px;
 }
 
-.brand {
-  font-size: 21px;
-  font-weight: 800;
+.header-search input{
+  width:100%;
+  min-width:0;
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:10px 13px;
+  background:#171717;
+  color:white;
+  outline:none;
 }
 
-.brand span {
-  color: var(--gold);
+.header-search button{
+  width:40px;
+  flex:0 0 40px;
+  border-radius:50%;
+  background:#202020;
+  color:white;
+  border:1px solid var(--border);
 }
 
-.header-label {
-  color: var(--gold);
-  font-weight: bold;
+.header-icon{
+  flex:0 0 auto;
+  width:35px;
+  height:35px;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  color:white;
+  font-size:20px;
+  padding:0;
 }
 
-main {
-  width: 100%;
-  max-width: 1200px;
-  margin: auto;
-  padding: 15px;
+.header-icon:active{background:#292929}
+
+/* MAIN */
+main{
+  width:100%;
+  max-width:1250px;
+  margin:auto;
+  padding:10px 12px 25px;
 }
 
-.search {
-  display: flex;
-  gap: 8px;
-  margin: 14px 0;
+.page{display:none}
+.page.active{display:block}
+
+/* CATEGORY */
+.categories{
+  display:flex;
+  gap:9px;
+  overflow-x:auto;
+  padding:8px 0 14px;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
 }
 
-.search input {
-  flex: 1;
-  min-width: 0;
-  padding: 14px;
-  border-radius: 25px;
-  border: 1px solid var(--border);
-  background: var(--panel);
-  color: white;
-  outline: none;
+.categories::-webkit-scrollbar{display:none}
+
+.categories button{
+  flex:0 0 auto;
+  padding:9px 15px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:var(--panel2);
+  color:#eee;
+  font-size:13px;
 }
 
-.search input:focus {
-  border-color: var(--gold);
+.categories button.active{
+  background:var(--gold);
+  color:#080808;
+  border-color:var(--gold);
+  font-weight:bold;
 }
 
-button {
-  border: 0;
-  border-radius: 9px;
-  padding: 10px 14px;
-  background: var(--gold);
-  color: #080808;
-  font-weight: bold;
+.section-heading{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin:12px 0;
 }
 
-.search button {
-  border-radius: 25px;
-  background: linear-gradient(135deg,#E5C36A,#B88A2E);
+.section-heading h2{
+  font-size:17px;
+  margin:0;
+  color:var(--gold);
 }
 
-.top-actions {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 3px 0 10px;
-  scrollbar-width: none;
+.section-heading small{
+  color:var(--muted);
+  font-size:12px;
 }
 
-.top-actions::-webkit-scrollbar {
-  display: none;
+.message{
+  min-height:18px;
+  color:var(--muted);
+  font-size:13px;
+  margin:8px 0;
 }
 
-.secondary-btn {
-  flex: 0 0 auto;
-  background: var(--panel2);
-  color: var(--gold);
-  border: 1px solid #806326;
+/* VIDEO GRID */
+.video-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:24px 15px;
 }
 
-.secondary-btn.active {
-  background: var(--gold);
-  color: #080808;
+.video-card{
+  min-width:0;
+  overflow:hidden;
 }
 
-.tabs {
-  display: flex;
-  gap: 9px;
-  overflow-x: auto;
-  padding: 8px 0 13px;
-  margin: 8px 0 15px;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+.thumbnail-wrap{
+  position:relative;
+  width:100%;
+  cursor:pointer;
 }
 
-.tabs::-webkit-scrollbar {
-  display: none;
+.thumbnail{
+  width:100%;
+  display:block;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  background:#222;
+  border-radius:12px;
 }
 
-.tabs button {
-  flex: 0 0 auto;
-  white-space: nowrap;
-  border-radius: 20px;
-  padding: 10px 16px;
-  background: var(--panel2);
-  color: #ddd;
-  border: 1px solid var(--border);
-  font-size: 13px;
+.play-overlay{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  pointer-events:none;
 }
 
-.tabs button.active {
-  background: linear-gradient(135deg,#E5C36A,#B88A2E);
-  color: #080808;
-  border-color: var(--gold);
+.play-overlay span{
+  background:#000b;
+  padding:9px 15px;
+  border-radius:30px;
+  font-size:20px;
 }
 
-.section-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 16px 0;
+.video-details{
+  display:flex;
+  gap:10px;
+  padding-top:10px;
 }
 
-.section-heading h2 {
-  font-size: 17px;
-  color: var(--gold);
-  margin: 0;
+.channel-avatar{
+  width:37px;
+  height:37px;
+  flex:0 0 37px;
+  border-radius:50%;
+  background:#292929;
+  display:grid;
+  place-items:center;
+  color:var(--gold);
+  font-weight:bold;
+  overflow:hidden;
 }
 
-.section-heading small {
-  color: var(--muted);
+.channel-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-#message {
-  color: var(--muted);
-  font-size: 13px;
-  margin: 12px 0;
+.video-text{min-width:0;flex:1}
+
+.video-title{
+  font-size:14px;
+  font-weight:700;
+  line-height:1.45;
+  margin:0 0 5px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 
-.video-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px 16px;
+.video-meta{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
 }
 
-.video {
-  min-width: 0;
-  overflow: hidden;
-  border-radius: 12px;
-  background: transparent;
+.card-menu{
+  border:0;
+  background:transparent;
+  color:white;
+  font-size:20px;
+  padding:0 5px;
+  align-self:flex-start;
 }
 
-.thumb-wrap {
-  position: relative;
+.card-actions{
+  display:flex;
+  gap:8px;
+  margin:9px 0 0 47px;
 }
 
-.thumb {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  background: var(--panel2);
-  border-radius: 12px;
+.small-action{
+  background:#202020;
+  color:var(--gold);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:7px 11px;
+  font-size:12px;
 }
 
-.play-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,.12);
-  pointer-events: none;
+.small-action.saved{color:var(--green);border-color:var(--green)}
+
+.empty-state{
+  padding:35px 15px;
+  text-align:center;
+  background:var(--panel);
+  color:var(--muted);
+  border-radius:12px;
 }
 
-.play-overlay span {
-  background: rgba(0,0,0,.78);
-  color: white;
-  padding: 10px 16px;
-  border-radius: 30px;
-  font-size: 22px;
+/* WATCH PAGE */
+.watch-layout{display:block}
+
+.watch-main{min-width:0}
+
+.back-button{
+  border:0;
+  color:var(--gold);
+  background:transparent;
+  padding:9px 0;
+  font-size:14px;
 }
 
-.video h3 {
-  font-size: 14px;
-  line-height: 1.5;
-  margin: 10px 0 5px;
+.watch-player{
+  width:100%;
+  background:#000;
+  aspect-ratio:16/9;
+  border-radius:12px;
+  overflow:hidden;
 }
 
-.video small {
-  display: block;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.7;
+.watch-player iframe{
+  display:block;
+  width:100%;
+  height:100%;
+  border:0;
 }
 
-.video-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
+.watch-title{
+  font-size:18px;
+  line-height:1.4;
+  margin:13px 0 10px;
 }
 
-.video-actions button {
-  flex: 1;
-  padding: 8px 6px;
-  font-size: 12px;
-  background: var(--panel2);
-  color: var(--gold);
-  border: 1px solid var(--border);
+.watch-stat{
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:13px;
 }
 
-.video-actions button.saved {
-  color: var(--green);
-  border-color: var(--green);
+.channel-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
 }
 
-.video-play {
-  width: 100%;
-  padding: 9px;
-  margin-top: 9px;
-  background: linear-gradient(135deg,#E5C36A,#B88A2E);
+.channel-info{flex:1;min-width:0}
+
+.channel-name{
+  font-size:14px;
+  font-weight:bold;
 }
 
-/* Shorts */
-.shorts-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-  max-width: 520px;
-  margin: auto;
+.channel-subs{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
 }
 
-.video.shorts-mode {
-  width: 100%;
-  scroll-snap-align: start;
+.subscribe-button{
+  border:0;
+  border-radius:22px;
+  background:white;
+  color:#111;
+  padding:9px 15px;
+  font-weight:bold;
+  font-size:13px;
 }
 
-.video.shorts-mode .thumb {
-  aspect-ratio: 9 / 16;
-  max-height: 72vh;
-  object-fit: cover;
+.subscribe-button.subscribed{
+  background:#303030;
+  color:white;
 }
 
-.shorts-grid .video {
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--border);
+.watch-actions{
+  display:flex;
+  justify-content:space-between;
+  gap:7px;
+  overflow-x:auto;
+  padding:14px 0;
 }
 
-.shorts-grid .video h3 {
-  font-size: 15px;
+.watch-action{
+  flex:0 0 auto;
+  border:1px solid var(--border);
+  border-radius:22px;
+  background:#202020;
+  color:white;
+  padding:10px 13px;
+  font-size:12px;
 }
 
-/* Pemutar */
-#playerBox {
-  display: none;
-  width: 100%;
-  margin: 20px 0;
-  padding: 12px;
-  background: var(--panel);
-  border: 1px solid var(--gold);
-  border-radius: 14px;
+.watch-action.active{
+  color:var(--gold);
+  border-color:var(--gold);
 }
 
-#player {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border: 0;
-  border-radius: 9px;
-  background: #000;
+/* DESCRIPTION */
+.description-box{
+  background:#191919;
+  border-radius:12px;
+  padding:13px;
+  font-size:13px;
+  line-height:1.6;
+  margin-bottom:20px;
 }
 
-#playingTitle {
-  color: var(--gold);
-  font-size: 15px;
-  line-height: 1.5;
+.description-box strong{color:var(--gold)}
+
+/* COMMENTS */
+.comments-section{margin-top:20px}
+
+.comments-section h3{
+  font-size:16px;
+  margin:0 0 15px;
 }
 
-.close-player {
-  background: var(--panel2);
-  color: var(--gold);
-  border: 1px solid var(--gold);
-  margin-bottom: 10px;
+.comment-form{
+  display:flex;
+  gap:9px;
+  margin-bottom:20px;
 }
 
-/* Koleksi */
-.empty-state {
-  text-align: center;
-  color: var(--muted);
-  padding: 45px 15px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 14px;
+.comment-form input{
+  min-width:0;
+  flex:1;
+  background:transparent;
+  color:white;
+  border:0;
+  border-bottom:1px solid #555;
+  padding:10px 3px;
 }
 
-.empty-state strong {
-  display: block;
-  color: var(--gold);
-  font-size: 17px;
-  margin-bottom: 8px;
+.comment-form button{
+  border:0;
+  border-radius:20px;
+  padding:8px 13px;
+  background:var(--gold);
+  color:#080808;
+  font-weight:bold;
 }
 
-/* Navigasi */
-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 200;
-  display: grid;
-  grid-template-columns: repeat(5,1fr);
-  background: #111;
-  border-top: 1px solid #806326;
-  padding: 10px 4px;
-  text-align: center;
+.comment-item{
+  display:flex;
+  gap:10px;
+  margin:17px 0;
 }
 
-nav a {
-  text-decoration: none;
-  color: var(--muted);
-  font-size: 11px;
+.comment-avatar{
+  flex:0 0 34px;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:#303030;
+  display:grid;
+  place-items:center;
+  color:var(--gold);
 }
 
-nav a span {
-  display: block;
-  font-size: 19px;
-  margin-bottom: 4px;
+.comment-body{min-width:0;flex:1}
+
+.comment-user{
+  font-size:12px;
+  font-weight:bold;
 }
 
-nav a.current {
-  color: var(--gold);
+.comment-time{
+  color:var(--muted);
+  font-size:11px;
+  margin-left:6px;
+  font-weight:normal;
 }
 
-@media(min-width:600px) {
-  .video-grid:not(.shorts-grid) {
-    grid-template-columns: repeat(2,minmax(0,1fr));
-  }
+.comment-text{
+  font-size:14px;
+  line-height:1.5;
+  margin:6px 0;
+  overflow-wrap:anywhere;
 }
 
-@media(min-width:1000px) {
-  .video-grid:not(.shorts-grid) {
-    grid-template-columns: repeat(3,minmax(0,1fr));
-  }
+.comment-buttons{
+  display:flex;
+  gap:15px;
+}
+
+.comment-buttons button{
+  color:var(--muted);
+  background:transparent;
+  border:0;
+  padding:3px 0;
+  font-size:12px;
+}
+
+/* RECOMMENDATIONS */
+.recommendations{margin-top:25px}
+.recommendations h3{font-size:16px}
+
+.recommendation-card{
+  display:flex;
+  gap:10px;
+  margin:14px 0;
+  cursor:pointer;
+}
+
+.recommendation-card img{
+  width:43%;
+  max-width:190px;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  border-radius:9px;
+}
+
+.recommendation-info{min-width:0;flex:1}
+.recommendation-info strong{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  font-size:13px;
+  line-height:1.4;
+}
+
+.recommendation-info small{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin-top:6px;
+}
+
+/* SHORTS */
+#shortsPage{
+  margin:-10px -12px 0;
+}
+
+.shorts-feed{
+  width:100%;
+  max-width:500px;
+  margin:auto;
+  height:calc(100dvh - 145px);
+  min-height:420px;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  overscroll-behavior:contain;
+  scrollbar-width:none;
+}
+
+.shorts-feed::-webkit-scrollbar{display:none}
+
+.short-card{
+  position:relative;
+  width:100%;
+  height:100%;
+  min-height:420px;
+  max-height:850px;
+  aspect-ratio:9/16;
+  scroll-snap-align:start;
+  overflow:hidden;
+  background:#171717;
+}
+
+.short-background{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.short-player{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+  background:#000;
+}
+
+.short-shade{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    #0008 0%,
+    transparent 24%,
+    transparent 55%,
+    #000b 100%
+  );
+  pointer-events:none;
+}
+
+.shorts-top{
+  position:absolute;
+  top:12px;
+  left:14px;
+  right:14px;
+  display:flex;
+  justify-content:flex-end;
+  gap:20px;
+  z-index:5;
+}
+
+.shorts-top button{
+  border:0;
+  background:#0005;
+  color:white;
+  font-size:23px;
+  padding:6px;
+}
+
+.shorts-info{
+  position:absolute;
+  left:14px;
+  right:76px;
+  bottom:22px;
+  z-index:5;
+  color:white;
+}
+
+.short-channel{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:10px;
+}
+
+.short-avatar{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:var(--gold);
+  color:#080808;
+  display:grid;
+  place-items:center;
+  font-weight:bold;
+}
+
+.short-channel-name{
+  font-size:15px;
+  font-weight:bold;
+}
+
+.short-subscribe{
+  border:0;
+  border-radius:5px;
+  background:white;
+  color:#111;
+  padding:7px 12px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.short-caption{
+  font-size:14px;
+  line-height:1.45;
+  margin-bottom:10px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.short-music{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px;
+  border-radius:8px;
+  background:#0008;
+  font-size:12px;
+  font-style:italic;
+  overflow:hidden;
+  white-space:nowrap;
+}
+
+.short-music span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.short-side{
+  position:absolute;
+  right:14px;
+  bottom:25px;
+  z-index:6;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:22px;
+}
+
+.short-side button{
+  border:0;
+  background:transparent;
+  color:white;
+  padding:0;
+  text-align:center;
+  font-size:23px;
+  text-shadow:0 1px 5px #000;
+}
+
+.short-side small{
+  display:block;
+  font-size:11px;
+  margin-top:4px;
+}
+
+.shorts-interest{
+  position:absolute;
+  z-index:7;
+  left:12px;
+  right:12px;
+  bottom:5px;
+  display:flex;
+  gap:8px;
+  transform:translateY(100%);
+  opacity:0;
+  pointer-events:none;
+}
+
+.shorts-interest button{
+  flex:1;
+  border:1px solid #ffffff55;
+  border-radius:20px;
+  padding:9px;
+  background:#111d;
+  color:white;
+  font-size:12px;
+}
+
+.shorts-interest.show{
+  transform:translateY(0);
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* NAVIGASI GIRINATAN */
+.bottom-nav{
+  position:fixed;
+  z-index:600;
+  bottom:0;
+  left:0;
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  padding:8px 3px calc(7px + env(safe-area-inset-bottom));
+  background:#101010;
+  border-top:1px solid #806326;
+}
+
+.bottom-nav a{
+  color:var(--muted);
+  text-decoration:none;
+  text-align:center;
+  font-size:10px;
+}
+
+.bottom-nav a span{
+  display:block;
+  font-size:21px;
+  margin-bottom:3px;
+}
+
+.bottom-nav a.current{color:var(--gold)}
+
+/* DESKTOP */
+@media(min-width:650px){
+  main{padding:15px 20px}
+  .video-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .watch-layout{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:22px}
+  .recommendations{margin-top:0}
+  .shorts-feed{height:calc(100dvh - 145px)}
+}
+
+@media(min-width:1000px){
+  .video-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  header{padding-left:25px;padding-right:25px}
+}
+
+@media(max-width:370px){
+  .brand{font-size:17px}
+  header{gap:6px;padding-left:8px;padding-right:8px}
+  .header-icon{width:29px}
 }
 </style>
 </head>
 
 <body>
 
+<!-- HEADER SELALU DI ATAS -->
 <header>
   <div class="brand">GIRI<span>NATAN</span></div>
-  <div class="header-label">▶ YouTube</div>
+
+  <form class="header-search" id="searchForm">
+    <input id="searchInput" type="search"
+      placeholder="Cari video..."
+      autocomplete="off">
+    <button type="submit" aria-label="Cari">⌕</button>
+  </form>
+
+  <button class="header-icon" id="notificationButton"
+    aria-label="Notifikasi">♧</button>
+
+  <button class="header-icon" id="profileButton"
+    aria-label="Profil">●</button>
 </header>
 
 <main>
 
-  <div class="search">
-    <input
-      id="searchInput"
-      type="search"
-      placeholder="Cari video YouTube..."
-    >
-    <button id="searchButton">Cari</button>
-  </div>
+<!-- HALAMAN UTAMA -->
+<section class="page active" id="homePage">
 
-  <div class="top-actions">
-    <button class="secondary-btn active" id="homeButton">
-      🏠 Beranda
-    </button>
-    <button class="secondary-btn" id="savedButton">
-      ♥ Favorit
-    </button>
-    <button class="secondary-btn" id="historyButton">
-      ◷ Riwayat
-    </button>
-  </div>
-
-  <div class="tabs" id="categoryTabs">
-    <button class="active" data-mode="popular">Untuk Anda</button>
-    <button data-mode="shorts">▶ Shorts</button>
+  <div class="categories" id="categoryTabs">
+    <button class="active" data-mode="popular">Semua</button>
+    <button data-mode="shorts">Shorts</button>
     <button data-category="musik">Musik</button>
     <button data-category="hiburan">Hiburan</button>
     <button data-category="olahraga">Olahraga</button>
@@ -436,41 +816,98 @@ nav a.current {
     <button data-category="kuliner">Kuliner</button>
   </div>
 
-  <div id="playerBox">
-    <button class="close-player" id="closePlayer">
-      ✕ Tutup Pemutar
-    </button>
-
-    <iframe
-      id="player"
-      allowfullscreen
-      allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen"
-      referrerpolicy="strict-origin-when-cross-origin"
-    ></iframe>
-
-    <h3 id="playingTitle"></h3>
-    <button class="secondary-btn" id="sharePlaying">
-      ↗ Bagikan video
-    </button>
-  </div>
-
   <div class="section-heading">
     <h2 id="sectionTitle">Video Populer</h2>
     <small id="videoCount"></small>
   </div>
 
-  <p id="message">Memuat video...</p>
+  <p class="message" id="message">Memuat video...</p>
+  <div class="video-grid" id="videoList"></div>
 
-  <div id="videoList" class="video-grid"></div>
+  <div id="collectionButtons" style="margin-top:25px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="small-action" id="savedButton">♥ Favorit</button>
+    <button class="small-action" id="historyButton">◷ Riwayat</button>
+  </div>
+</section>
+
+<!-- HALAMAN TONTONAN -->
+<section class="page" id="watchPage">
+  <button class="back-button" id="backHome">← Kembali</button>
+
+  <div class="watch-layout">
+    <div class="watch-main">
+      <div class="watch-player">
+        <iframe id="watchPlayer"
+          title="Pemutar video YouTube"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin">
+        </iframe>
+      </div>
+
+      <h1 class="watch-title" id="watchTitle"></h1>
+      <div class="watch-stat" id="watchStats"></div>
+
+      <div class="channel-row">
+        <div class="channel-avatar" id="watchAvatar">G</div>
+        <div class="channel-info">
+          <div class="channel-name" id="watchChannel"></div>
+          <div class="channel-subs">Saluran YouTube</div>
+        </div>
+        <button class="subscribe-button" id="subscribeButton">
+          Subscribe
+        </button>
+      </div>
+
+      <div class="watch-actions">
+        <button class="watch-action" id="likeButton">👍 Suka</button>
+        <button class="watch-action" id="dislikeButton">👎 Tidak suka</button>
+        <button class="watch-action" id="shareButton">↗ Bagikan</button>
+        <button class="watch-action" id="saveWatchButton">☆ Simpan</button>
+        <button class="watch-action" id="moreButton">⋯ Lainnya</button>
+      </div>
+
+      <div class="description-box">
+        <strong>Informasi video</strong>
+        <div id="watchDescription">Video diputar melalui YouTube.</div>
+      </div>
+
+      <div class="comments-section">
+        <h3>Komentar</h3>
+        <p class="message" id="commentNotice">
+          Komentar lokal GIRINATAN. Belum terhubung ke komentar YouTube.
+        </p>
+
+        <form class="comment-form" id="commentForm">
+          <input id="commentInput"
+            maxlength="500"
+            placeholder="Tulis komentar..."
+            required>
+          <button type="submit">Kirim</button>
+        </form>
+
+        <div id="commentList"></div>
+      </div>
+    </div>
+
+    <aside class="recommendations">
+      <h3>Video lainnya</h3>
+      <div id="recommendationList"></div>
+    </aside>
+  </div>
+</section>
+
+<!-- SHORTS -->
+<section class="page" id="shortsPage">
+  <div class="shorts-feed" id="shortsFeed"></div>
+</section>
 
 </main>
 
-<nav>
+<!-- NAVIGASI BAWAH GIRINATAN -->
+<nav class="bottom-nav">
   <a href="../index.html">
     <span>⌂</span>Beranda
-  </a>
-  <a href="../index.html#marketPage">
-    <span>▣</span>Market
   </a>
   <a href="../index.html#karyaPage">
     <span>✦</span>Berkarya
@@ -479,7 +916,10 @@ nav a.current {
     <span>♧</span>Komunitas
   </a>
   <a href="../index.html#accountPage">
-    <span>♙</span>Akun
+    <span>♙</span>Profil
+  </a>
+  <a href="../index.html#marketPage">
+    <span>▣</span>Market
   </a>
 </nav>
 
@@ -492,514 +932,817 @@ const WORKER_URL =
 
 const STORAGE_FAVORITES = "girinatanyoutube_favorites";
 const STORAGE_HISTORY = "girinatanyoutube_history";
+const STORAGE_COMMENTS = "girinatanyoutube_comments";
+const STORAGE_SUBSCRIPTIONS = "girinatanyoutube_subscriptions";
+const STORAGE_REACTIONS = "girinatanyoutube_reactions";
 
-const list = document.getElementById("videoList");
-const message = document.getElementById("message");
-const searchInput = document.getElementById("searchInput");
-const playerBox = document.getElementById("playerBox");
-const player = document.getElementById("player");
+const $ = id => document.getElementById(id);
 
 let currentVideos = [];
 let currentVideo = null;
 let currentMode = "popular";
 let requestNumber = 0;
+let shortsVideos = [];
 
 const categoryKeywords = {
-  musik: "musik Indonesia terbaru",
-  hiburan: "hiburan Indonesia",
-  olahraga: "berita dan pertandingan olahraga",
-  berita: "berita Indonesia terbaru",
-  gaming: "gameplay gaming Indonesia",
-  pendidikan: "video edukasi pembelajaran Indonesia",
-  teknologi: "teknologi dan gadget terbaru",
-  kuliner: "kuliner dan resep masakan Indonesia"
+  musik:"musik Indonesia terbaru",
+  hiburan:"hiburan Indonesia",
+  olahraga:"pertandingan olahraga Indonesia",
+  berita:"berita Indonesia terbaru",
+  gaming:"gameplay gaming Indonesia",
+  pendidikan:"video edukasi pembelajaran",
+  teknologi:"teknologi gadget terbaru",
+  kuliner:"kuliner resep masakan Indonesia"
 };
 
-/* PENYIMPANAN LOKAL */
-function bacaPenyimpanan(key) {
-  try {
-    return JSON.parse(localStorage.getItem(key) || "[]");
-  } catch {
+/* STORAGE */
+function readStore(key){
+  try{
+    return JSON.parse(localStorage.getItem(key)||"[]");
+  }catch{
     return [];
   }
 }
 
-function simpanPenyimpanan(key, data) {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch {
-    tampilkanPesan("Penyimpanan perangkat tidak tersedia.");
+function writeStore(key,data){
+  try{
+    localStorage.setItem(key,JSON.stringify(data));
+  }catch{
+    showMessage("Penyimpanan perangkat tidak tersedia.");
   }
 }
 
-function ambilID(video) {
-  return typeof video.id === "object"
+function videoId(video){
+  return typeof video.id==="object"
     ? video.id?.videoId
     : video.id;
 }
 
-function dataVideo(video) {
+function normalizeVideo(video){
+  const snippet=video.snippet||{};
   return {
-    id: ambilID(video),
-    title: video.snippet?.title || "",
-    channel: video.snippet?.channelTitle || "",
+    id:videoId(video),
+    title:snippet.title||"",
+    channel:snippet.channelTitle||"YouTube",
     thumbnail:
-      video.snippet?.thumbnails?.medium?.url ||
-      video.snippet?.thumbnails?.default?.url ||
-      "",
-    publishedAt: video.snippet?.publishedAt || "",
-    views: video.statistics?.viewCount || "0"
+      snippet.thumbnails?.high?.url||
+      snippet.thumbnails?.medium?.url||
+      snippet.thumbnails?.default?.url||"",
+    publishedAt:snippet.publishedAt||"",
+    views:video.statistics?.viewCount||"0",
+    description:snippet.description||""
   };
 }
 
-/* PESAN */
-function tampilkanPesan(teks) {
-  message.textContent = teks;
+function formatViews(value){
+  const number=Number(value||0);
+  if(number>=1000000)return (number/1000000).toFixed(1)+" jt";
+  if(number>=1000)return (number/1000).toFixed(1)+" rb";
+  return number.toLocaleString("id-ID");
 }
 
-/* TAB */
-function pilihTab(button) {
+function formatDate(value){
+  if(!value)return "Tanggal tidak tersedia";
+  return new Date(value).toLocaleDateString("id-ID",{
+    day:"numeric",month:"short",year:"numeric"
+  });
+}
+
+function showMessage(text){
+  $("message").textContent=text;
+}
+
+/* NAVIGASI HALAMAN */
+function showPage(pageId){
+  document.querySelectorAll(".page").forEach(page=>{
+    page.classList.remove("active");
+  });
+  $(pageId).classList.add("active");
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+/* TAB KATEGORI */
+function activateCategory(button){
   document.querySelectorAll("#categoryTabs button")
-    .forEach(item => item.classList.remove("active"));
-
-  if (button) button.classList.add("active");
+    .forEach(item=>item.classList.remove("active"));
+  if(button)button.classList.add("active");
 }
 
-function pilihTampilan(button) {
-  document.querySelectorAll(".top-actions button")
-    .forEach(item => item.classList.remove("active"));
+/* API YOUTUBE MELALUI WORKER */
+async function fetchVideos(action,keyword=""){
+  const request=++requestNumber;
 
-  button.classList.add("active");
-}
+  showMessage("Memuat video...");
+  $("videoList").innerHTML="";
+  $("videoCount").textContent="";
 
-/* MEMUAT VIDEO */
-async function ambilVideo(action, kata = "") {
-  const nomorPermintaan = ++requestNumber;
+  try{
+    const url=new URL(WORKER_URL);
+    url.searchParams.set("action",action);
+    if(keyword)url.searchParams.set("q",keyword);
 
-  try {
-    tampilkanPesan("Memuat video...");
-    list.innerHTML = "";
-    document.getElementById("videoCount").textContent = "";
+    const response=await fetch(url.toString());
+    const data=await response.json();
 
-    const url = new URL(WORKER_URL);
-    url.searchParams.set("action", action);
+    if(request!==requestNumber)return;
 
-    if (kata) url.searchParams.set("q", kata);
-
-    const response = await fetch(url.toString());
-    const data = await response.json();
-
-    if (nomorPermintaan !== requestNumber) return;
-
-    if (!response.ok || data.error) {
-      throw new Error(
-        data.error?.message || "Gagal mengambil video."
-      );
+    if(!response.ok||data.error){
+      throw new Error(data.error?.message||"Gagal mengambil video.");
     }
 
-    currentVideos = data.items || [];
-    tampilkanVideo(currentVideos);
+    currentVideos=(data.items||[])
+      .map(normalizeVideo)
+      .filter(item=>item.id&&item.thumbnail);
 
-  } catch (error) {
-    if (nomorPermintaan !== requestNumber) return;
+    renderVideos(currentVideos);
 
-    tampilkanPesan("Gagal memuat video: " + error.message);
-    list.innerHTML = "";
+  }catch(error){
+    if(request!==requestNumber)return;
+    showMessage("Gagal memuat video: "+error.message);
 
-    const retry = document.createElement("button");
-    retry.textContent = "↻ Coba Lagi";
-    retry.onclick = () => ambilVideo(action, kata);
-
-    list.appendChild(retry);
+    const retry=document.createElement("button");
+    retry.className="small-action";
+    retry.textContent="Coba Lagi";
+    retry.onclick=()=>fetchVideos(action,keyword);
+    $("videoList").appendChild(retry);
   }
 }
 
 /* KARTU VIDEO */
-function tampilkanVideo(videos) {
-  list.innerHTML = "";
+function renderVideos(videos){
+  const container=$("videoList");
+  container.innerHTML="";
 
-  if (!videos || !videos.length) {
-    tampilkanPesan("Video tidak ditemukan.");
+  if(!videos.length){
+    showMessage("Video tidak ditemukan.");
+    $("videoCount").textContent="0 video";
     return;
   }
 
-  let total = 0;
+  let count=0;
 
-  videos.forEach(video => {
-    const item = dataVideo(video);
+  videos.forEach(item=>{
+    const card=document.createElement("article");
+    card.className="video-card";
 
-    if (!item.id || !item.thumbnail) return;
+    const wrap=document.createElement("div");
+    wrap.className="thumbnail-wrap";
 
-    const card = document.createElement("article");
-    card.className = "video";
+    const img=document.createElement("img");
+    img.className="thumbnail";
+    img.src=item.thumbnail;
+    img.alt=item.title;
+    img.loading="lazy";
+    img.decoding="async";
 
-    if (currentMode === "shorts") {
-      card.classList.add("shorts-mode");
-    }
+    const overlay=document.createElement("div");
+    overlay.className="play-overlay";
+    overlay.innerHTML="<span>▶</span>";
 
-    const thumbWrap = document.createElement("div");
-    thumbWrap.className = "thumb-wrap";
+    wrap.append(img,overlay);
+    wrap.addEventListener("click",()=>openWatch(item));
 
-    const img = document.createElement("img");
-    img.className = "thumb";
-    img.src = item.thumbnail;
-    img.alt = item.title;
-    img.loading = "lazy";
-    img.decoding = "async";
+    const details=document.createElement("div");
+    details.className="video-details";
 
-    const overlay = document.createElement("div");
-    overlay.className = "play-overlay";
+    const avatar=document.createElement("div");
+    avatar.className="channel-avatar";
+    avatar.textContent=(item.channel||"G").charAt(0).toUpperCase();
 
-    const playIcon = document.createElement("span");
-    playIcon.textContent = "▶";
+    const text=document.createElement("div");
+    text.className="video-text";
 
-    overlay.appendChild(playIcon);
-    thumbWrap.append(img, overlay);
+    const title=document.createElement("h3");
+    title.className="video-title";
+    title.textContent=item.title;
 
-    thumbWrap.addEventListener("click", () => putarVideo(item));
+    const meta=document.createElement("div");
+    meta.className="video-meta";
+    meta.textContent=item.channel+" · "+formatViews(item.views)+
+      " penayangan · "+formatDate(item.publishedAt);
 
-    const title = document.createElement("h3");
-    title.textContent = item.title;
+    text.append(title,meta);
+    details.append(avatar,text);
 
-    const channel = document.createElement("small");
-    channel.textContent = item.channel;
+    const menu=document.createElement("button");
+    menu.className="card-menu";
+    menu.textContent="⋮";
+    menu.setAttribute("aria-label","Menu video");
+    menu.onclick=()=>shareVideo(item);
 
-    const views = document.createElement("small");
-    views.textContent = Number(item.views).toLocaleString("id-ID")
-      + " penayangan";
+    details.appendChild(menu);
 
-    const date = document.createElement("small");
-    date.textContent = item.publishedAt
-      ? new Date(item.publishedAt).toLocaleDateString("id-ID")
-      : "Tanggal tidak tersedia";
+    const actions=document.createElement("div");
+    actions.className="card-actions";
 
-    const actions = document.createElement("div");
-    actions.className = "video-actions";
+    const favorite=document.createElement("button");
+    favorite.className="small-action";
+    updateFavoriteButton(favorite,item);
 
-    const saveButton = document.createElement("button");
-    saveButton.textContent = "♥ Favorit";
+    favorite.onclick=()=>{
+      toggleFavorite(item);
+      updateFavoriteButton(favorite,item);
+    };
 
-    function perbaruiTombolFavorit() {
-      const saved = bacaPenyimpanan(STORAGE_FAVORITES)
-        .some(v => v.id === item.id);
+    const share=document.createElement("button");
+    share.className="small-action";
+    share.textContent="↗ Bagikan";
+    share.onclick=()=>shareVideo(item);
 
-      saveButton.classList.toggle("saved", saved);
-      saveButton.textContent = saved
-        ? "♥ Tersimpan"
-        : "♡ Favorit";
-    }
-
-    perbaruiTombolFavorit();
-
-    saveButton.addEventListener("click", () => {
-      toggleFavorit(item);
-      perbaruiTombolFavorit();
-    });
-
-    const shareButton = document.createElement("button");
-    shareButton.textContent = "↗ Bagikan";
-
-    shareButton.addEventListener("click", () => {
-      bagikanVideo(item);
-    });
-
-    actions.append(saveButton, shareButton);
-
-    const watchButton = document.createElement("button");
-    watchButton.className = "video-play";
-    watchButton.textContent = "▶ Tonton Video";
-    watchButton.addEventListener("click", () => putarVideo(item));
-
-    card.append(
-      thumbWrap,
-      title,
-      channel,
-      views,
-      date,
-      actions,
-      watchButton
-    );
-
-    list.appendChild(card);
-    total++;
+    actions.append(favorite,share);
+    card.append(wrap,details,actions);
+    container.appendChild(card);
+    count++;
   });
 
-  tampilkanPesan(total ? "" : "Video tidak ditemukan.");
-
-  document.getElementById("videoCount").textContent =
-    total + " video";
+  showMessage("");
+  $("videoCount").textContent=count+" video";
 }
 
-/* PEMUTAR */
-function putarVideo(item) {
-  currentVideo = item;
+function updateFavoriteButton(button,item){
+  const saved=readStore(STORAGE_FAVORITES)
+    .some(video=>video.id===item.id);
 
-  playerBox.style.display = "block";
-
-  player.src =
-    "https://www.youtube-nocookie.com/embed/" +
-    encodeURIComponent(item.id) +
-    "?autoplay=1&rel=0";
-
-  document.getElementById("playingTitle").textContent =
-    item.title;
-
-  simpanRiwayat(item);
-
-  playerBox.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-}
-
-function tutupPemutar() {
-  player.src = "";
-  playerBox.style.display = "none";
-  currentVideo = null;
-}
-
-/* FAVORIT */
-function toggleFavorit(item) {
-  let favorites = bacaPenyimpanan(STORAGE_FAVORITES);
-
-  const exists = favorites.some(v => v.id === item.id);
-
-  if (exists) {
-    favorites = favorites.filter(v => v.id !== item.id);
-    tampilkanPesan("Video dihapus dari favorit.");
-  } else {
-    favorites.unshift(item);
-    tampilkanPesan("Video disimpan ke favorit.");
-  }
-
-  simpanPenyimpanan(STORAGE_FAVORITES, favorites);
-}
-
-/* RIWAYAT */
-function simpanRiwayat(item) {
-  let history = bacaPenyimpanan(STORAGE_HISTORY);
-
-  history = history.filter(v => v.id !== item.id);
-  history.unshift({
-    ...item,
-    watchedAt: new Date().toISOString()
-  });
-
-  history = history.slice(0, 100);
-
-  simpanPenyimpanan(STORAGE_HISTORY, history);
-}
-
-/* TAMPILKAN KOLEKSI */
-function tampilkanKoleksi(mode) {
-  tutupPemutar();
-
-  currentMode = mode;
-  list.className = "video-grid";
-
-  const favorites = bacaPenyimpanan(STORAGE_FAVORITES);
-  const history = bacaPenyimpanan(STORAGE_HISTORY);
-
-  const data = mode === "favorites" ? favorites : history;
-
-  document.getElementById("sectionTitle").textContent =
-    mode === "favorites" ? "Video Favorit" : "Riwayat Tontonan";
-
-  document.querySelectorAll("#categoryTabs button")
-    .forEach(b => b.classList.remove("active"));
-
-  if (!data.length) {
-    list.innerHTML = `
-      <div class="empty-state">
-        <strong>${mode === "favorites" ? "Belum Ada Favorit" : "Belum Ada Riwayat"}</strong>
-        Video yang kamu simpan akan muncul di sini.
-      </div>
-    `;
-    tampilkanPesan("");
-    document.getElementById("videoCount").textContent = "0 video";
-    return;
-  }
-
-  const videos = data.map(v => ({
-    id: v.id,
-    snippet: {
-      title: v.title,
-      channelTitle: v.channel,
-      thumbnails: {
-        medium: { url: v.thumbnail }
-      },
-      publishedAt: v.publishedAt
-    },
-    statistics: {
-      viewCount: v.views
-    }
-  }));
-
-  currentVideos = videos;
-  tampilkanVideo(videos);
-
-  document.getElementById("videoCount").textContent =
-    data.length + " video";
-}
-
-/* BAGIKAN */
-async function bagikanVideo(item) {
-  const url = "https://www.youtube.com/watch?v=" +
-    encodeURIComponent(item.id);
-
-  const shareData = {
-    title: item.title,
-    text: "Tonton video ini di YouTube",
-    url
-  };
-
-  try {
-    if (navigator.share) {
-      await navigator.share(shareData);
-    } else if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(url);
-      tampilkanPesan("Tautan video berhasil disalin.");
-    } else {
-      window.prompt("Salin tautan video:", url);
-    }
-  } catch (error) {
-    if (error.name !== "AbortError") {
-      tampilkanPesan("Tidak dapat membagikan video.");
-    }
-  }
+  button.classList.toggle("saved",saved);
+  button.textContent=saved?"♥ Tersimpan":"♡ Favorit";
 }
 
 /* BERANDA */
-function beranda() {
-  currentMode = "popular";
-  list.className = "video-grid";
-
-  pilihTampilan(document.getElementById("homeButton"));
-
-  const firstTab = document.querySelector(
-    '#categoryTabs button[data-mode="popular"]'
-  );
-
-  pilihTab(firstTab);
-
-  document.getElementById("sectionTitle").textContent =
-    "Video Populer";
-
-  searchInput.value = "";
-
-  tutupPemutar();
-  ambilVideo("popular");
-}
-
-/* SHORTS */
-function shorts() {
-  currentMode = "shorts";
-  list.className = "video-grid shorts-grid";
-
-  document.getElementById("sectionTitle").textContent =
-    "▶ Shorts";
-
-  searchInput.value = "YouTube Shorts Indonesia";
-
-  tutupPemutar();
-  ambilVideo("search", "YouTube Shorts Indonesia");
+function home(){
+  currentMode="popular";
+  showPage("homePage");
+  $("sectionTitle").textContent="Video Populer";
+  $("searchInput").value="";
+  activateCategory(document.querySelector('[data-mode="popular"]'));
+  closeWatch();
+  fetchVideos("popular");
 }
 
 /* PENCARIAN */
-function cariVideo() {
-  const kata = searchInput.value.trim();
-
-  if (!kata) {
-    tampilkanPesan("Masukkan kata pencarian.");
+function searchVideos(keyword){
+  keyword=keyword.trim();
+  if(!keyword){
+    showMessage("Masukkan kata pencarian.");
     return;
   }
 
-  currentMode = "search";
-  list.className = "video-grid";
-
-  document.getElementById("sectionTitle").textContent =
-    "Hasil Pencarian";
-
-  document.querySelectorAll("#categoryTabs button")
-    .forEach(b => b.classList.remove("active"));
-
-  pilihTampilan(document.getElementById("homeButton"));
-
-  tutupPemutar();
-  ambilVideo("search", kata);
+  currentMode="search";
+  showPage("homePage");
+  $("sectionTitle").textContent="Hasil pencarian";
+  activateCategory(null);
+  closeWatch();
+  fetchVideos("search",keyword);
 }
 
 /* KATEGORI */
-function kategori(kata, button) {
-  const pencarian = categoryKeywords[kata] || kata;
+function openCategory(category,button){
+  const keyword=categoryKeywords[category];
+  if(!keyword)return;
 
-  currentMode = "search";
-  list.className = "video-grid";
+  currentMode="search";
+  activateCategory(button);
+  showPage("homePage");
+  $("sectionTitle").textContent=
+    "Kategori "+category.charAt(0).toUpperCase()+category.slice(1);
 
-  pilihTab(button);
-  pilihTampilan(document.getElementById("homeButton"));
-
-  searchInput.value = pencarian;
-
-  document.getElementById("sectionTitle").textContent =
-    "Kategori " + kata.charAt(0).toUpperCase() + kata.slice(1);
-
-  tutupPemutar();
-  ambilVideo("search", pencarian);
+  closeWatch();
+  fetchVideos("search",keyword);
 }
 
-/* EVENT */
-document.getElementById("searchButton")
-  .addEventListener("click", cariVideo);
+/* FAVORIT DAN RIWAYAT */
+function toggleFavorite(item){
+  let data=readStore(STORAGE_FAVORITES);
+  const exists=data.some(video=>video.id===item.id);
 
-searchInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") cariVideo();
+  data=exists
+    ?data.filter(video=>video.id!==item.id)
+    :[item,...data];
+
+  writeStore(STORAGE_FAVORITES,data);
+  showMessage(exists?"Dihapus dari favorit.":"Disimpan ke favorit.");
+}
+
+function saveHistory(item){
+  let data=readStore(STORAGE_HISTORY);
+  data=data.filter(video=>video.id!==item.id);
+  data.unshift({...item,watchedAt:new Date().toISOString()});
+  writeStore(STORAGE_HISTORY,data.slice(0,100));
+}
+
+function showCollection(type){
+  currentMode=type;
+  showPage("homePage");
+  closeWatch();
+
+  const data=readStore(
+    type==="favorites"?STORAGE_FAVORITES:STORAGE_HISTORY
+  );
+
+  $("sectionTitle").textContent=
+    type==="favorites"?"Video Favorit":"Riwayat Tontonan";
+
+  $("videoList").innerHTML="";
+  $("videoCount").textContent=data.length+" video";
+
+  if(!data.length){
+    showMessage("Belum ada video di bagian ini.");
+    return;
+  }
+
+  showMessage("");
+  renderVideos(data);
+}
+
+/* PEMBAGIAN TAUTAN */
+async function shareVideo(item){
+  const url="https://www.youtube.com/watch?v="+
+    encodeURIComponent(item.id);
+
+  try{
+    if(navigator.share){
+      await navigator.share({
+        title:item.title,
+        text:"Tonton video ini",
+        url
+      });
+    }else{
+      await navigator.clipboard.writeText(url);
+      showMessage("Tautan berhasil disalin.");
+    }
+  }catch(error){
+    if(error.name!=="AbortError"){
+      window.prompt("Salin tautan video:",url);
+    }
+  }
+}
+
+/* HALAMAN TONTONAN */
+function openWatch(item){
+  currentVideo=item;
+  showPage("watchPage");
+
+  $("watchPlayer").src=
+    "https://www.youtube-nocookie.com/embed/"+
+    encodeURIComponent(item.id)+
+    "?autoplay=1&rel=0";
+
+  $("watchTitle").textContent=item.title;
+  $("watchChannel").textContent=item.channel;
+  $("watchAvatar").textContent=
+    (item.channel||"G").charAt(0).toUpperCase();
+
+  $("watchStats").textContent=
+    formatViews(item.views)+" penayangan · "+
+    formatDate(item.publishedAt);
+
+  $("watchDescription").textContent=
+    item.description||"Video diputar melalui pemutar resmi YouTube.";
+
+  saveHistory(item);
+  renderRecommendations();
+  renderComments();
+  updateWatchFavorite();
+  updateSubscriptionButton();
+
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+function closeWatch(){
+  $("watchPlayer").src="";
+  currentVideo=null;
+}
+
+function updateWatchFavorite(){
+  if(!currentVideo)return;
+
+  const saved=readStore(STORAGE_FAVORITES)
+    .some(item=>item.id===currentVideo.id);
+
+  $("saveWatchButton").textContent=
+    saved?"★ Tersimpan":"☆ Simpan";
+
+  $("saveWatchButton").classList.toggle("active",saved);
+}
+
+/* TOMBOL INTERAKSI LOKAL */
+function getReaction(){
+  const reactions=readStore(STORAGE_REACTIONS);
+  return reactions.find(item=>item.id===currentVideo?.id);
+}
+
+function setReaction(type){
+  if(!currentVideo)return;
+
+  let data=readStore(STORAGE_REACTIONS);
+  data=data.filter(item=>item.id!==currentVideo.id);
+
+  if(type)data.push({id:currentVideo.id,type});
+
+  writeStore(STORAGE_REACTIONS,data);
+
+  $("likeButton").classList.toggle("active",type==="like");
+  $("dislikeButton").classList.toggle("active",type==="dislike");
+}
+
+function updateSubscriptionButton(){
+  if(!currentVideo)return;
+
+  const subscriptions=readStore(STORAGE_SUBSCRIPTIONS);
+  const exists=subscriptions.includes(currentVideo.channel);
+
+  $("subscribeButton").textContent=
+    exists?"Subscribed":"Subscribe";
+
+  $("subscribeButton").classList.toggle("subscribed",exists);
+}
+
+/* KOMENTAR LOKAL */
+function commentKey(){
+  return currentVideo?"girinatanyoutube_comments_"+currentVideo.id:"";
+}
+
+function renderComments(){
+  if(!currentVideo)return;
+
+  const comments=readStore(commentKey());
+  const container=$("commentList");
+  container.innerHTML="";
+
+  if(!comments.length){
+    container.innerHTML=
+      '<p class="message">Belum ada komentar GIRINATAN.</p>';
+    return;
+  }
+
+  comments.forEach((comment,index)=>{
+    const row=document.createElement("div");
+    row.className="comment-item";
+
+    const avatar=document.createElement("div");
+    avatar.className="comment-avatar";
+    avatar.textContent="G";
+
+    const body=document.createElement("div");
+    body.className="comment-body";
+
+    const user=document.createElement("div");
+    user.className="comment-user";
+    user.textContent=comment.user||"Pengguna GIRINATAN";
+
+    const time=document.createElement("span");
+    time.className="comment-time";
+    time.textContent=comment.time||"Baru saja";
+    user.appendChild(time);
+
+    const content=document.createElement("div");
+    content.className="comment-text";
+    content.textContent=comment.text;
+
+    const buttons=document.createElement("div");
+    buttons.className="comment-buttons";
+
+    const like=document.createElement("button");
+    like.textContent="♡ Suka ("+(comment.likes||0)+")";
+    like.onclick=()=>{
+      const updated=readStore(commentKey());
+      updated[index].likes=(updated[index].likes||0)+1;
+      writeStore(commentKey(),updated);
+      renderComments();
+    };
+
+    const reply=document.createElement("button");
+    reply.textContent="Balas";
+    reply.onclick=()=>{
+      $("commentInput").value="@"+(comment.user||"pengguna")+" ";
+      $("commentInput").focus();
+    };
+
+    buttons.append(like,reply);
+    body.append(user,content,buttons);
+    row.append(avatar,body);
+    container.appendChild(row);
+  });
+}
+
+/* REKOMENDASI */
+function renderRecommendations(){
+  const container=$("recommendationList");
+  container.innerHTML="";
+
+  const videos=currentVideos.filter(
+    item=>item.id!==currentVideo?.id
+  );
+
+  const recommendations=videos.length
+    ?videos
+    :readStore(STORAGE_HISTORY).filter(
+      item=>item.id!==currentVideo?.id
+    );
+
+  recommendations.forEach(item=>{
+    const row=document.createElement("div");
+    row.className="recommendation-card";
+
+    const img=document.createElement("img");
+    img.src=item.thumbnail;
+    img.alt=item.title;
+    img.loading="lazy";
+
+    const info=document.createElement("div");
+    info.className="recommendation-info";
+
+    const title=document.createElement("strong");
+    title.textContent=item.title;
+
+    const meta=document.createElement("small");
+    meta.textContent=item.channel+" · "+formatViews(item.views)+" penayangan";
+
+    info.append(title,meta);
+    row.append(img,info);
+    row.onclick=()=>openWatch(item);
+
+    container.appendChild(row);
+  });
+}
+
+/* SHORTS */
+async function openShorts(){
+  currentMode="shorts";
+  showPage("shortsPage");
+
+  const feed=$("shortsFeed");
+  feed.innerHTML='<p class="message">Memuat Shorts...</p>';
+
+  try{
+    const url=new URL(WORKER_URL);
+    url.searchParams.set("action","search");
+    url.searchParams.set("q","YouTube Shorts Indonesia");
+
+    const response=await fetch(url);
+    const data=await response.json();
+
+    if(!response.ok||data.error){
+      throw new Error(data.error?.message||"Gagal memuat Shorts");
+    }
+
+    shortsVideos=(data.items||[])
+      .map(normalizeVideo)
+      .filter(item=>item.id&&item.thumbnail);
+
+    renderShorts();
+
+  }catch(error){
+    feed.innerHTML="";
+    const text=document.createElement("p");
+    text.className="message";
+    text.textContent="Gagal memuat Shorts: "+error.message;
+    feed.appendChild(text);
+  }
+}
+
+function renderShorts(){
+  const feed=$("shortsFeed");
+  feed.innerHTML="";
+
+  if(!shortsVideos.length){
+    feed.textContent="Belum ada video Shorts.";
+    return;
+  }
+
+  shortsVideos.forEach(item=>{
+    const card=document.createElement("article");
+    card.className="short-card";
+
+    const background=document.createElement("img");
+    background.className="short-background";
+    background.src=item.thumbnail;
+    background.alt=item.title;
+    background.loading="lazy";
+
+    const shade=document.createElement("div");
+    shade.className="short-shade";
+
+    const top=document.createElement("div");
+    top.className="shorts-top";
+
+    const search=document.createElement("button");
+    search.textContent="⌕";
+    search.onclick=()=>{
+      showPage("homePage");
+      $("searchInput").focus();
+    };
+
+    const more=document.createElement("button");
+    more.textContent="⋮";
+    more.onclick=()=>{
+      card.querySelector(".shorts-interest")
+        .classList.toggle("show");
+    };
+
+    top.append(search,more);
+
+    const info=document.createElement("div");
+    info.className="shorts-info";
+
+    const channel=document.createElement("div");
+    channel.className="short-channel";
+
+    const avatar=document.createElement("div");
+    avatar.className="short-avatar";
+    avatar.textContent=(item.channel||"G").charAt(0).toUpperCase();
+
+    const name=document.createElement("div");
+    name.className="short-channel-name";
+    name.textContent=item.channel;
+
+    const subscribe=document.createElement("button");
+    subscribe.className="short-subscribe";
+    subscribe.textContent="Subscribe";
+    subscribe.onclick=()=>{
+      let data=readStore(STORAGE_SUBSCRIPTIONS);
+      if(!data.includes(item.channel)){
+        data.push(item.channel);
+        writeStore(STORAGE_SUBSCRIPTIONS,data);
+        subscribe.textContent="Subscribed";
+      }else{
+        subscribe.textContent="Subscribed";
+      }
+    };
+
+    channel.append(avatar,name,subscribe);
+
+    const caption=document.createElement("div");
+    caption.className="short-caption";
+    caption.textContent=item.title;
+
+    const music=document.createElement("div");
+    music.className="short-music";
+    music.innerHTML="♫ <span>Suara asli · "+escapeHTML(item.channel)+"</span>";
+
+    info.append(channel,caption,music);
+
+    const side=document.createElement("div");
+    side.className="short-side";
+
+    const like=document.createElement("button");
+    like.innerHTML="♡<small>Suka</small>";
+    like.onclick=()=>{
+      like.innerHTML="♥<small>Disukai</small>";
+    };
+
+    const comment=document.createElement("button");
+    comment.innerHTML="▢<small>Komentar</small>";
+    comment.onclick=()=>openWatch(item);
+
+    const share=document.createElement("button");
+    share.innerHTML="↗<small>Bagikan</small>";
+    share.onclick=()=>shareVideo(item);
+
+    const save=document.createElement("button");
+    save.innerHTML="☆<small>Simpan</small>";
+    save.onclick=()=>{
+      toggleFavorite(item);
+      save.innerHTML="★<small>Tersimpan</small>";
+    };
+
+    side.append(like,comment,share,save);
+
+    const interest=document.createElement("div");
+    interest.className="shorts-interest";
+
+    const no=document.createElement("button");
+    no.textContent="Tidak tertarik";
+    no.onclick=()=>card.remove();
+
+    const yes=document.createElement("button");
+    yes.textContent="Tertarik";
+    yes.onclick=()=>card.remove();
+
+    interest.append(no,yes);
+
+    const play=document.createElement("button");
+    play.textContent="▶ Tonton video";
+    play.style.cssText=
+      "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;border:0;border-radius:25px;padding:10px 16px;background:#000b;color:white";
+    play.onclick=()=>openWatch(item);
+
+    card.append(background,shade,top,info,side,interest,play);
+    feed.appendChild(card);
+  });
+}
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g,char=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#039;"
+  })[char]);
+}
+
+/* EVENT SEARCH */
+$("searchForm").addEventListener("submit",event=>{
+  event.preventDefault();
+  searchVideos($("searchInput").value);
 });
 
-document.getElementById("closePlayer")
-  .addEventListener("click", tutupPemutar);
-
-document.getElementById("sharePlaying")
-  .addEventListener("click", () => {
-    if (currentVideo) bagikanVideo(currentVideo);
-  });
-
-document.getElementById("homeButton")
-  .addEventListener("click", beranda);
-
-document.getElementById("savedButton")
-  .addEventListener("click", event => {
-    pilihTampilan(event.currentTarget);
-    tampilkanKoleksi("favorites");
-  });
-
-document.getElementById("historyButton")
-  .addEventListener("click", event => {
-    pilihTampilan(event.currentTarget);
-    tampilkanKoleksi("history");
-  });
-
+/* EVENT CATEGORY */
 document.querySelectorAll("#categoryTabs button")
-  .forEach(button => {
-    button.addEventListener("click", () => {
-      const mode = button.dataset.mode;
-      const category = button.dataset.category;
-
-      if (mode === "popular") {
-        beranda();
-      } else if (mode === "shorts") {
-        pilihTab(button);
-        shorts();
-      } else if (category) {
-        kategori(category, button);
+  .forEach(button=>{
+    button.addEventListener("click",()=>{
+      if(button.dataset.mode==="popular"){
+        home();
+      }else if(button.dataset.mode==="shorts"){
+        activateCategory(button);
+        openShorts();
+      }else if(button.dataset.category){
+        openCategory(button.dataset.category,button);
       }
     });
   });
 
+/* EVENT KOLEKSI */
+$("savedButton").onclick=()=>showCollection("favorites");
+$("historyButton").onclick=()=>showCollection("history");
+
+/* EVENT HALAMAN TONTONAN */
+$("backHome").onclick=()=>{
+  closeWatch();
+  home();
+};
+
+$("likeButton").onclick=()=>{
+  const current=getReaction();
+  setReaction(current?.type==="like"?null:"like");
+};
+
+$("dislikeButton").onclick=()=>{
+  const current=getReaction();
+  setReaction(current?.type==="dislike"?null:"dislike");
+};
+
+$("shareButton").onclick=()=>{
+  if(currentVideo)shareVideo(currentVideo);
+};
+
+$("saveWatchButton").onclick=()=>{
+  if(!currentVideo)return;
+  toggleFavorite(currentVideo);
+  updateWatchFavorite();
+};
+
+$("subscribeButton").onclick=()=>{
+  if(!currentVideo)return;
+
+  let data=readStore(STORAGE_SUBSCRIPTIONS);
+
+  if(data.includes(currentVideo.channel)){
+    data=data.filter(name=>name!==currentVideo.channel);
+  }else{
+    data.push(currentVideo.channel);
+  }
+
+  writeStore(STORAGE_SUBSCRIPTIONS,data);
+  updateSubscriptionButton();
+};
+
+$("moreButton").onclick=()=>{
+  if(currentVideo)shareVideo(currentVideo);
+};
+
+/* KOMENTAR */
+$("commentForm").addEventListener("submit",event=>{
+  event.preventDefault();
+
+  if(!currentVideo)return;
+
+  const text=$("commentInput").value.trim();
+  if(!text)return;
+
+  const comments=readStore(commentKey());
+
+  comments.unshift({
+    user:"Pengguna GIRINATAN",
+    text,
+    time:"Baru saja",
+    likes:0
+  });
+
+  writeStore(commentKey(),comments);
+  $("commentInput").value="";
+  renderComments();
+});
+
+/* HEADER */
+$("notificationButton").onclick=()=>{
+  alert("Fitur notifikasi GIRINATAN akan dihubungkan ke sistem notifikasi.");
+};
+
+$("profileButton").onclick=()=>{
+  window.location.href="../index.html#accountPage";
+};
+
 /* MULAI */
-beranda();
+home();
 
 </script>
-
 </body>
-</html>
+  </html>
