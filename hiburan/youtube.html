@@ -99,10 +99,12 @@ button{
 }
 
 .tabs button.active{
-  background:#D6AD48;
+  background:linear-gradient(135deg,#E5C36A,#B88A2E);
   color:#080808;
   border-color:#D6AD48;
   font-weight:bold;
+  box-shadow:0 3px 12px rgba(214,173,72,.2);
+  transform:translateY(-1px);
 }
 
 #message{color:#A8ADA8;font-size:13px}
@@ -376,12 +378,26 @@ function cariVideo() {
 }
 
 function kategori(kata, button) {
+  const kataKunci = {
+    musik: "musik Indonesia terbaru",
+    hiburan: "hiburan Indonesia",
+    olahraga: "berita dan pertandingan olahraga",
+    berita: "berita Indonesia terbaru",
+    gaming: "gameplay gaming Indonesia",
+    pendidikan: "video edukasi pembelajaran Indonesia",
+    teknologi: "teknologi dan gadget terbaru",
+    kuliner: "kuliner dan resep masakan Indonesia"
+  };
+
   pilihTab(button);
-  document.getElementById("searchInput").value = kata;
+
+  document.getElementById("searchInput").value =
+    kataKunci[kata] || kata;
+
   cariVideo();
 }
-
-function pilihTab(button) {
+  
+  function pilihTab(button) {
   document.querySelectorAll(".tabs button").forEach(b => {
     b.classList.remove("active");
   });
