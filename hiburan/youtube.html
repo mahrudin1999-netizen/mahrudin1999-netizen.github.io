@@ -310,6 +310,23 @@ main{
   overflow:hidden;
 }
 
+.watch-player.pinned{
+  position:fixed;
+  top:var(--header-height,62px);
+  left:0;
+  right:0;
+  width:100%;
+  max-width:850px;
+  margin:0 auto;
+  z-index:450;
+  border-radius:0 0 12px 12px;
+  box-shadow:0 6px 20px #000b;
+}
+
+.player-spacer{
+  display:none;
+}
+
 .watch-player iframe{
   display:block;
   width:100%;
@@ -1275,7 +1292,59 @@ async function shareVideo(item){
     }
   }
 }
+/* PEMUTAR TETAP DI ATAS */
+const watchPlayerBox = $("watchPlayer").parentElement;
+const playerSpacer = document.createElement("div");
 
+playerSpacer.className = "player-spacer";
+watchPlayerBox.parentNode.insertBefore(
+  playerSpacer,
+  watchPlayerBox
+);
+
+function updatePinnedPlayer(){
+  if(
+    !$("watchPage").classList.contains("active") ||
+    !currentVideo
+  ){
+    watchPlayerBox.classList.remove("pinned");
+    playerSpacer.style.display = "none";
+    return;
+  }
+
+  const headerHeight =
+    document.querySelector("header").getBoundingClientRect().height;
+
+  watchPlayerBox.style.setProperty(
+    "--header-height",
+    headerHeight + "px"
+  );
+
+  if(!watchPlayerBox.classList.contains("pinned")){
+    if(
+      watchPlayerBox.getBoundingClientRect().top <= headerHeight
+    ){
+      playerSpacer.style.height =
+        watchPlayerBox.offsetHeight + "px";
+
+      playerSpacer.style.display = "block";
+      watchPlayerBox.classList.add("pinned");
+    }
+  }else if(
+    playerSpacer.getBoundingClientRect().top > headerHeight
+  ){
+    watchPlayerBox.classList.remove("pinned");
+    playerSpacer.style.display = "none";
+  }
+}
+
+window.addEventListener(
+  "scroll",
+  updatePinnedPlayer,
+  {passive:true}
+);
+
+window.addEventListener("resize",updatePinnedPlayer);
 /* HALAMAN TONTONAN */
 function openWatch(item){
   currentVideo=item;
@@ -1466,6 +1535,32 @@ function renderRecommendations(){
 }
 
 /* SHORTS */
+  /* AUTOPLAY SHORTS */
+const shortObserver = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    const frame = entry.target.querySelector(".short-player");
+
+    if(!frame)return;
+
+    if(
+      entry.isIntersecting &&
+      entry.intersectionRatio >= 0.65 &&
+      $("shortsPage").classList.contains("active")
+    ){
+      const id = frame.dataset.videoId;
+
+      frame.src =
+        "https://www.youtube-nocookie.com/embed/" +
+        encodeURIComponent(id) +
+        "?autoplay=1&mute=1&playsinline=1&controls=1&rel=0";
+    }else{
+      frame.src = "about:blank";
+    }
+  });
+},{
+  root:$("shortsFeed"),
+  threshold:[0,0.65,1]
+});
 async function openShorts(){
   currentMode="shorts";
   showPage("shortsPage");
@@ -1512,12 +1607,21 @@ function renderShorts(){
   shortsVideos.forEach(item=>{
     const card=document.createElement("article");
     card.className="short-card";
+const background=document.createElement("img");
+background.className="short-background";
+background.src=item.thumbnail;
+background.alt=item.title;
+background.loading="lazy";
 
-    const background=document.createElement("img");
-    background.className="short-background";
-    background.src=item.thumbnail;
-    background.alt=item.title;
-    background.loading="lazy";
+const shortFrame=document.createElement("iframe");
+shortFrame.className="short-player";
+shortFrame.dataset.videoId=item.id;
+shortFrame.allow=
+  "autoplay; encrypted-media; picture-in-picture; fullscreen";
+shortFrame.allowFullscreen=true;
+shortFrame.referrerPolicy="strict-origin-when-cross-origin";
+shortFrame.src="about:blank";
+    
 
     const shade=document.createElement("div");
     shade.className="short-shade";
@@ -1620,14 +1724,18 @@ function renderShorts(){
 
     interest.append(no,yes);
 
-    const play=document.createElement("button");
-    play.textContent="▶ Tonton video";
-    play.style.cssText=
-      "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;border:0;border-radius:25px;padding:10px 16px;background:#000b;color:white";
-    play.onclick=()=>openWatch(item);
+    card.append(
+  background,
+  shortFrame,
+  shade,
+  top,
+  info,
+  side,
+  interest
+);
 
-    card.append(background,shade,top,info,side,interest,play);
-    feed.appendChild(card);
+feed.appendChild(card);
+shortObserver.observe(card);
   });
 }
 
