@@ -321,6 +321,17 @@ footer a.active {
 </div>
 
   <div id="videoMode" style="display:none">
+    
+<div class="music-categories">
+  <button onclick="searchYouTubeCategory('dangdut indonesia')">Dangdut</button>
+  <button onclick="searchYouTubeCategory('dangdut koplo indonesia')">Koplo</button>
+  <button onclick="searchYouTubeCategory('pop indonesia')">Pop Indonesia</button>
+  <button onclick="searchYouTubeCategory('lagu daerah indonesia')">Lagu Daerah</button>
+  <button onclick="searchYouTubeCategory('musik religi indonesia')">Religi</button>
+  <button onclick="searchYouTubeCategory('rock indonesia')">Rock</button>
+  <button onclick="searchYouTubeCategory('indie indonesia')">Indie</button>
+</div>
+
   <input
     id="youtubeSearch"
     class="search"
@@ -663,6 +674,11 @@ function showMusicMode() {
 function showVideoMode() {
   document.getElementById("musicMode").style.display = "none";
   document.getElementById("videoMode").style.display = "block";
+}
+
+function searchYouTubeCategory(keyword) {
+  document.getElementById("youtubeSearch").value = keyword;
+  searchYouTube();
 }
 
 async function searchYouTube() {
