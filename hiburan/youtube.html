@@ -200,6 +200,19 @@ nav a span{display:block;font-size:19px;margin-bottom:4px}
     grid-template-columns:repeat(3,1fr);
   }
 }
+  .video.shorts-mode .thumb{
+  aspect-ratio:9/16;
+  object-fit:cover;
+  max-height:420px;
+  width:100%;
+  border-radius:14px;
+}
+
+.video.shorts-mode{
+  max-width:260px;
+  margin-left:auto;
+  margin-right:auto;
+}
 </style>
 </head>
 
@@ -220,6 +233,7 @@ nav a span{display:block;font-size:19px;margin-bottom:4px}
 </button>
   <div class="tabs">
     <button class="active" onclick="beranda(this)">Untuk Anda</button>
+    <button onclick="shorts(this)">▶ Shorts</button>
     <button onclick="kategori('musik',this)">Musik</button>
     <button onclick="kategori('hiburan',this)">Hiburan</button>
     <button onclick="kategori('olahraga',this)">Olahraga</button>
@@ -361,6 +375,14 @@ async function ambilVideo(action, kata = "") {
 function beranda(button) {
   pilihTab(button);
   ambilVideo("popular");
+}
+  function shorts(button) {
+  pilihTab(button);
+
+  document.getElementById("searchInput").value =
+    "YouTube Shorts Indonesia";
+
+  cariVideo();
 }
 function kembaliBeranda(){
   document.getElementById("searchInput").value = "";
