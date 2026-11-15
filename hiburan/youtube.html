@@ -37,7 +37,12 @@ header{
 
 .brand{font-size:20px;font-weight:bold}
 .brand span{color:#D6AD48}
-main{max-width:760px;margin:auto;padding:15px}
+main{
+  width:100%;
+  max-width:1200px;
+  margin:auto;
+  padding:15px;
+}
 h2{color:#D6AD48;margin-top:10px}
 
 .search{
@@ -213,6 +218,29 @@ nav a span{display:block;font-size:19px;margin-bottom:4px}
   margin-left:auto;
   margin-right:auto;
 }
+  #playerBox {
+  display: none;
+  width: 100%;
+  margin: 20px auto;
+  background: #141414;
+  padding: 12px;
+  border: 1px solid #D6AD48;
+  border-radius: 12px;
+}
+
+#player {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 8px;
+}
+
+#playingTitle {
+  color: #D6AD48;
+  font-size: 16px;
+  margin: 12px 0 4px;
+}
 </style>
 </head>
 
@@ -299,7 +327,12 @@ if (list.classList.contains("shorts-grid")) {
 }
     const img = document.createElement("img");
     img.className = "thumb";
-    img.src = data.thumbnails.medium.url;
+    img.loading = "lazy";
+img.decoding = "async";
+    img.src =
+  data.thumbnails?.medium?.url ||
+  data.thumbnails?.default?.url ||
+  "";
     img.alt = data.title;
 
     const title = document.createElement("h3");
