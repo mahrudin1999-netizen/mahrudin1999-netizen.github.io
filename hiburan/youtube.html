@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -12,38 +11,57 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg: #080808;
+  --panel: #151515;
+  --panel2: #202020;
+  --gold: #D6AD48;
+  --green: #00C875;
+  --text: #fff;
+  --muted: #A8ADA8;
+  --border: #343434;
+}
+
 body {
   margin: 0;
-  padding-bottom: 80px;
-  background: #080808;
-  color: #fff;
+  padding-bottom: 82px;
+  background: var(--bg);
+  color: var(--text);
   font-family: Arial, sans-serif;
 }
 
+button, input {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
 header {
-  padding: 17px 16px;
-  background: #080808;
-  border-bottom: 1px solid #292929;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 100;
+  padding: 15px 16px;
+  background: rgba(8,8,8,.97);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .brand {
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 800;
-  letter-spacing: .5px;
 }
 
 .brand span {
-  color: #D6AD48;
+  color: var(--gold);
 }
 
-header strong {
-  color: #D6AD48;
+.header-label {
+  color: var(--gold);
+  font-weight: bold;
 }
 
 main {
@@ -53,64 +71,71 @@ main {
   padding: 15px;
 }
 
-h2 {
-  color: #D6AD48;
-}
-
 .search {
   display: flex;
-  gap: 9px;
-  margin: 17px 0;
+  gap: 8px;
+  margin: 14px 0;
 }
 
-input {
-  min-width: 0;
+.search input {
   flex: 1;
-  padding: 14px 16px;
+  min-width: 0;
+  padding: 14px;
   border-radius: 25px;
-  border: 1px solid #343434;
-  background: #151515;
+  border: 1px solid var(--border);
+  background: var(--panel);
   color: white;
-  font-size: 14px;
   outline: none;
 }
 
-input:focus {
-  border-color: #D6AD48;
+.search input:focus {
+  border-color: var(--gold);
 }
 
 button {
   border: 0;
   border-radius: 9px;
-  padding: 12px;
-  background: #D6AD48;
+  padding: 10px 14px;
+  background: var(--gold);
   color: #080808;
   font-weight: bold;
-  cursor: pointer;
 }
 
 .search button {
   border-radius: 25px;
-  padding: 0 20px;
-  background: linear-gradient(135deg, #E5C36A, #B88A2E);
+  background: linear-gradient(135deg,#E5C36A,#B88A2E);
 }
 
-/* Tombol beranda video */
-#homeButton {
-  background: #202020;
-  color: #D6AD48;
+.top-actions {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 3px 0 10px;
+  scrollbar-width: none;
+}
+
+.top-actions::-webkit-scrollbar {
+  display: none;
+}
+
+.secondary-btn {
+  flex: 0 0 auto;
+  background: var(--panel2);
+  color: var(--gold);
   border: 1px solid #806326;
-  padding: 10px 14px;
 }
 
-/* Kategori horizontal */
+.secondary-btn.active {
+  background: var(--gold);
+  color: #080808;
+}
+
 .tabs {
   display: flex;
-  gap: 10px;
+  gap: 9px;
   overflow-x: auto;
-  overflow-y: hidden;
-  margin: 18px 0 22px;
-  padding: 3px 2px 10px;
+  padding: 8px 0 13px;
+  margin: 8px 0 15px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -122,29 +147,44 @@ button {
 .tabs button {
   flex: 0 0 auto;
   white-space: nowrap;
-  padding: 10px 17px;
   border-radius: 20px;
-  background: #202020;
+  padding: 10px 16px;
+  background: var(--panel2);
   color: #ddd;
-  border: 1px solid #343434;
+  border: 1px solid var(--border);
   font-size: 13px;
 }
 
 .tabs button.active {
-  background: linear-gradient(135deg, #E5C36A, #B88A2E);
+  background: linear-gradient(135deg,#E5C36A,#B88A2E);
   color: #080808;
-  border-color: #D6AD48;
-  box-shadow: 0 3px 12px rgba(214,173,72,.2);
+  border-color: var(--gold);
 }
 
-/* Pesan */
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.section-heading h2 {
+  font-size: 17px;
+  color: var(--gold);
+  margin: 0;
+}
+
+.section-heading small {
+  color: var(--muted);
+}
+
 #message {
-  color: #A8ADA8;
+  color: var(--muted);
   font-size: 13px;
   margin: 12px 0;
 }
 
-/* Daftar video */
 .video-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -153,115 +193,179 @@ button {
 
 .video {
   min-width: 0;
-  margin-bottom: 5px;
-  cursor: pointer;
   overflow: hidden;
-  transition: transform .2s ease;
+  border-radius: 12px;
+  background: transparent;
 }
 
-.video:active {
-  transform: scale(.98);
+.thumb-wrap {
+  position: relative;
 }
 
 .thumb {
+  display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 13px;
-  background: #202020;
-  border: 1px solid #292929;
-  display: block;
+  background: var(--panel2);
+  border-radius: 12px;
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.12);
+  pointer-events: none;
+}
+
+.play-overlay span {
+  background: rgba(0,0,0,.78);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 30px;
+  font-size: 22px;
 }
 
 .video h3 {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.5;
-  margin: 11px 0 5px;
-  color: #fff;
-  font-weight: 600;
+  margin: 10px 0 5px;
 }
 
 .video small {
   display: block;
-  color: #A8ADA8;
+  color: var(--muted);
   font-size: 12px;
   line-height: 1.7;
-  margin-top: 3px;
 }
 
-/* Tampilan kartu Shorts */
+.video-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.video-actions button {
+  flex: 1;
+  padding: 8px 6px;
+  font-size: 12px;
+  background: var(--panel2);
+  color: var(--gold);
+  border: 1px solid var(--border);
+}
+
+.video-actions button.saved {
+  color: var(--green);
+  border-color: var(--green);
+}
+
+.video-play {
+  width: 100%;
+  padding: 9px;
+  margin-top: 9px;
+  background: linear-gradient(135deg,#E5C36A,#B88A2E);
+}
+
+/* Shorts */
+.shorts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 520px;
+  margin: auto;
+}
+
 .video.shorts-mode {
   width: 100%;
-  max-width: 260px;
-  margin: 0 auto;
+  scroll-snap-align: start;
 }
 
 .video.shorts-mode .thumb {
   aspect-ratio: 9 / 16;
-  max-height: 420px;
+  max-height: 72vh;
   object-fit: cover;
-  border-radius: 14px;
 }
 
-/* Pemutar YouTube */
+.shorts-grid .video {
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border);
+}
+
+.shorts-grid .video h3 {
+  font-size: 15px;
+}
+
+/* Pemutar */
 #playerBox {
   display: none;
   width: 100%;
-  margin: 20px auto;
+  margin: 20px 0;
   padding: 12px;
-  background: #141414;
-  border: 1px solid #D6AD48;
-  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--gold);
+  border-radius: 14px;
 }
 
 #player {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border: none;
-  border-radius: 8px;
+  border: 0;
+  border-radius: 9px;
   background: #000;
 }
 
 #playingTitle {
-  color: #D6AD48;
-  font-size: 16px;
+  color: var(--gold);
+  font-size: 15px;
   line-height: 1.5;
-  margin: 12px 0 4px;
 }
 
 .close-player {
-  background: #202020;
-  color: #D6AD48;
-  border: 1px solid #D6AD48;
-  padding: 9px 15px;
-  border-radius: 8px;
+  background: var(--panel2);
+  color: var(--gold);
+  border: 1px solid var(--gold);
   margin-bottom: 10px;
 }
 
-.close-player:hover {
-  background: #D6AD48;
-  color: #080808;
+/* Koleksi */
+.empty-state {
+  text-align: center;
+  color: var(--muted);
+  padding: 45px 15px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
 }
 
-/* Navigasi bawah */
+.empty-state strong {
+  display: block;
+  color: var(--gold);
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+/* Navigasi */
 nav {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
+  z-index: 200;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5,1fr);
   background: #111;
   border-top: 1px solid #806326;
-  padding: 11px 4px;
+  padding: 10px 4px;
   text-align: center;
-  z-index: 200;
 }
 
 nav a {
-  color: #A8ADA8;
   text-decoration: none;
+  color: var(--muted);
   font-size: 11px;
 }
 
@@ -271,36 +375,19 @@ nav a span {
   margin-bottom: 4px;
 }
 
-/* Tablet */
-@media (min-width: 600px) {
-  .video-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+nav a.current {
+  color: var(--gold);
+}
+
+@media(min-width:600px) {
+  .video-grid:not(.shorts-grid) {
+    grid-template-columns: repeat(2,minmax(0,1fr));
   }
 }
 
-/* Komputer */
-@media (min-width: 1000px) {
-  .video-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-/* Tampilan Shorts di layar besar */
-.shorts-grid {
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(180px, 1fr)
-  );
-  align-items: start;
-}
-
-@media (max-width: 599px) {
-  .shorts-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .video.shorts-mode {
-    max-width: 100%;
+@media(min-width:1000px) {
+  .video-grid:not(.shorts-grid) {
+    grid-template-columns: repeat(3,minmax(0,1fr));
   }
 }
 </style>
@@ -310,7 +397,7 @@ nav a span {
 
 <header>
   <div class="brand">GIRI<span>NATAN</span></div>
-  <strong>▶ YouTube</strong>
+  <div class="header-label">▶ YouTube</div>
 </header>
 
 <main>
@@ -321,42 +408,55 @@ nav a span {
       type="search"
       placeholder="Cari video YouTube..."
     >
-    <button onclick="cariVideo()">Cari</button>
+    <button id="searchButton">Cari</button>
   </div>
 
-  <button id="homeButton" onclick="kembaliBeranda()">
-    🏠 Beranda Video
-  </button>
+  <div class="top-actions">
+    <button class="secondary-btn active" id="homeButton">
+      🏠 Beranda
+    </button>
+    <button class="secondary-btn" id="savedButton">
+      ♥ Favorit
+    </button>
+    <button class="secondary-btn" id="historyButton">
+      ◷ Riwayat
+    </button>
+  </div>
 
-  <div class="tabs">
-    <button class="active" onclick="beranda(this)">Untuk Anda</button>
-    <button onclick="shorts(this)">▶ Shorts</button>
-    <button onclick="kategori('musik',this)">Musik</button>
-    <button onclick="kategori('hiburan',this)">Hiburan</button>
-    <button onclick="kategori('olahraga',this)">Olahraga</button>
-    <button onclick="kategori('berita',this)">Berita</button>
-    <button onclick="kategori('gaming',this)">Gaming</button>
-    <button onclick="kategori('pendidikan',this)">Pendidikan</button>
-    <button onclick="kategori('teknologi',this)">Teknologi</button>
-    <button onclick="kategori('kuliner',this)">Kuliner</button>
+  <div class="tabs" id="categoryTabs">
+    <button class="active" data-mode="popular">Untuk Anda</button>
+    <button data-mode="shorts">▶ Shorts</button>
+    <button data-category="musik">Musik</button>
+    <button data-category="hiburan">Hiburan</button>
+    <button data-category="olahraga">Olahraga</button>
+    <button data-category="berita">Berita</button>
+    <button data-category="gaming">Gaming</button>
+    <button data-category="pendidikan">Pendidikan</button>
+    <button data-category="teknologi">Teknologi</button>
+    <button data-category="kuliner">Kuliner</button>
   </div>
 
   <div id="playerBox">
-    <button
-      onclick="tutupPemutar()"
-      class="close-player"
-    >
+    <button class="close-player" id="closePlayer">
       ✕ Tutup Pemutar
     </button>
 
     <iframe
       id="player"
       allowfullscreen
-      allow="accelerometer; autoplay; encrypted-media; picture-in-picture"
+      allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen"
       referrerpolicy="strict-origin-when-cross-origin"
     ></iframe>
 
     <h3 id="playingTitle"></h3>
+    <button class="secondary-btn" id="sharePlaying">
+      ↗ Bagikan video
+    </button>
+  </div>
+
+  <div class="section-heading">
+    <h2 id="sectionTitle">Video Populer</h2>
+    <small id="videoCount"></small>
   </div>
 
   <p id="message">Memuat video...</p>
@@ -369,27 +469,29 @@ nav a span {
   <a href="../index.html">
     <span>⌂</span>Beranda
   </a>
-
   <a href="../index.html#marketPage">
     <span>▣</span>Market
   </a>
-
   <a href="../index.html#karyaPage">
     <span>✦</span>Berkarya
   </a>
-
   <a href="../komunitas/index.html">
     <span>♧</span>Komunitas
   </a>
-
   <a href="../index.html#accountPage">
     <span>♙</span>Akun
   </a>
 </nav>
 
 <script>
+"use strict";
+
+/* KONFIGURASI */
 const WORKER_URL =
   "https://girinatanyoutube.mahrudin1999.workers.dev";
+
+const STORAGE_FAVORITES = "girinatanyoutube_favorites";
+const STORAGE_HISTORY = "girinatanyoutube_history";
 
 const list = document.getElementById("videoList");
 const message = document.getElementById("message");
@@ -397,89 +499,252 @@ const searchInput = document.getElementById("searchInput");
 const playerBox = document.getElementById("playerBox");
 const player = document.getElementById("player");
 
+let currentVideos = [];
+let currentVideo = null;
+let currentMode = "popular";
+let requestNumber = 0;
+
+const categoryKeywords = {
+  musik: "musik Indonesia terbaru",
+  hiburan: "hiburan Indonesia",
+  olahraga: "berita dan pertandingan olahraga",
+  berita: "berita Indonesia terbaru",
+  gaming: "gameplay gaming Indonesia",
+  pendidikan: "video edukasi pembelajaran Indonesia",
+  teknologi: "teknologi dan gadget terbaru",
+  kuliner: "kuliner dan resep masakan Indonesia"
+};
+
+/* PENYIMPANAN LOKAL */
+function bacaPenyimpanan(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function simpanPenyimpanan(key, data) {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch {
+    tampilkanPesan("Penyimpanan perangkat tidak tersedia.");
+  }
+}
+
+function ambilID(video) {
+  return typeof video.id === "object"
+    ? video.id?.videoId
+    : video.id;
+}
+
+function dataVideo(video) {
+  return {
+    id: ambilID(video),
+    title: video.snippet?.title || "",
+    channel: video.snippet?.channelTitle || "",
+    thumbnail:
+      video.snippet?.thumbnails?.medium?.url ||
+      video.snippet?.thumbnails?.default?.url ||
+      "",
+    publishedAt: video.snippet?.publishedAt || "",
+    views: video.statistics?.viewCount || "0"
+  };
+}
+
+/* PESAN */
 function tampilkanPesan(teks) {
   message.textContent = teks;
 }
 
+/* TAB */
+function pilihTab(button) {
+  document.querySelectorAll("#categoryTabs button")
+    .forEach(item => item.classList.remove("active"));
+
+  if (button) button.classList.add("active");
+}
+
+function pilihTampilan(button) {
+  document.querySelectorAll(".top-actions button")
+    .forEach(item => item.classList.remove("active"));
+
+  button.classList.add("active");
+}
+
+/* MEMUAT VIDEO */
+async function ambilVideo(action, kata = "") {
+  const nomorPermintaan = ++requestNumber;
+
+  try {
+    tampilkanPesan("Memuat video...");
+    list.innerHTML = "";
+    document.getElementById("videoCount").textContent = "";
+
+    const url = new URL(WORKER_URL);
+    url.searchParams.set("action", action);
+
+    if (kata) url.searchParams.set("q", kata);
+
+    const response = await fetch(url.toString());
+    const data = await response.json();
+
+    if (nomorPermintaan !== requestNumber) return;
+
+    if (!response.ok || data.error) {
+      throw new Error(
+        data.error?.message || "Gagal mengambil video."
+      );
+    }
+
+    currentVideos = data.items || [];
+    tampilkanVideo(currentVideos);
+
+  } catch (error) {
+    if (nomorPermintaan !== requestNumber) return;
+
+    tampilkanPesan("Gagal memuat video: " + error.message);
+    list.innerHTML = "";
+
+    const retry = document.createElement("button");
+    retry.textContent = "↻ Coba Lagi";
+    retry.onclick = () => ambilVideo(action, kata);
+
+    list.appendChild(retry);
+  }
+}
+
+/* KARTU VIDEO */
 function tampilkanVideo(videos) {
   list.innerHTML = "";
 
-  if (!videos || videos.length === 0) {
+  if (!videos || !videos.length) {
     tampilkanPesan("Video tidak ditemukan.");
     return;
   }
 
-  let jumlahVideo = 0;
+  let total = 0;
 
   videos.forEach(video => {
-    const id = typeof video.id === "object"
-      ? video.id?.videoId
-      : video.id;
+    const item = dataVideo(video);
 
-    const data = video.snippet;
+    if (!item.id || !item.thumbnail) return;
 
-    if (!id || !data) return;
-
-    const thumbnail =
-      data.thumbnails?.medium?.url ||
-      data.thumbnails?.default?.url;
-
-    if (!thumbnail) return;
-
-    const card = document.createElement("div");
+    const card = document.createElement("article");
     card.className = "video";
 
-    if (list.classList.contains("shorts-grid")) {
+    if (currentMode === "shorts") {
       card.classList.add("shorts-mode");
     }
 
+    const thumbWrap = document.createElement("div");
+    thumbWrap.className = "thumb-wrap";
+
     const img = document.createElement("img");
     img.className = "thumb";
+    img.src = item.thumbnail;
+    img.alt = item.title;
     img.loading = "lazy";
     img.decoding = "async";
-    img.src = thumbnail;
-    img.alt = data.title || "Video YouTube";
+
+    const overlay = document.createElement("div");
+    overlay.className = "play-overlay";
+
+    const playIcon = document.createElement("span");
+    playIcon.textContent = "▶";
+
+    overlay.appendChild(playIcon);
+    thumbWrap.append(img, overlay);
+
+    thumbWrap.addEventListener("click", () => putarVideo(item));
 
     const title = document.createElement("h3");
-    title.textContent = data.title || "Video tanpa judul";
+    title.textContent = item.title;
 
     const channel = document.createElement("small");
-    channel.textContent = data.channelTitle || "Kanal YouTube";
+    channel.textContent = item.channel;
 
     const views = document.createElement("small");
-    const jumlah = video.statistics?.viewCount;
+    views.textContent = Number(item.views).toLocaleString("id-ID")
+      + " penayangan";
 
-    views.textContent = jumlah
-      ? Number(jumlah).toLocaleString("id-ID") + " penayangan"
-      : "Jumlah penayangan tidak tersedia";
-
-    const tanggal = document.createElement("small");
-
-    tanggal.textContent = data.publishedAt
-      ? new Date(data.publishedAt).toLocaleDateString("id-ID")
+    const date = document.createElement("small");
+    date.textContent = item.publishedAt
+      ? new Date(item.publishedAt).toLocaleDateString("id-ID")
       : "Tanggal tidak tersedia";
 
-    card.append(img, title, channel, views, tanggal);
+    const actions = document.createElement("div");
+    actions.className = "video-actions";
 
-    card.onclick = () => putarVideo(id, data.title);
+    const saveButton = document.createElement("button");
+    saveButton.textContent = "♥ Favorit";
+
+    function perbaruiTombolFavorit() {
+      const saved = bacaPenyimpanan(STORAGE_FAVORITES)
+        .some(v => v.id === item.id);
+
+      saveButton.classList.toggle("saved", saved);
+      saveButton.textContent = saved
+        ? "♥ Tersimpan"
+        : "♡ Favorit";
+    }
+
+    perbaruiTombolFavorit();
+
+    saveButton.addEventListener("click", () => {
+      toggleFavorit(item);
+      perbaruiTombolFavorit();
+    });
+
+    const shareButton = document.createElement("button");
+    shareButton.textContent = "↗ Bagikan";
+
+    shareButton.addEventListener("click", () => {
+      bagikanVideo(item);
+    });
+
+    actions.append(saveButton, shareButton);
+
+    const watchButton = document.createElement("button");
+    watchButton.className = "video-play";
+    watchButton.textContent = "▶ Tonton Video";
+    watchButton.addEventListener("click", () => putarVideo(item));
+
+    card.append(
+      thumbWrap,
+      title,
+      channel,
+      views,
+      date,
+      actions,
+      watchButton
+    );
 
     list.appendChild(card);
-    jumlahVideo++;
+    total++;
   });
 
-  tampilkanPesan(
-    jumlahVideo ? "" : "Video tidak ditemukan."
-  );
+  tampilkanPesan(total ? "" : "Video tidak ditemukan.");
+
+  document.getElementById("videoCount").textContent =
+    total + " video";
 }
 
-function putarVideo(id, title) {
+/* PEMUTAR */
+function putarVideo(item) {
+  currentVideo = item;
+
   playerBox.style.display = "block";
 
   player.src =
     "https://www.youtube-nocookie.com/embed/" +
-    encodeURIComponent(id);
+    encodeURIComponent(item.id) +
+    "?autoplay=1&rel=0";
 
-  document.getElementById("playingTitle").textContent = title;
+  document.getElementById("playingTitle").textContent =
+    item.title;
+
+  simpanRiwayat(item);
 
   playerBox.scrollIntoView({
     behavior: "smooth",
@@ -490,77 +755,157 @@ function putarVideo(id, title) {
 function tutupPemutar() {
   player.src = "";
   playerBox.style.display = "none";
+  currentVideo = null;
 }
 
-async function ambilVideo(action, kata = "") {
+/* FAVORIT */
+function toggleFavorit(item) {
+  let favorites = bacaPenyimpanan(STORAGE_FAVORITES);
+
+  const exists = favorites.some(v => v.id === item.id);
+
+  if (exists) {
+    favorites = favorites.filter(v => v.id !== item.id);
+    tampilkanPesan("Video dihapus dari favorit.");
+  } else {
+    favorites.unshift(item);
+    tampilkanPesan("Video disimpan ke favorit.");
+  }
+
+  simpanPenyimpanan(STORAGE_FAVORITES, favorites);
+}
+
+/* RIWAYAT */
+function simpanRiwayat(item) {
+  let history = bacaPenyimpanan(STORAGE_HISTORY);
+
+  history = history.filter(v => v.id !== item.id);
+  history.unshift({
+    ...item,
+    watchedAt: new Date().toISOString()
+  });
+
+  history = history.slice(0, 100);
+
+  simpanPenyimpanan(STORAGE_HISTORY, history);
+}
+
+/* TAMPILKAN KOLEKSI */
+function tampilkanKoleksi(mode) {
+  tutupPemutar();
+
+  currentMode = mode;
+  list.className = "video-grid";
+
+  const favorites = bacaPenyimpanan(STORAGE_FAVORITES);
+  const history = bacaPenyimpanan(STORAGE_HISTORY);
+
+  const data = mode === "favorites" ? favorites : history;
+
+  document.getElementById("sectionTitle").textContent =
+    mode === "favorites" ? "Video Favorit" : "Riwayat Tontonan";
+
+  document.querySelectorAll("#categoryTabs button")
+    .forEach(b => b.classList.remove("active"));
+
+  if (!data.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <strong>${mode === "favorites" ? "Belum Ada Favorit" : "Belum Ada Riwayat"}</strong>
+        Video yang kamu simpan akan muncul di sini.
+      </div>
+    `;
+    tampilkanPesan("");
+    document.getElementById("videoCount").textContent = "0 video";
+    return;
+  }
+
+  const videos = data.map(v => ({
+    id: v.id,
+    snippet: {
+      title: v.title,
+      channelTitle: v.channel,
+      thumbnails: {
+        medium: { url: v.thumbnail }
+      },
+      publishedAt: v.publishedAt
+    },
+    statistics: {
+      viewCount: v.views
+    }
+  }));
+
+  currentVideos = videos;
+  tampilkanVideo(videos);
+
+  document.getElementById("videoCount").textContent =
+    data.length + " video";
+}
+
+/* BAGIKAN */
+async function bagikanVideo(item) {
+  const url = "https://www.youtube.com/watch?v=" +
+    encodeURIComponent(item.id);
+
+  const shareData = {
+    title: item.title,
+    text: "Tonton video ini di YouTube",
+    url
+  };
+
   try {
-    tampilkanPesan("Memuat video...");
-    list.innerHTML = "";
-
-    const url = new URL(WORKER_URL);
-
-    url.searchParams.set("action", action);
-
-    if (kata) {
-      url.searchParams.set("q", kata);
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(url);
+      tampilkanPesan("Tautan video berhasil disalin.");
+    } else {
+      window.prompt("Salin tautan video:", url);
     }
-
-    const response = await fetch(url.toString());
-    const data = await response.json();
-
-    if (!response.ok || data.error) {
-      throw new Error(
-        data.error?.message || "Gagal mengambil video."
-      );
-    }
-
-    tampilkanVideo(data.items);
-
   } catch (error) {
-    tampilkanPesan(
-      "Gagal memuat video: " + error.message
-    );
-
-    list.innerHTML = "";
-
-    const retry = document.createElement("button");
-    retry.textContent = "↻ Coba Lagi";
-
-    retry.onclick = () => ambilVideo(action, kata);
-
-    list.appendChild(retry);
+    if (error.name !== "AbortError") {
+      tampilkanPesan("Tidak dapat membagikan video.");
+    }
   }
 }
 
-function pilihTab(button) {
-  document.querySelectorAll(".tabs button").forEach(b => {
-    b.classList.remove("active");
-  });
+/* BERANDA */
+function beranda() {
+  currentMode = "popular";
+  list.className = "video-grid";
 
-  button.classList.add("active");
-}
+  pilihTampilan(document.getElementById("homeButton"));
 
-function beranda(button) {
-  pilihTab(button);
-  list.classList.remove("shorts-grid");
+  const firstTab = document.querySelector(
+    '#categoryTabs button[data-mode="popular"]'
+  );
+
+  pilihTab(firstTab);
+
+  document.getElementById("sectionTitle").textContent =
+    "Video Populer";
+
   searchInput.value = "";
 
+  tutupPemutar();
   ambilVideo("popular");
 }
 
-function shorts(button) {
-  pilihTab(button);
-  list.classList.add("shorts-grid");
+/* SHORTS */
+function shorts() {
+  currentMode = "shorts";
+  list.className = "video-grid shorts-grid";
+
+  document.getElementById("sectionTitle").textContent =
+    "▶ Shorts";
 
   searchInput.value = "YouTube Shorts Indonesia";
 
+  tutupPemutar();
   ambilVideo("search", "YouTube Shorts Indonesia");
 }
 
-function kembaliBeranda() {
-  beranda(document.querySelector(".tabs button"));
-}
-
+/* PENCARIAN */
 function cariVideo() {
   const kata = searchInput.value.trim();
 
@@ -569,45 +914,90 @@ function cariVideo() {
     return;
   }
 
-  list.classList.remove("shorts-grid");
+  currentMode = "search";
+  list.className = "video-grid";
 
-  document.querySelectorAll(".tabs button").forEach(b => {
-    b.classList.remove("active");
-  });
+  document.getElementById("sectionTitle").textContent =
+    "Hasil Pencarian";
 
+  document.querySelectorAll("#categoryTabs button")
+    .forEach(b => b.classList.remove("active"));
+
+  pilihTampilan(document.getElementById("homeButton"));
+
+  tutupPemutar();
   ambilVideo("search", kata);
 }
 
+/* KATEGORI */
 function kategori(kata, button) {
-  const kataKunci = {
-    musik: "musik Indonesia terbaru",
-    hiburan: "hiburan Indonesia",
-    olahraga: "berita dan pertandingan olahraga",
-    berita: "berita Indonesia terbaru",
-    gaming: "gameplay gaming Indonesia",
-    pendidikan: "video edukasi pembelajaran Indonesia",
-    teknologi: "teknologi dan gadget terbaru",
-    kuliner: "kuliner dan resep masakan Indonesia"
-  };
+  const pencarian = categoryKeywords[kata] || kata;
+
+  currentMode = "search";
+  list.className = "video-grid";
 
   pilihTab(button);
-  list.classList.remove("shorts-grid");
-
-  const pencarian = kataKunci[kata] || kata;
+  pilihTampilan(document.getElementById("homeButton"));
 
   searchInput.value = pencarian;
 
+  document.getElementById("sectionTitle").textContent =
+    "Kategori " + kata.charAt(0).toUpperCase() + kata.slice(1);
+
+  tutupPemutar();
   ambilVideo("search", pencarian);
 }
 
+/* EVENT */
+document.getElementById("searchButton")
+  .addEventListener("click", cariVideo);
+
 searchInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    cariVideo();
-  }
+  if (event.key === "Enter") cariVideo();
 });
 
-/* Muat video populer saat halaman dibuka */
-beranda(document.querySelector(".tabs button"));
+document.getElementById("closePlayer")
+  .addEventListener("click", tutupPemutar);
+
+document.getElementById("sharePlaying")
+  .addEventListener("click", () => {
+    if (currentVideo) bagikanVideo(currentVideo);
+  });
+
+document.getElementById("homeButton")
+  .addEventListener("click", beranda);
+
+document.getElementById("savedButton")
+  .addEventListener("click", event => {
+    pilihTampilan(event.currentTarget);
+    tampilkanKoleksi("favorites");
+  });
+
+document.getElementById("historyButton")
+  .addEventListener("click", event => {
+    pilihTampilan(event.currentTarget);
+    tampilkanKoleksi("history");
+  });
+
+document.querySelectorAll("#categoryTabs button")
+  .forEach(button => {
+    button.addEventListener("click", () => {
+      const mode = button.dataset.mode;
+      const category = button.dataset.category;
+
+      if (mode === "popular") {
+        beranda();
+      } else if (mode === "shorts") {
+        pilihTab(button);
+        shorts();
+      } else if (category) {
+        kategori(category, button);
+      }
+    });
+  });
+
+/* MULAI */
+beranda();
 
 </script>
 
