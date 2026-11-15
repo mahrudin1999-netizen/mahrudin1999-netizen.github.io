@@ -242,6 +242,7 @@ nav a span{display:block;font-size:19px;margin-bottom:4px}
 <button onclick="kategori('pendidikan',this)">Pendidikan</button>
 <button onclick="kategori('teknologi',this)">Teknologi</button>
 <button onclick="kategori('kuliner',this)">Kuliner</button>
+    
   </div>
 
   <div id="playerBox">
@@ -404,10 +405,10 @@ function cariVideo() {
     return;
   }
 
+  list.classList.remove("shorts-grid");
   ambilVideo("search", kata);
 }
-
-function kategori(kata, button) {
+  function kategori(kata, button) {
   const kataKunci = {
     musik: "musik Indonesia terbaru",
     hiburan: "hiburan Indonesia",
@@ -420,13 +421,13 @@ function kategori(kata, button) {
   };
 
   pilihTab(button);
+  list.classList.remove("shorts-grid");
 
   document.getElementById("searchInput").value =
     kataKunci[kata] || kata;
 
-  cariVideo();
+  ambilVideo("search", kataKunci[kata] || kata);
 }
-  
   function pilihTab(button) {
   document.querySelectorAll(".tabs button").forEach(b => {
     b.classList.remove("active");
