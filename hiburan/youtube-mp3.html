@@ -303,11 +303,36 @@ footer a.active {
   </div>
 </div>
 
-<audio id="musicPlayer" controls
-  style="width:100%;margin-top:15px;display:none">
-</audio>
-  
-<div class="section-title">🎵 Katalog YouTube GIRINATAN</div>
+
+<div class="section-title">Pilih Mode Pemutaran</div>
+
+<div style="display:flex;gap:10px;margin:12px 0">
+  <button class="shuffle-btn" onclick="showMusicMode()">
+    🎵 Musik Saja
+  </button>
+
+  <button class="shuffle-btn" onclick="showVideoMode()">
+    ▶ YouTube Video
+  </button>
+</div>
+
+<div id="musicMode">
+  <audio id="musicPlayer" controls></audio>
+</div>
+
+  <div id="videoMode" style="display:none">
+  <input
+    id="youtubeSearch"
+    class="search"
+    placeholder="Cari Dangdut, Koplo, Pop..."
+  >
+
+  <button class="shuffle-btn" onclick="searchYouTube()">
+    Cari Lagu
+  </button>
+
+  <div id="youtubeResults"></div>
+</div>
 
 <input
   id="youtubeSearch"
@@ -629,6 +654,16 @@ function loadYouTube() {
 
 const GIRINATAN_YOUTUBE_API =
   "https://giratan-music-api.mahrudin1999.workers.dev";
+
+function showMusicMode() {
+  document.getElementById("musicMode").style.display = "block";
+  document.getElementById("videoMode").style.display = "none";
+}
+
+function showVideoMode() {
+  document.getElementById("musicMode").style.display = "none";
+  document.getElementById("videoMode").style.display = "block";
+}
 
 async function searchYouTube() {
   const keyword = document
