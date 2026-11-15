@@ -289,7 +289,9 @@ function tampilkanVideo(videos) {
 
     const card = document.createElement("div");
     card.className = "video";
-
+if (list.classList.contains("shorts-grid")) {
+  card.classList.add("shorts-mode");
+}
     const img = document.createElement("img");
     img.className = "thumb";
     img.src = data.thumbnails.medium.url;
@@ -371,20 +373,23 @@ async function ambilVideo(action, kata = "") {
   list.appendChild(retry);
 }
 }
-
 function beranda(button) {
   pilihTab(button);
+  list.classList.remove("shorts-grid");
   ambilVideo("popular");
 }
+
   function shorts(button) {
-  pilihTab(button);
+  pilihTab(button);list.classList.remove("shorts-grid");
+
+  list.classList.add("shorts-grid");
 
   document.getElementById("searchInput").value =
     "YouTube Shorts Indonesia";
 
   cariVideo();
 }
-function kembaliBeranda(){
+    function kembaliBeranda){
   document.getElementById("searchInput").value = "";
   beranda(document.querySelector(".tabs button"));
   }
