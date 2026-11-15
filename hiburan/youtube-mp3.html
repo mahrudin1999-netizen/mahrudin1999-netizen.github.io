@@ -1,132 +1,429 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YouTube Music - GIRINATAN</title>
+<meta name="theme-color" content="#080808">
+<title>GIRINATAN MUSIC</title>
 
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;background:#080808;color:white;
-  font-family:Arial,sans-serif;padding-bottom:85px;
+:root {
+  --bg:#080808;
+  --panel:#151515;
+  --panel2:#202020;
+  --gold:#D6AD48;
+  --green:#00C875;
+  --text:#fff;
+  --muted:#A8ADA8;
+  --border:#343434;
 }
-header{
-  padding:18px;background:#141414;
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+  padding-bottom:85px;
+}
+
+header {
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#080808;
   border-bottom:1px solid #806326;
-  display:flex;align-items:center;gap:12px;
+  padding:17px;
 }
-header a{color:#D6AD48;text-decoration:none}
-.brand{font-size:20px;font-weight:bold}
-.brand span{color:#D6AD48}
-main{padding:18px;max-width:760px;margin:auto}
-h2{color:#D6AD48}
-p{color:#A8ADA8;font-size:14px;line-height:1.6}
-input{
-  width:100%;padding:14px;border-radius:10px;
-  border:1px solid #343434;background:#151515;
-  color:white;margin:12px 0;
+
+.brand {
+  font-size:21px;
+  font-weight:bold;
+  letter-spacing:1px;
 }
-button{
-  width:100%;padding:14px;border:0;border-radius:10px;
-  background:linear-gradient(135deg,#E5C36A,#B88A2E);
-  color:#080808;font-weight:bold;font-size:15px;
+
+.brand span {
+  color:var(--gold);
 }
-.player{
-  margin-top:20px;width:100%;aspect-ratio:16/9;
-  background:#151515;border-radius:12px;overflow:hidden;
+
+.subtitle {
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
 }
-iframe{width:100%;height:100%;border:0}
-nav{
-  position:fixed;bottom:0;left:0;width:100%;
-  display:grid;grid-template-columns:repeat(5,1fr);
-  background:#111;border-top:1px solid #806326;
-  padding:12px 4px;text-align:center;
+
+.container {
+  padding:16px;
+  max-width:700px;
+  margin:auto;
 }
-nav a{color:#A8ADA8;text-decoration:none;font-size:11px}
-nav a span{display:block;font-size:19px;margin-bottom:4px}
-nav a.active{color:#D6AD48}
+
+.hero {
+  background:linear-gradient(135deg,#252016,#111);
+  border:1px solid #806326;
+  border-radius:16px;
+  padding:22px 17px;
+  margin-bottom:20px;
+}
+
+.hero h1 {
+  font-size:25px;
+  margin:0 0 8px;
+}
+
+.hero h1 span {
+  color:var(--gold);
+}
+
+.hero p {
+  color:#ccc;
+  font-size:13px;
+  line-height:1.6;
+  margin:0;
+}
+
+.search {
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:white;
+  font-size:14px;
+  outline:none;
+  margin-bottom:16px;
+}
+
+.search:focus {
+  border-color:var(--gold);
+}
+
+.section-title {
+  font-size:17px;
+  font-weight:bold;
+  margin:20px 0 12px;
+}
+
+.categories {
+  display:flex;
+  gap:9px;
+  overflow-x:auto;
+  padding-bottom:8px;
+}
+
+.category {
+  flex-shrink:0;
+  background:var(--panel2);
+  color:white;
+  border:1px solid var(--border);
+  padding:10px 15px;
+  border-radius:20px;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.category.active {
+  background:var(--gold);
+  color:#111;
+  border-color:var(--gold);
+  font-weight:bold;
+}
+
+.music-card {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:10px;
+}
+
+.music-icon {
+  width:48px;
+  height:48px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#292318;
+  border-radius:10px;
+  font-size:23px;
+}
+
+.music-info {
+  flex:1;
+  min-width:0;
+}
+
+.music-info h3 {
+  margin:0 0 5px;
+  font-size:14px;
+}
+
+.music-info p {
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.music-tag {
+  color:var(--green);
+  font-size:10px;
+  margin-top:5px;
+}
+
+.play-btn {
+  width:39px;
+  height:39px;
+  border:none;
+  border-radius:50%;
+  background:var(--gold);
+  color:#111;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.notice {
+  background:#151515;
+  border:1px solid #3c3320;
+  border-radius:12px;
+  padding:14px;
+  color:#ccc;
+  font-size:12px;
+  line-height:1.6;
+  margin-top:18px;
+}
+
+.notice strong {
+  color:var(--gold);
+}
+
+.empty {
+  display:none;
+  text-align:center;
+  color:var(--muted);
+  padding:25px 10px;
+  font-size:13px;
+}
+
+footer {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:20;
+  display:flex;
+  justify-content:space-around;
+  background:#101010;
+  border-top:1px solid #806326;
+  padding:11px 3px;
+}
+
+footer a {
+  color:#aaa;
+  text-decoration:none;
+  font-size:10px;
+  text-align:center;
+  line-height:1.7;
+}
+
+footer a span {
+  display:block;
+  font-size:18px;
+}
+
+footer a.active {
+  color:var(--gold);
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <a href="../index.html">← Kembali</a>
-  <div class="brand">GIRI<span>NATAN</span></div>
+  <div class="brand">GIRI<span>NATAN</span> MUSIC</div>
+  <div class="subtitle">Tempat menikmati musik dan karya musisi</div>
 </header>
 
-<main>
-  <h2>🎵 YouTube MP3</h2>
-  <p>
-    Dengarkan lagu melalui pemutar YouTube.
-    Tempel link video musik YouTube untuk mulai mendengarkan.
-  </p>
+<main class="container">
+
+  <section class="hero">
+    <h1>Dengarkan <span>Musikmu</span></h1>
+    <p>
+      Jelajahi dunia musik Indonesia dan temukan karya
+      yang menemani setiap suasana hatimu.
+    </p>
+  </section>
 
   <input
-    type="text"
-    id="musicUrl"
-    placeholder="Tempel link lagu YouTube di sini"
+    type="search"
+    class="search"
+    id="searchMusic"
+    placeholder="Cari musik atau genre..."
+    oninput="searchMusic()"
   >
 
-  <button onclick="putarLagu()">PUTAR LAGU</button>
+  <div class="section-title">Jelajahi Genre</div>
 
-  <div class="player" id="player">
-    <p style="text-align:center;padding:25px">
-      Pemutar musik akan tampil di sini.
-    </p>
+  <div class="categories">
+    <button class="category active" onclick="filterMusic('semua',this)">Semua</button>
+    <button class="category" onclick="filterMusic('pop',this)">Pop Indonesia</button>
+    <button class="category" onclick="filterMusic('dangdut',this)">Dangdut</button>
+    <button class="category" onclick="filterMusic('koplo',this)">Koplo</button>
+    <button class="category" onclick="filterMusic('daerah',this)">Lagu Daerah</button>
+    <button class="category" onclick="filterMusic('religi',this)">Religi</button>
+    <button class="category" onclick="filterMusic('rock',this)">Rock</button>
+    <button class="category" onclick="filterMusic('indie',this)">Indie</button>
   </div>
 
-  <p>
-    Catatan: GIRINATAN tidak mengunduh atau mengubah video
-    menjadi file MP3. Pemutaran menggunakan layanan YouTube.
-  </p>
+  <div class="section-title">Pilihan Musik</div>
+
+  <div id="musicList">
+
+    <div class="music-card" data-genre="pop">
+      <div class="music-icon">🎤</div>
+      <div class="music-info">
+        <h3>Pop Indonesia</h3>
+        <p>Kumpulan karya musik pop Indonesia</p>
+        <div class="music-tag">GENRE MUSIK</div>
+      </div>
+      <button class="play-btn" onclick="showNotice()">▶</button>
+    </div>
+
+    <div class="music-card" data-genre="dangdut">
+      <div class="music-icon">🎶</div>
+      <div class="music-info">
+        <h3>Dangdut Indonesia</h3>
+        <p>Musik dangdut pilihan</p>
+        <div class="music-tag">GENRE MUSIK</div>
+      </div>
+      <button class="play-btn" onclick="showNotice()">▶</button>
+    </div>
+
+    <div class="music-card" data-genre="koplo">
+      <div class="music-icon">🥁</div>
+      <div class="music-info">
+        <h3>Dangdut Koplo</h3>
+        <p>Irama koplo dan musik panggung</p>
+        <div class="music-tag">GENRE MUSIK</div>
+      </div>
+      <button class="play-btn" onclick="showNotice()">▶</button>
+    </div>
+
+    <div class="music-card" data-genre="daerah">
+      <div class="music-icon">🌿</div>
+      <div class="music-info">
+        <h3>Lagu Daerah</h3>
+        <p>Kenali kekayaan musik Nusantara</p>
+        <div class="music-tag">GENRE MUSIK</div>
+      </div>
+      <button class="play-btn" onclick="showNotice()">▶</button>
+    </div>
+
+    <div class="music-card" data-genre="religi">
+      <div class="music-icon">🤲</div>
+      <div class="music-info">
+        <h3>Musik Religi</h3>
+        <p>Lagu religi dan penuh makna</p>
+        <div class="music-tag">GENRE MUSIK</div>
+      </div>
+      <button class="play-btn" onclick="showNotice()">▶</button>
+    </div>
+
+    <div class="music-card" data-genre="rock">
+      <div class="music-icon">🎸</div>
+      <div class="music-info">
+        <h3>Rock Indonesia</h3>
+        <p>Musik rock dan alternatif</p>
+        <div class="music-tag">GENRE MUSIK</div>
+      </div>
+      <button class="play-btn" onclick="showNotice()">▶</button>
+    </div>
+
+    <div class="music-card" data-genre="indie">
+      <div class="music-icon">🎧</div>
+      <div class="music-info">
+        <h3>Musik Indie</h3>
+        <p>Temukan karya musisi independen</p>
+        <div class="music-tag">GENRE MUSIK</div>
+      </div>
+      <button class="play-btn" onclick="showNotice()">▶</button>
+    </div>
+
+  </div>
+
+  <div class="empty" id="emptyMessage">
+    Musik atau genre tidak ditemukan.
+  </div>
+
+  <div class="notice">
+    <strong>Informasi GIRINATAN MUSIC</strong><br>
+    Katalog dan pemutar musik sedang dipersiapkan.
+    Musik akan tersedia melalui sumber resmi atau
+    karya musisi yang telah memberikan izin.
+    GIRINATAN tidak menyimpan file lagu di halaman ini.
+  </div>
+
 </main>
 
-<nav>
+<footer>
   <a href="../index.html"><span>⌂</span>Beranda</a>
-  <a href="../index.html#marketPage"><span>▣</span>Market</a>
-  <a href="../index.html#karyaPage"><span>✦</span>Berkarya</a>
-  <a href="../komunitas/index.html"><span>♧</span>Komunitas</a>
-  <a href="../index.html#accountPage"><span>♙</span>Akun</a>
-</nav>
+  <a href="../index.html#marketPage"><span>🛒</span>Market</a>
+  <a href="../index.html#karyaPage"><span>✨</span>Berkarya</a>
+  <a href="../komunitas/index.html"><span>👥</span>Komunitas</a>
+  <a href="../index.html#accountPage"><span>◉</span>Akun</a>
+</footer>
 
 <script>
-function putarLagu(){
-  const url=document.getElementById("musicUrl").value.trim();
-  let id="";
+let selectedGenre = "semua";
 
-  try{
-    const link=new URL(url);
+function filterMusic(genre,button) {
+  selectedGenre = genre;
 
-    if(link.hostname==="youtu.be"){
-      id=link.pathname.slice(1).split("/")[0];
-    }else if(
-      link.hostname.includes("youtube.com") ||
-      link.hostname==="m.youtube.com"
-    ){
-      if(link.pathname==="/watch"){
-        id=link.searchParams.get("v")||"";
-      }else if(link.pathname.startsWith("/embed/")){
-        id=link.pathname.split("/")[2]||"";
-      }else if(link.pathname.startsWith("/shorts/")){
-        id=link.pathname.split("/")[2]||"";
-      }
-    }
-  }catch(e){}
+  document.querySelectorAll(".category").forEach(btn => {
+    btn.classList.remove("active");
+  });
 
-  if(!/^[a-zA-Z0-9_-]{11}$/.test(id)){
-    alert("Link YouTube tidak valid. Periksa kembali link lagu.");
-    return;
-  }
+  button.classList.add("active");
+  searchMusic();
+}
 
-  document.getElementById("player").innerHTML=
-    '<iframe src="https://www.youtube-nocookie.com/embed/'+id+
-    '" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>';
+function searchMusic() {
+  const keyword = document
+    .getElementById("searchMusic")
+    .value.toLowerCase();
+
+  const cards = document.querySelectorAll(".music-card");
+  let visible = 0;
+
+  cards.forEach(card => {
+    const genre = card.dataset.genre;
+    const content = card.innerText.toLowerCase();
+
+    const genreMatch =
+      selectedGenre === "semua" || genre === selectedGenre;
+
+    const searchMatch = content.includes(keyword);
+    const show = genreMatch && searchMatch;
+
+    card.style.display = show ? "flex" : "none";
+
+    if(show) visible++;
+  });
+
+  document.getElementById("emptyMessage").style.display =
+    visible === 0 ? "block" : "none";
+}
+
+function showNotice() {
+  alert("Pemutar musik belum tersedia. Katalog musik GIRINATAN sedang dipersiapkan.");
 }
 </script>
 
 </body>
 </html>
-
