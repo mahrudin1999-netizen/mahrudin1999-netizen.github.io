@@ -306,7 +306,45 @@ footer a.active {
 <audio id="musicPlayer" controls
   style="width:100%;margin-top:15px;display:none">
 </audio>
+<div class="section-title">Musik dari Layanan Lain</div>
 
+<div class="music-card">
+  <div class="music-info">
+    <h3>🎵 Spotify</h3>
+    <p>Putar lagu melalui Spotify Embed resmi</p>
+  </div>
+</div>
+
+<input
+  id="spotifyUrl"
+  class="search"
+  placeholder="Tempel link lagu atau playlist Spotify"
+>
+
+<button class="shuffle-btn" onclick="loadSpotify()">
+  Buka Spotify
+</button>
+
+<div id="spotifyPlayer"></div>
+
+<div class="music-card">
+  <div class="music-info">
+    <h3>▶ YouTube Music</h3>
+    <p>Putar musik melalui pemutar resmi YouTube</p>
+  </div>
+</div>
+
+<input
+  id="youtubeUrl"
+  class="search"
+  placeholder="Tempel link video YouTube"
+>
+
+<button class="shuffle-btn" onclick="loadYouTube()">
+  Putar YouTube
+</button>
+
+<div id="youtubePlayer"></div>
   <div class="empty" id="emptyMessage">
     Musik atau genre tidak ditemukan.
   </div>
@@ -500,6 +538,81 @@ function shuffleMusic() {
 
   displayMusic(shuffled);
 }
+
+function loadSpotify() {
+  const input = document.getElementById("spotifyUrl").value.trim();
+  const player = document.getElementById("spotifyPlayer");
+
+  const match = input.match(
+    /open\.spotify\.com\/(track|album|playlist|artist|episode|show)\/([a-zA-Z0-9]+)/
+  );
+
+  if (!match) {
+    alert("Masukkan link Spotify yang benar.");
+    return;
+  }
+
+  const type = match[1];
+  const id = match[2];
+
+  player.innerHTML = "";
+
+  const iframe = document.createElement("iframe");
+  iframe.src = `https://open.spotify.com/embed/${type}/${id}`;
+  iframe.width = "100%";
+  iframe.height = "352";
+  iframe.style.border = "0";
+  iframe.style.borderRadius = "12px";
+  iframe.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+
+  player.appendChild(iframe);
+}
+
+function loadYouTube() {
+  const input = document.getElementById("youtubeUrl").value.trim();
+  const player = document.getElementById("youtubePlayer");
+
+  let videoId = "";
+
+  try {
+    const url = new URL(input);
+
+    if (url.hostname === "youtu.be") {
+      videoId = url.pathname.slice(1);
+    } else if (
+      url.hostname.includes("youtube.com") ||
+      url.hostname.includes("youtube-nocookie.com")
+    ) {
+      videoId =
+        url.searchParams.get("v") ||
+        url.pathname.match(/\/(?:embed|shorts)\/([^/?]+)/)?.[1] ||
+        "";
+    }
+  } catch (error) {
+    alert("Masukkan link YouTube yang benar.");
+    return;
+  }
+
+  if (!/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+    alert("Link video YouTube tidak valid.");
+    return;
+  }
+
+  player.innerHTML = "";
+
+  const iframe = document.createElement("iframe");
+  iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}`;
+  iframe.width = "100%";
+  iframe.height = "225";
+  iframe.style.border = "0";
+  iframe.style.borderRadius = "12px";
+  iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+  iframe.allowFullscreen = true;
+
+  player.appendChild(iframe);
+}
+
+loadMusic();
 
 loadMusic();
 
