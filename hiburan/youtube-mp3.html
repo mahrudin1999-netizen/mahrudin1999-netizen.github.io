@@ -473,12 +473,18 @@ function filterMusic(genre, button) {
 
   loadMusic(genreSearch[genre] || "");
 }
-
 function searchMusic() {
-  const keyword =
-    document.getElementById("searchMusic").value.trim();
+  const keyword = document
+    .getElementById("searchMusic")
+    .value.toLowerCase()
+    .trim();
 
-  loadMusic(keyword);
+  const filtered = currentTracks.filter(track =>
+    track.name.toLowerCase().includes(keyword) ||
+    track.artist_name.toLowerCase().includes(keyword)
+  );
+
+  displayMusic(filtered);
 }
 
 function shuffleMusic() {
