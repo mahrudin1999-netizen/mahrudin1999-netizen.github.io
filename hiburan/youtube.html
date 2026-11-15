@@ -792,6 +792,21 @@ main{
   header{gap:6px;padding-left:8px;padding-right:8px}
   .header-icon{width:29px}
 }
+  
+.short-sound-button {
+  position: absolute;
+  top: 65px;
+  right: 15px;
+  z-index: 20;
+  padding: 10px 14px;
+  border: 1px solid #D6AD48;
+  border-radius: 25px;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 </style>
 </head>
 
@@ -1536,31 +1551,39 @@ function renderRecommendations(){
 
 /* SHORTS */
   /* AUTOPLAY SHORTS */
-const shortObserver = new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
+
+let shortsSoundOn = false;
+
+const shortObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
     const frame = entry.target.querySelector(".short-player");
+    if (!frame) return;
 
-    if(!frame)return;
-
-    if(
+    if (
       entry.isIntersecting &&
       entry.intersectionRatio >= 0.65 &&
       $("shortsPage").classList.contains("active")
-    ){
-      const id = frame.dataset.videoId;
+    ) {
+      if (frame.dataset.playing !== "true") {
+        const id = frame.dataset.videoId;
+        frame.src =
+          "https://www.youtube-nocookie.com/embed/" +
+          encodeURIComponent(id) +
+          "?autoplay=1&mute=" + (shortsSoundOn ? "0" : "1") +
+          "&playsinline=1&controls=1&rel=0";
 
-      frame.src =
-        "https://www.youtube-nocookie.com/embed/" +
-        encodeURIComponent(id) +
-        "?autoplay=1&mute=1&playsinline=1&controls=1&rel=0";
-    }else{
+        frame.dataset.playing = "true";
+      }
+    } else {
       frame.src = "about:blank";
+      frame.dataset.playing = "false";
     }
   });
-},{
-  root:$("shortsFeed"),
-  threshold:[0,0.65,1]
+}, {
+  root: $("shortsFeed"),
+  threshold: [0, 0.65, 1]
 });
+
 async function openShorts(){
   currentMode="shorts";
   showPage("shortsPage");
@@ -1622,6 +1645,35 @@ shortFrame.allowFullscreen=true;
 shortFrame.referrerPolicy="strict-origin-when-cross-origin";
 shortFrame.src="about:blank";
     
+const soundButton = document.createElement("button");
+soundButton.className = "short-sound-button";
+soundButton.textContent = shortsSoundOn
+  ? "🔊 Suara Aktif"
+  : "🔇 Aktifkan Suara";
+
+soundButton.onclick = () => {
+  shortsSoundOn = !shortsSoundOn;
+
+  document.querySelectorAll(".short-card").forEach(card => {
+    const frame = card.querySelector(".short-player");
+    const button = card.querySelector(".short-sound-button");
+
+    if (button) {
+      button.textContent = shortsSoundOn
+        ? "🔊 Suara Aktif"
+        : "🔇 Aktifkan Suara";
+    }
+
+    if (frame && frame.dataset.playing === "true") {
+      frame.src =
+        "https://www.youtube-nocookie.com/embed/" +
+        encodeURIComponent(frame.dataset.videoId) +
+        "?autoplay=1&mute=" + (shortsSoundOn ? "0" : "1") +
+        "&playsinline=1&controls=1&rel=0";
+    }
+  });
+};
+
 
     const shade=document.createElement("div");
     shade.className="short-shade";
@@ -1723,16 +1775,17 @@ shortFrame.src="about:blank";
     yes.onclick=()=>card.remove();
 
     interest.append(no,yes);
-
-    card.append(
+card.append(
   background,
   shortFrame,
   shade,
   top,
   info,
   side,
-  interest
+  interest,
+  soundButton
 );
+    
 
 feed.appendChild(card);
 shortObserver.observe(card);
