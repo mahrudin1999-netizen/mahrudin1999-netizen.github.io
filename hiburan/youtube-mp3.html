@@ -306,6 +306,21 @@ footer a.active {
 <audio id="musicPlayer" controls
   style="width:100%;margin-top:15px;display:none">
 </audio>
+  
+<div class="section-title">🎵 Katalog YouTube GIRINATAN</div>
+
+<input
+  id="youtubeSearch"
+  class="search"
+  placeholder="Cari lagu dangdut, pop, koplo..."
+>
+
+<button class="shuffle-btn" onclick="searchYouTube()">
+  Cari Lagu
+</button>
+
+<div id="youtubeResults"></div>
+
 <div class="section-title">Musik dari Layanan Lain</div>
 
 <div class="music-card">
@@ -608,6 +623,102 @@ function loadYouTube() {
   iframe.style.borderRadius = "12px";
   iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
   iframe.allowFullscreen = true;
+
+  player.appendChild(iframe);
+}
+
+const GIRINATAN_YOUTUBE_API =
+  "https://giratan-music-api.mahrudin1999.workers.dev";
+
+async function searchYouTube() {
+  const keyword = document
+    .getElementById("youtubeSearch")
+    .value.trim();
+
+  const results = document.getElementById("youtubeResults");
+
+  if (!keyword) {
+    alert("Masukkan judul lagu terlebih dahulu.");
+    return;
+  }
+
+  results.textContent = "Sedang mencari lagu...";
+
+  try {
+    const response = await fetch(
+      GIRINATAN_YOUTUBE_API +
+      "?q=" + encodeURIComponent(keyword)
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.details || data.error);
+    }
+
+    results.innerHTML = "";
+
+    if (!data.videos || data.videos.length === 0) {
+      results.textContent = "Lagu tidak ditemukan.";
+      return;
+    }
+
+    data.videos.forEach(video => {
+      const card = document.createElement("div");
+      card.className = "music-card";
+
+      const img = document.createElement("img");
+      img.src = video.thumbnail;
+      img.alt = video.title;
+      img.style.width = "110px";
+      img.style.borderRadius = "8px";
+
+      const info = document.createElement("div");
+      info.className = "music-info";
+
+      const title = document.createElement("h3");
+      title.textContent = video.title;
+
+      const channel = document.createElement("p");
+      channel.textContent = video.channel;
+
+      const button = document.createElement("button");
+      button.className = "shuffle-btn";
+      button.textContent = "Putar Video";
+      button.onclick = () => playYouTubeVideo(video.videoId);
+
+      info.append(title, channel, button);
+      card.append(img, info);
+      results.appendChild(card);
+    });
+
+  } catch (error) {
+    results.textContent = "Gagal mencari: " + error.message;
+  }
+}
+
+function playYouTubeVideo(videoId) {
+  const results = document.getElementById("youtubeResults");
+
+  let player = document.getElementById("youtubeCatalogPlayer");
+
+  if (!player) {
+    player = document.createElement("div");
+    player.id = "youtubeCatalogPlayer";
+    results.prepend(player);
+  }
+
+  player.innerHTML = "";
+
+  const iframe = document.createElement("iframe");
+  iframe.src =
+    "https://www.youtube-nocookie.com/embed/" + videoId;
+  iframe.width = "100%";
+  iframe.height = "225";
+  iframe.allow =
+    "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+  iframe.allowFullscreen = true;
+  iframe.style.border = "0";
 
   player.appendChild(iframe);
 }
