@@ -297,79 +297,15 @@ footer a.active {
 </button>
   <div class="section-title">Pilihan Musik</div>
 
-  <div id="musicList">
-
-    <div class="music-card" data-genre="pop">
-      <div class="music-icon">🎤</div>
-      <div class="music-info">
-        <h3>Pop Indonesia</h3>
-        <p>Kumpulan karya musik pop Indonesia</p>
-        <div class="music-tag">GENRE MUSIK</div>
-      </div>
-      <button class="play-btn" onclick="showNotice()">▶</button>
-    </div>
-
-    <div class="music-card" data-genre="dangdut">
-      <div class="music-icon">🎶</div>
-      <div class="music-info">
-        <h3>Dangdut Indonesia</h3>
-        <p>Musik dangdut pilihan</p>
-        <div class="music-tag">GENRE MUSIK</div>
-      </div>
-      <button class="play-btn" onclick="showNotice()">▶</button>
-    </div>
-
-    <div class="music-card" data-genre="koplo">
-      <div class="music-icon">🥁</div>
-      <div class="music-info">
-        <h3>Dangdut Koplo</h3>
-        <p>Irama koplo dan musik panggung</p>
-        <div class="music-tag">GENRE MUSIK</div>
-      </div>
-      <button class="play-btn" onclick="showNotice()">▶</button>
-    </div>
-
-    <div class="music-card" data-genre="daerah">
-      <div class="music-icon">🌿</div>
-      <div class="music-info">
-        <h3>Lagu Daerah</h3>
-        <p>Kenali kekayaan musik Nusantara</p>
-        <div class="music-tag">GENRE MUSIK</div>
-      </div>
-      <button class="play-btn" onclick="showNotice()">▶</button>
-    </div>
-
-    <div class="music-card" data-genre="religi">
-      <div class="music-icon">🤲</div>
-      <div class="music-info">
-        <h3>Musik Religi</h3>
-        <p>Lagu religi dan penuh makna</p>
-        <div class="music-tag">GENRE MUSIK</div>
-      </div>
-      <button class="play-btn" onclick="showNotice()">▶</button>
-    </div>
-
-    <div class="music-card" data-genre="rock">
-      <div class="music-icon">🎸</div>
-      <div class="music-info">
-        <h3>Rock Indonesia</h3>
-        <p>Musik rock dan alternatif</p>
-        <div class="music-tag">GENRE MUSIK</div>
-      </div>
-      <button class="play-btn" onclick="showNotice()">▶</button>
-    </div>
-
-    <div class="music-card" data-genre="indie">
-      <div class="music-icon">🎧</div>
-      <div class="music-info">
-        <h3>Musik Indie</h3>
-        <p>Temukan karya musisi independen</p>
-        <div class="music-tag">GENRE MUSIK</div>
-      </div>
-      <button class="play-btn" onclick="showNotice()">▶</button>
-    </div>
-
+<div id="musicList">
+  <div class="empty" style="display:block">
+    Memuat daftar musik...
   </div>
+</div>
+
+<audio id="musicPlayer" controls
+  style="width:100%;margin-top:15px;display:none">
+</audio>
 
   <div class="empty" id="emptyMessage">
     Musik atau genre tidak ditemukan.
@@ -394,31 +330,139 @@ footer a.active {
 </footer>
 
 <script>
-  function shuffleMusic() {
-  const list = document.getElementById("musicList");
-  const cards = Array.from(list.children);
 
-  for (let i = cards.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [cards[i], cards[j]] = [cards[j], cards[i]];
+const JAMENDO_CLIENT_ID = "7905a3fd";
+
+const musicList = document.getElementById("musicList");
+const musicPlayer = document.getElementById("musicPlayer");
+const emptyMessage = document.getElementById("emptyMessage");
+
+let selectedGenre = "semua";
+let currentTracks = [];
+let currentAudio = null;
+
+const genreSearch = {
+  semua: "",
+  pop: "pop",
+  dangdut: "dangdut",
+  koplo: "koplo",
+  daerah: "indonesia traditional",
+  religi: "religious",
+  rock: "rock",
+  indie: "indie"
+};
+
+function allowedTrack(track) {
+  const license = track.licenses || {};
+
+  return (
+    license.ccnc !== true &&
+    license.ccnc !== "true" &&
+    license.prolicensing !== true &&
+    license.prolicensing !== "true" &&
+    track.audio
+  );
+}
+
+async function loadMusic(keyword = "") {
+  musicList.innerHTML =
+    '<p style="color:#D6AD48">Sedang memuat musik...</p>';
+
+  emptyMessage.style.display = "none";
+
+  try {
+    const params = new URLSearchParams({
+      client_id: JAMENDO_CLIENT_ID,
+      format: "json",
+      limit: "50",
+      type: "single albumtrack",
+      audioformat: "mp31",
+      include: "licenses",
+      order: "popularity_total"
+    });
+
+    if (keyword) {
+      params.set("search", keyword);
+    }
+
+    const url =
+      "https://api.jamendo.com/v3.0/tracks/?" +
+      params.toString();
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.headers.status !== "success") {
+      throw new Error("API Jamendo gagal");
+    }
+
+    currentTracks = data.results.filter(allowedTrack);
+
+    displayMusic(currentTracks);
+
+  } catch (error) {
+    musicList.innerHTML =
+      '<p style="color:#ff7777">Musik gagal dimuat. Periksa koneksi internet atau coba lagi.</p>';
+    console.error(error);
+  }
+}
+
+function displayMusic(tracks) {
+  musicList.innerHTML = "";
+
+  if (!tracks.length) {
+    emptyMessage.style.display = "block";
+    return;
   }
 
-  cards.forEach(card => list.appendChild(card));
+  emptyMessage.style.display = "none";
 
-  document.getElementById("searchMusic").value = "";
-  selectedGenre = "semua";
+  tracks.forEach(track => {
+    const card = document.createElement("div");
+    card.className = "music-card";
 
-  document.querySelectorAll(".category").forEach(btn => {
-    btn.classList.remove("active");
+    const info = document.createElement("div");
+    info.className = "music-info";
+
+    const title = document.createElement("h3");
+    title.textContent = track.name;
+
+    const artist = document.createElement("p");
+    artist.textContent = track.artist_name;
+
+    const tag = document.createElement("div");
+    tag.className = "music-tag";
+    tag.textContent = "JAMENDO MUSIC";
+
+    info.append(title, artist, tag);
+
+    const play = document.createElement("button");
+    play.className = "play-btn";
+    play.textContent = "▶";
+    play.onclick = () => playMusic(track);
+
+    const icon = document.createElement("div");
+    icon.className = "music-icon";
+    icon.textContent = "🎵";
+
+    card.append(icon, info, play);
+    musicList.appendChild(card);
+  });
+}
+
+function playMusic(track) {
+  if (!track.audio) return;
+
+  musicPlayer.src = track.audio;
+  musicPlayer.style.display = "block";
+  musicPlayer.play().catch(() => {
+    alert("Musik tidak dapat diputar. Silakan coba lagu lain.");
   });
 
-  document.querySelector(".category").classList.add("active");
-
-  searchMusic();
+  currentAudio = track;
 }
-let selectedGenre = "semua";
 
-function filterMusic(genre,button) {
+function filterMusic(genre, button) {
   selectedGenre = genre;
 
   document.querySelectorAll(".category").forEach(btn => {
@@ -426,39 +470,33 @@ function filterMusic(genre,button) {
   });
 
   button.classList.add("active");
-  searchMusic();
+
+  loadMusic(genreSearch[genre] || "");
 }
 
 function searchMusic() {
-  const keyword = document
-    .getElementById("searchMusic")
-    .value.toLowerCase();
+  const keyword =
+    document.getElementById("searchMusic").value.trim();
 
-  const cards = document.querySelectorAll(".music-card");
-  let visible = 0;
-
-  cards.forEach(card => {
-    const genre = card.dataset.genre;
-    const content = card.innerText.toLowerCase();
-
-    const genreMatch =
-      selectedGenre === "semua" || genre === selectedGenre;
-
-    const searchMatch = content.includes(keyword);
-    const show = genreMatch && searchMatch;
-
-    card.style.display = show ? "flex" : "none";
-
-    if(show) visible++;
-  });
-
-  document.getElementById("emptyMessage").style.display =
-    visible === 0 ? "block" : "none";
+  loadMusic(keyword);
 }
 
-function showNotice() {
-  alert("Pemutar musik belum tersedia. Katalog musik GIRINATAN sedang dipersiapkan.");
+function shuffleMusic() {
+  if (!currentTracks.length) return;
+
+  const shuffled = [...currentTracks];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] =
+      [shuffled[j], shuffled[i]];
+  }
+
+  displayMusic(shuffled);
 }
+
+loadMusic();
+
 </script>
 
 </body>
