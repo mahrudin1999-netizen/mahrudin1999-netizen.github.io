@@ -770,39 +770,6 @@ function updateFavoriteButtons() {
   ).textContent = isSaved ? "♥" : "♡";
 }
 
-function formatTime(seconds) {
-  if (!Number.isFinite(seconds)) return "0:00";
-  const minutes = Math.floor(seconds / 60);
-  const remainder = Math.floor(seconds % 60);
-  return minutes + ":" + String(remainder).padStart(2, "0");
-}
-
-function seekMusic(value) {
-  if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
-  audio.currentTime = (Number(value) / 100) * audio.duration;
-}
-
-function toggleSave(track) {
-  const id = String(track.id);
-
-  if (savedIds.includes(id)) {
-    savedIds = savedIds.filter(item => item !== id);
-  } else {
-    savedIds.push(id);
-  }
-
-  writeStorage("girinatanSavedTracks", savedIds);
-  renderTrackContainer(currentTracks, document.getElementById("musicResults"));
-  renderTrackContainer(currentTracks.slice(0, 6), document.getElementById("homeTracks"));
-  renderLibrary();
-  updateFavoriteButtons();
-}
-
-function toggleSaveCurrent() {
-  if (!currentTrack) return;
-  toggleSave(currentTrack);
-}
-
 function showLibrary(mode) {
   libraryMode = mode;
 
