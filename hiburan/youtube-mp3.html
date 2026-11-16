@@ -582,10 +582,14 @@ if (dateLabel) {
   }
 })
     .catch(error => {
-      console.error(error);
-      container.innerHTML =
-        '<div class="empty">Musik gagal diperbarui.</div>';
-    });
+  console.error("Gagal memperbarui musik:", error);
+  container.innerHTML =
+    '<div class="empty">Musik belum bisa dimuat. Periksa koneksi internet lalu coba lagi.</div>';
+
+  if (dateLabel) {
+    dateLabel.textContent = "Pembaruan gagal";
+  }
+});
 }
 /* YOUTUBE */
 
