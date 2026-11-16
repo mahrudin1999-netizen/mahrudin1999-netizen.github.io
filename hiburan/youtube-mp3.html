@@ -213,47 +213,89 @@ main{max-width:850px;margin:auto;padding:15px}
   line-height:1.6;
   margin-top:12px;
 }
-.mini-player{
-  position:fixed;
-  bottom:65px;
-  left:0;right:0;
-  z-index:30;
-  display:none;
-  background:#10271B;
-  border-top:1px solid var(--gold);
-  padding:9px 13px;
+
+/* PEMUTAR MUSIK TETAP DI ATAS */
+.mini-player {
+  position: sticky;
+  top: 70px;
+  left: 0;
+  right: 0;
+  z-index: 25;
+  display: none;
+  background: linear-gradient(110deg,#123C28,#0A2318);
+  border: 1px solid #D4AF37;
+  border-radius: 14px;
+  padding: 10px;
+  margin: 10px 12px;
 }
-.mini-inner{
-  max-width:850px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  gap:10px;
+
+.mini-inner {
+  max-width: 850px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.mini-inner img{
-  width:42px;height:42px;
-  border-radius:8px;
-  object-fit:cover;
+
+.mini-inner img {
+  width: 48px;
+  height: 48px;
+  border-radius: 9px;
+  object-fit: cover;
 }
-.mini-info{flex:1;min-width:0}
-.mini-info strong{
-  display:block;font-size:12px;
-  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+
+.mini-info {
+  flex: 1;
+  min-width: 0;
 }
-.mini-info small{color:var(--muted);font-size:10px}
-.mini-controls{display:flex;gap:10px;align-items:center}
-.mini-controls button{
-  border:0;background:none;color:white;font-size:20px;
+
+.mini-info strong {
+  display: block;
+  font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-.mini-controls .mini-play{color:var(--green);font-size:25px}
-.mini-progress{
-  height:3px;background:#34483B;
-  position:absolute;top:0;left:0;right:0;
+
+.mini-info small {
+  color: var(--muted);
+  font-size: 10px;
 }
-.mini-progress span{
-  display:block;height:100%;width:0;
-  background:var(--gold);
+
+.mini-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
+
+.mini-controls button {
+  border: 0;
+  background: none;
+  color: white;
+  font-size: 20px;
+}
+
+.mini-controls .mini-play {
+  color: var(--green);
+  font-size: 25px;
+}
+
+.mini-progress {
+  height: 3px;
+  background: #34483B;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.mini-progress span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--gold);
+}
+
 .bottom-nav{
   position:fixed;
   bottom:0;left:0;right:0;
@@ -351,6 +393,116 @@ footer{
   main{padding:22px}
   .hero{padding:30px}
 }
+  .bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 5px;
+  background: #0A2318;
+  border-top: 1px solid #D4AF37;
+  z-index: 1000;
+}
+
+.bottom-nav button,
+.bottom-nav a {
+  color: white;
+  background: none;
+  border: none;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.bottom-nav span {
+  font-size: 23px;
+}
+
+.bottom-nav small {
+  font-size: 11px;
+}
+  /* Pemutar musik tetap di atas */
+.music-top-player {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: #0A2318;
+  border-bottom: 1px solid #D4AF37;
+  padding: 12px;
+}
+
+/* Pilihan musik bisa digeser ke samping */
+.music-shelf-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 12px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.music-shelf-track > * {
+  flex: 0 0 145px;
+  scroll-snap-align: start;
+}
+
+.music-shelf-track::-webkit-scrollbar {
+  display: none;
+}
+  
+/* KARTU PILIHAN MUSIK HORIZONTAL */
+.music-shelf-track {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 12px 2px 18px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.music-shelf-track::-webkit-scrollbar {
+  display: none;
+}
+
+.music-shelf-track > .track {
+  flex: 0 0 145px;
+  width: 145px;
+  min-width: 145px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  scroll-snap-align: start;
+}
+
+.music-shelf-track .track-art {
+  width: 100%;
+  height: 125px;
+  border-radius: 10px;
+}
+
+.music-shelf-track .track-info {
+  width: 100%;
+  min-height: 48px;
+}
+
+.music-shelf-track .track-actions {
+  justify-content: space-between;
+}
+
+.music-shelf-track > .empty {
+  flex: 0 0 100%;
+}
+
 </style>
 </head>
 
@@ -362,8 +514,27 @@ footer{
     <div class="subtitle">Temukan musik, nikmati kreativitas</div>
   </div>
   <button class="header-icon" onclick="openFullPlayer()">♫</button>
+
 </header>
 
+<!-- MINI PLAYER -->
+<div class="mini-player" id="miniPlayer" onclick="openFullPlayer()">
+  <div class="mini-progress"><span id="miniProgress"></span></div>
+  <div class="mini-inner">
+    <img id="miniArt" src="" alt="Album">
+    <div class="mini-info">
+      <strong id="miniTitle">Belum ada musik diputar</strong>
+      <small id="miniArtist">Pilih musik untuk memulai</small>
+    </div>
+    <div class="mini-controls">
+      <button onclick="event.stopPropagation();previousTrack()">‹</button>
+      <button class="mini-play" id="miniPlay" onclick="event.stopPropagation();togglePlayback()">▶</button>
+      <button onclick="event.stopPropagation();nextTrack()">›</button>
+    </div>
+  </div>
+</div>
+
+<main>
 <main>
 
 <!-- BERANDA -->
@@ -392,7 +563,7 @@ footer{
     <h2>Musik Pilihan</h2>
     <small>Jamendo</small>
   </div>
-  <div id="homeTracks" class="track-list">
+  <div id="homeTracks" class="music-shelf-track">
     <div class="empty">Sedang memuat pilihan musik...</div>
   </div>
 
@@ -480,23 +651,6 @@ footer{
 
 </main>
 
-<!-- MINI PLAYER -->
-<div class="mini-player" id="miniPlayer" onclick="openFullPlayer()">
-  <div class="mini-progress"><span id="miniProgress"></span></div>
-  <div class="mini-inner">
-    <img id="miniArt" src="" alt="Album">
-    <div class="mini-info">
-      <strong id="miniTitle">Belum ada musik diputar</strong>
-      <small id="miniArtist">Pilih musik untuk memulai</small>
-    </div>
-    <div class="mini-controls">
-      <button onclick="event.stopPropagation();previousTrack()">‹</button>
-      <button class="mini-play" id="miniPlay" onclick="event.stopPropagation();togglePlayback()">▶</button>
-      <button onclick="event.stopPropagation();nextTrack()">›</button>
-    </div>
-  </div>
-</div>
-
 <!-- FULL PLAYER -->
 <div class="player-overlay" id="fullPlayer">
   <div class="player-top">
@@ -530,16 +684,31 @@ footer{
 <audio id="musicPlayer" preload="metadata"></audio>
 
 <nav class="bottom-nav">
-  <button class="nav-btn active" data-page="homePage" onclick="showPage('homePage')">
-    <span>⌂</span>Beranda
+  <button class="nav-btn active" data-page="homePage"
+    onclick="showPage('homePage')">
+    <span>⌂</span>
+    <small>Utama</small>
   </button>
-  <button class="nav-btn" data-page="explorePage" onclick="showPage('explorePage')">
-    <span>⌕</span>Jelajahi
+
+  <button class="nav-btn" data-page="explorePage"
+    onclick="showPage('explorePage')">
+    <span>⌕</span>
+    <small>Jelajah</small>
   </button>
-  <button class="nav-btn" data-page="libraryPage" onclick="showPage('libraryPage')">
-    <span>▤</span>Koleksi
+
+  <button class="nav-btn" data-page="libraryPage"
+    onclick="showPage('libraryPage')">
+    <span>♫</span>
+    <small>Koleksi</small>
   </button>
+
+  <a class="nav-btn"
+    href="https://mahrudin1999-netizen.github.io/">
+    <span>↩</span>
+    <small>Kembali</small>
+  </a>
 </nav>
+
 
 <footer>
   GIRINATAN MUSIC · Musik dan kreativitas dalam satu ruang
