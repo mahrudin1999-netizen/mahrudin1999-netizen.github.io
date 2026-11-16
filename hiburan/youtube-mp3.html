@@ -562,7 +562,12 @@ if (dateLabel) {
     GIRINATAN_YOUTUBE_API + "?q=" + encodeURIComponent(keyword),
     { cache: "no-store" }
   )
-    .then(response => response.json())
+    .then(response => {
+  if (!response.ok) {
+    throw new Error("Video gagal dimuat");
+  }
+  return response.json();
+})
     .then(data => {
       homeVideos = (data.videos || []).slice(0, 6);
       renderHomeMixed();
