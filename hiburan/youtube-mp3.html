@@ -488,9 +488,10 @@ async function loadHomeVideos() {
   ];
   try {
     const response = await fetch(
-      GIRINATAN_YOUTUBE_API +
-      "?q=" + encodeURIComponent(dailyQuery)
-    );
+  GIRINATAN_YOUTUBE_API +
+  "?q=" + encodeURIComponent(dailyQuery),
+  { cache: "no-store" }
+);
 
     const data = await response.json();
 
