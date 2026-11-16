@@ -559,13 +559,16 @@ footer{
     <button onclick="searchYouTubeCategory('lagu indonesia')">Indonesia</button>
   </div>
 
-  <div class="section-title">
-    <h2>Musik Pilihan</h2>
-    <small>Jamendo</small>
-  </div>
-  <div id="homeTracks" class="music-shelf-track">
-    <div class="empty">Sedang memuat pilihan musik...</div>
-  </div>
+
+<div class="section-title">
+  <h2>Musik & Video Pilihan</h2>
+  <small>GIRINATAN MUSIC</small>
+</div>
+
+<div id="homeTracks" class="music-shelf-track">
+  <div class="empty">Sedang memuat musik dan video...</div>
+</div>
+
 
   <div class="section-title">
     <h2>Putar Video YouTube</h2>
@@ -725,6 +728,7 @@ const audio = document.getElementById("musicPlayer");
 
 let currentTracks = [];
 let currentIndex = -1;
+  let homeVideos = [];
 let currentTrack = null;
 let shuffleOn = false;
 let libraryMode = "favorites";
@@ -830,7 +834,7 @@ async function loadMusic(keyword = "") {
     currentTracks = (data.results || []).filter(allowedTrack);
 
     renderTrackContainer(currentTracks, results);
-    renderTrackContainer(currentTracks.slice(0, 6), home);
+    renderHomeMixed();
 
     if (!currentTracks.length) {
       results.innerHTML =
@@ -1109,6 +1113,123 @@ function renderLibrary() {
   renderTrackContainer(tracks, container);
 }
 
+function renderHomeMixed() {
+  const container = document.getElementById("homeTracks");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const total = Math.max(
+    currentTracks.slice(0, 6).length,
+    homeVideos.length
+  );
+
+  if (total === 0) {
+    container.innerHTML =
+      '<div class="empty">Sedang memuat musik dan video...</div>';
+    return;
+  }
+
+  for (let i = 0; i < total; i++) {
+    const track = currentTracks.slice(0, 6)[i];
+
+    if (track) {
+      const card = document.createElement("div");
+      card.className = "track";
+
+      const img = document.createElement("img");
+      img.className = "track-art";
+      img.src = track.album_image || track.image || "";
+      img.alt = "Album musik";
+
+      const info = document.createElement("div");
+      info.className = "track-info";
+
+      const title = document.createElement("strong");
+      title.textContent = track.name || "Tanpa judul";
+
+      const artist = document.createElement("small");
+      artist.textContent = track.artist_name || "Artis";
+
+      info.append(title, artist);
+
+      const button = document.createElement("button");
+      button.className = "play-btn";
+      button.textContent = "▶";
+      button.onclick = () => playTrack(track);
+
+      card.append(img, info, button);
+      container.appendChild(card);
+    }
+
+    const video = homeVideos[i];
+
+    if (video) {
+      const card = document.createElement("div");
+      card.className = "track";
+
+      const img = document.createElement("img");
+      img.className = "track-art";
+      img.src = video.thumbnail || "";
+      img.alt = "Video musik";
+
+      const info = document.createElement("div");
+      info.className = "track-info";
+
+      const title = document.createElement("strong");
+      title.textContent = video.title || "Video musik";
+
+      const channel = document.createElement("small");
+      channel.textContent = video.channel || "YouTube";
+
+      info.append(title, channel);
+
+      const button = document.createElement("button");
+      button.className = "play-btn";
+      button.textContent = "▶";
+      button.onclick = () => {
+        const iframe = document.createElement("iframe");
+        iframe.src =
+          "https://www.youtube-nocookie.com/embed/" +
+          encodeURIComponent(video.videoId) + "?autoplay=1";
+        iframe.title = video.title || "Video musik";
+        iframe.allow =
+          "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+        iframe.allowFullscreen = true;
+        iframe.style.height = "125px";
+        card.replaceChildren(iframe);
+      };
+
+      card.append(img, info, button);
+      container.appendChild(card);
+    }
+  }
+}
+
+async function loadHomeVideos() {
+  const container = document.getElementById("homeTracks");
+
+  try {
+    const response = await fetch(
+      GIRINATAN_YOUTUBE_API +
+      "?q=" + encodeURIComponent("musik populer indonesia")
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Video gagal dimuat");
+    }
+
+    homeVideos = (data.videos || []).slice(0, 6);
+    renderHomeMixed();
+
+  } catch (error) {
+    console.error("Video beranda:", error);
+    renderHomeMixed();
+  }
+}
+
 /* YOUTUBE */
 
 async function searchYouTube() {
@@ -1241,9 +1362,9 @@ function loadSpotify() {
 }
 
 /* AWAL HALAMAN */
-
 loadMusic();
-</script>
+loadHomeVideos();
 
+</script>
 </body>
 </html>
