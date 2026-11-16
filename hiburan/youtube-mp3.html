@@ -742,25 +742,6 @@ function playTrack(track) {
   renderLibrary();
 }
 
-
-function updatePlayerUI() {
-  if (!currentTrack) return;
-
-  const title = currentTrack.name || "Tanpa judul";
-  const artist = currentTrack.artist_name || "Artis";
-  const art = currentTrack.album_image || currentTrack.image || "";
-
-  document.getElementById("miniPlayer").style.display = "block";
-  document.getElementById("miniTitle").textContent = title;
-  document.getElementById("miniArtist").textContent = artist;
-  document.getElementById("miniArt").src = art;
-  document.getElementById("fullTitle").textContent = title;
-  document.getElementById("fullArtist").textContent = artist;
-  document.getElementById("fullArt").src = art;
-
-  updateFavoriteButtons();
-}
-
 function updateFavoriteButtons() {
   const isSaved = currentTrack &&
     savedIds.includes(String(currentTrack.id));
