@@ -569,9 +569,18 @@ if (dateLabel) {
   return response.json();
 })
     .then(data => {
-      homeVideos = (data.videos || []).slice(0, 6);
-      renderHomeMixed();
-    })
+  homeVideos = (data.videos || []).slice(0, 6);
+  renderHomeMixed();
+
+  if (dateLabel) {
+    dateLabel.textContent =
+      "Diperbarui pukul " +
+      new Date().toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+  }
+})
     .catch(error => {
       console.error(error);
       container.innerHTML =
