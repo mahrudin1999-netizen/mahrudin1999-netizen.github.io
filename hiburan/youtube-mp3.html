@@ -604,26 +604,6 @@ let currentTrack = null;
 let shuffleOn = false;
 let libraryMode = "favorites";
 
-function readStorage(key) {
-  try {
-    const value = JSON.parse(localStorage.getItem(key) || "[]");
-    return Array.isArray(value) ? value : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeStorage(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch (error) {
-    console.warn("Penyimpanan lokal tidak tersedia", error);
-  }
-}
-
-let savedIds = readStorage("girinatanSavedTracks");
-let recentIds = readStorage("girinatanRecentTracks");
-
 function showPage(pageId) {
   document.querySelectorAll(".page").forEach(page => {
     page.classList.toggle("active", page.id === pageId);
