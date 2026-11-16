@@ -523,7 +523,46 @@ const dailyQuery = dailyQueries[dailyIndex];
     renderHomeMixed();
   }
 }
+function refreshDailyMusic() {
+  const dailyQueries = [
+    "lagu indonesia terbaru",
+    "musik populer indonesia",
+    "dangdut viral terbaru",
+    "koplo terbaru",
+    "pop indonesia hits",
+    "lagu viral tiktok indonesia",
+    "lagu nostalgia indonesia"
+  ];
 
+  const today = new Date();
+  const dayNumber = Math.floor(
+    (today - new Date(today.getFullYear(), 0, 0)) / 86400000
+  );
+
+  let currentIndex = (dayNumber - 1) % dailyQueries.length;
+  currentIndex = (currentIndex + 1) % dailyQueries.length;
+
+  const keyword = dailyQueries[currentIndex];
+
+  const container = document.getElementById("homeTracks");
+  container.innerHTML =
+    '<div class="empty">Memuat pilihan musik baru...</div>';
+
+  fetch(
+    GIRINATAN_YOUTUBE_API + "?q=" + encodeURIComponent(keyword),
+    { cache: "no-store" }
+  )
+    .then(response => response.json())
+    .then(data => {
+      homeVideos = (data.videos || []).slice(0, 6);
+      renderHomeMixed();
+    })
+    .catch(error => {
+      console.error(error);
+      container.innerHTML =
+        '<div class="empty">Musik gagal diperbarui.</div>';
+    });
+}
 /* YOUTUBE */
 
 async function searchYouTube() {
