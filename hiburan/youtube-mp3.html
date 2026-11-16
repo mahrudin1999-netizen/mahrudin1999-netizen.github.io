@@ -594,8 +594,14 @@ container.innerHTML =
   container.innerHTML =
     '<div class="empty">Musik belum bisa dimuat. Periksa koneksi internet lalu coba lagi.</div>';
 
-  if (dateLabel) {
+    if (dateLabel) {
     dateLabel.textContent = "Pembaruan gagal";
+  }
+})
+.finally(() => {
+  if (refreshButton) {
+    refreshButton.disabled = false;
+    refreshButton.textContent = "↻ Segarkan Musik";
   }
 });
 }
