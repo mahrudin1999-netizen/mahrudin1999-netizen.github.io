@@ -568,7 +568,7 @@ footer{
   <div class="empty">
     Cari lagu favorit dan putar melalui pemutar resmi YouTube.
     <br><br>
-    <button class="gold-btn" onclick="showPage('explorePage');selectSource('youtube')">Cari Lagu YouTube</button>
+    <button class="gold-btn" onclick="showPage('explorePage')">Cari Lagu YouTube</button>
   </div>
 </section>
 
@@ -578,33 +578,7 @@ footer{
     <h2>Jelajahi Musik</h2>
   </div>
 
-  <div class="source-tabs">
-    <button class="source-tab active" data-source="jamendo" onclick="selectSource('jamendo')">♫ Musik Gratis</button>
-    <button class="source-tab" data-source="youtube" onclick="selectSource('youtube')">▶ YouTube</button>
-    <button class="source-tab" data-source="spotify" onclick="selectSource('spotify')">Spotify</button>
-  </div>
-
-  <div id="jamendoPanel">
-    <div class="search-box">
-      <input id="searchMusic" placeholder="Cari judul atau nama artis..." onkeydown="if(event.key==='Enter')searchMusic()">
-      <button onclick="searchMusic()">Cari</button>
-    </div>
-    <div class="chips">
-      <button onclick="genreSearch('pop')">Pop</button>
-      <button onclick="genreSearch('rock')">Rock</button>
-      <button onclick="genreSearch('jazz')">Jazz</button>
-      <button onclick="genreSearch('acoustic')">Acoustic</button>
-      <button onclick="genreSearch('electronic')">Electronic</button>
-      <button onclick="genreSearch('relaxing')">Relaxing</button>
-    </div>
-    <div id="musicResults" class="track-list">
-      <div class="empty">Memuat katalog musik...</div>
-    </div>
-    <p class="info">Musik disediakan melalui Jamendo. Ketersediaan dan izin penggunaan berbeda untuk setiap lagu. Periksa lisensi lagu sebelum digunakan untuk konten komersial.</p>
-  </div>
-
-  <div id="youtubePanel" style="display:none">
-    <div class="search-box">
+  <div id="youtubePanel">
       <input id="youtubeSearch" placeholder="Cari lagu, penyanyi, atau video..." onkeydown="if(event.key==='Enter')searchYouTube()">
       <button onclick="searchYouTube()">Cari</button>
     </div>
@@ -619,21 +593,10 @@ footer{
     <div id="youtubeResults"></div>
     <p class="info">Video diputar melalui pemutar resmi YouTube. GIRINATAN tidak mengunduh atau mengekstrak audio dari video YouTube.</p>
   </div>
-
-  <div id="spotifyPanel" style="display:none">
-    <h3>Putar Spotify</h3>
-    <input class="input" id="spotifyUrl" placeholder="Tempel link lagu, album, atau playlist Spotify">
-    <br><br>
-    <button class="gold-btn" onclick="loadSpotify()">Putar Spotify</button>
-    <div class="embed-box" id="spotifyPlayer">
-      <div class="empty">Tempel tautan Spotify untuk membuka pemutar.</div>
-    </div>
-    <p class="info">Pemutaran mengikuti ketentuan dan batasan layanan Spotify. Beberapa konten mungkin memerlukan akun Spotify.</p>
-  </div>
 </section>
 
 <!-- KOLEKSI -->
-<section class="page" id="libraryPage">
+<div id="youtubePanel">
   <div class="section-title">
     <h2>Koleksi Saya</h2>
   </div>
@@ -722,12 +685,6 @@ function allowedTrack(track) {
     license.prolicensing === false
   );
 }
-
-function searchMusic() {
-  const keyword = document.getElementById("searchMusic").value.trim();
-  loadMusic(keyword);
-}
-
 function renderTrackContainer(tracks, container) {
   container.innerHTML = "";
 
