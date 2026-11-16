@@ -778,11 +778,7 @@ function renderHomeMixed() {
 
   container.innerHTML = "";
 
-  const total = Math.max(
-    currentTracks.slice(0, 6).length,
-    homeVideos.length
-  );
-
+  const total = homeVideos.length;
   if (total === 0) {
     container.innerHTML =
       '<div class="empty">Sedang memuat musik dan video...</div>';
