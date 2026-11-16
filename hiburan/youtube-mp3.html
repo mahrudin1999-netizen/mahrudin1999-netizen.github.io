@@ -550,7 +550,10 @@ manualMusicIndex =
 const currentIndex = manualMusicIndex;
 
   const keyword = dailyQueries[currentIndex];
-
+const dateLabel = document.getElementById("musicUpdateDate");
+if (dateLabel) {
+  dateLabel.textContent = "Pilihan: " + keyword;
+}
   const container = document.getElementById("homeTracks");
   container.innerHTML =
     '<div class="empty">Memuat pilihan musik baru...</div>';
