@@ -945,6 +945,20 @@ function playTrack(track) {
   renderLibrary();
 }
 
+/* PUTAR LAGU BERIKUTNYA OTOMATIS */
+audio.addEventListener("ended", function () {
+  if (currentTracks.length < 2) return;
+
+  let nextIndex = currentIndex + 1;
+
+  // Kembali ke lagu pertama jika sudah sampai akhir
+  if (nextIndex >= currentTracks.length) {
+    nextIndex = 0;
+  }
+
+  playTrack(currentTracks[nextIndex]);
+});
+
 function updatePlayerUI() {
   if (!currentTrack) return;
 
