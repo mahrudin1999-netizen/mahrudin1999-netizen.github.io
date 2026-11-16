@@ -840,33 +840,6 @@ function seekMusic(value) {
   if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
   audio.currentTime = (Number(value) / 100) * audio.duration;
 }
-
-audio.addEventListener("play", () => updatePlayState(true));
-audio.addEventListener("pause", () => updatePlayState(false));
-
-audio.addEventListener("timeupdate", () => {
-  const duration = audio.duration || 0;
-  const current = audio.currentTime || 0;
-  console.log("Waktu audio:", current, "Durasi:", duration, "Selesai:", audio.ended);
-  const percent = duration ? (current / duration) * 100 : 0;
-
-  document.getElementById("musicProgress").value = percent;
-  document.getElementById("miniProgress").style.width = percent + "%";
-  document.getElementById("currentTime").textContent = formatTime(current);
-  document.getElementById("durationTime").textContent = formatTime(duration);
-});
-
-audio.addEventListener("loadedmetadata", () => {
-  document.getElementById("durationTime").textContent =
-    formatTime(audio.duration);
-});
-
-audio.addEventListener("ended", function () {
-  alert("Lagu selesai terdeteksi!");
-  if (currentTracks.length > 1) {
-    nextTrack();
-  }
-});
   function openFullPlayer() {
   if (!currentTrack) {
     alert("Pilih lagu terlebih dahulu.");
