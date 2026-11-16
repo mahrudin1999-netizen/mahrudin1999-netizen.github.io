@@ -546,11 +546,6 @@ footer{
     <h2>Jelajahi Genre</h2>
   </div>
   <div class="chips">
-    <button onclick="genreSearch('pop')">Pop</button>
-    <button onclick="genreSearch('rock')">Rock</button>
-    <button onclick="genreSearch('jazz')">Jazz</button>
-    <button onclick="genreSearch('acoustic')">Acoustic</button>
-    <button onclick="genreSearch('electronic')">Electronic</button>
     <button onclick="searchYouTubeCategory('dangdut indonesia')">Dangdut</button>
     <button onclick="searchYouTubeCategory('koplo indonesia')">Koplo</button>
     <button onclick="searchYouTubeCategory('lagu indonesia')">Indonesia</button>
@@ -642,82 +637,33 @@ footer{
   <div class="section-title">
     <h2>Koleksi Saya</h2>
   </div>
-  <div class="source-tabs">
-    <button class="source-tab active" id="favTab" onclick="showLibrary('favorites')">♥ Favorit</button>
-    <button class="source-tab" id="recentTab" onclick="showLibrary('recent')">◷ Terakhir Diputar</button>
+  <div id="youtubePanel">
+  <div class="search-box">
+    <input id="youtubeSearch"
+      placeholder="Cari lagu, penyanyi, atau video..."
+      onkeydown="if(event.key==='Enter')searchYouTube()">
+    <button onclick="searchYouTube()">Cari</button>
   </div>
-  <div id="libraryTracks" class="track-list"></div>
-</section>
 
-</main>
-
-<!-- FULL PLAYER -->
-<div class="player-overlay" id="fullPlayer">
-  <div class="player-top">
-    <button onclick="closeFullPlayer()">⌄</button>
-    <span>GIRINATAN MUSIC</span>
-    <button onclick="toggleSaveCurrent()">♡</button>
+  <div class="chips">
+    <button onclick="searchYouTubeCategory('dangdut indonesia')">Dangdut</button>
+    <button onclick="searchYouTubeCategory('koplo terbaru')">Koplo</button>
+    <button onclick="searchYouTubeCategory('pop indonesia')">Pop</button>
+    <button onclick="searchYouTubeCategory('lagu daerah indonesia')">Daerah</button>
+    <button onclick="searchYouTubeCategory('lagu religi indonesia')">Religi</button>
+    <button onclick="searchYouTubeCategory('rock indonesia')">Rock</button>
   </div>
-  <div class="player-content">
-    <div class="vinyl-wrap" id="vinyl">
-      <img id="fullArt" src="" alt="Album">
-    </div>
-    <h2 id="fullTitle">Pilih musik</h2>
-    <p id="fullArtist">GIRINATAN MUSIC</p>
-    <input class="player-progress" id="musicProgress" type="range" min="0" max="100" value="0" oninput="seekMusic(this.value)">
-    <div class="time-row">
-      <span id="currentTime">0:00</span>
-      <span id="durationTime">0:00</span>
-    </div>
-    <div class="player-controls">
-      <button onclick="previousTrack()">⏮</button>
-      <button class="big-play" id="fullPlay" onclick="togglePlayback()">▶</button>
-      <button onclick="nextTrack()">⏭</button>
-    </div>
-    <div class="player-extras">
-      <button id="shuffleButton" onclick="toggleShuffle()">🔀</button>
-      <button onclick="toggleSaveCurrent()">♡ Favorit</button>
-    </div>
+
+  <div id="youtubeResults"></div>
+
+  <p class="info">
+    Video diputar melalui pemutar resmi YouTube.
+  </p>
   </div>
-</div>
-
-<audio id="musicPlayer" preload="metadata"></audio>
-
-<nav class="bottom-nav">
-  <button class="nav-btn active" data-page="homePage"
-    onclick="showPage('homePage')">
-    <span>⌂</span>
-    <small>Utama</small>
-  </button>
-
-  <button class="nav-btn" data-page="explorePage"
-    onclick="showPage('explorePage')">
-    <span>⌕</span>
-    <small>Jelajah</small>
-  </button>
-
-  <button class="nav-btn" data-page="libraryPage"
-    onclick="showPage('libraryPage')">
-    <span>♫</span>
-    <small>Koleksi</small>
-  </button>
-
-  <a class="nav-btn"
-    href="https://mahrudin1999-netizen.github.io/">
-    <span>↩</span>
-    <small>Kembali</small>
-  </a>
-</nav>
-
-
-<footer>
-  GIRINATAN MUSIC · Musik dan kreativitas dalam satu ruang
-</footer>
 
 <script>
 "use strict";
 
-const JAMENDO_CLIENT_ID = "7905a3fd";
 const GIRINATAN_YOUTUBE_API =
   "https://giratan-music-api.mahrudin1999.workers.dev";
 
@@ -768,34 +714,6 @@ function showPage(pageId) {
   if (pageId === "libraryPage") renderLibrary();
 }
 
-function selectSource(source) {
-  const panels = {
-    jamendo: "jamendoPanel",
-    youtube: "youtubePanel",
-    spotify: "spotifyPanel"
-  };
-
-  Object.values(panels).forEach(id => {
-    document.getElementById(id).style.display = "none";
-  });
-
-  document.getElementById(panels[source]).style.display = "block";
-
-  document.querySelectorAll(".source-tab[data-source]").forEach(button => {
-    button.classList.toggle(
-      "active",
-      button.dataset.source === source
-    );
-  });
-}
-
-function genreSearch(keyword) {
-  showPage("explorePage");
-  selectSource("jamendo");
-  document.getElementById("searchMusic").value = keyword;
-  loadMusic(keyword);
-}
-
 function allowedTrack(track) {
   const license = track.license || {};
   return Boolean(
@@ -803,50 +721,6 @@ function allowedTrack(track) {
     license.ccnc === false &&
     license.prolicensing === false
   );
-}
-
-async function loadMusic(keyword = "") {
-  const results = document.getElementById("musicResults");
-  const home = document.getElementById("homeTracks");
-
-  results.innerHTML = '<div class="empty">Sedang mencari musik...</div>';
-
-  const params = new URLSearchParams({
-    client_id: JAMENDO_CLIENT_ID,
-    format: "json",
-    limit: "50",
-    order: "popularity_total",
-    audioformat: "mp31",
-    include: "licenses"
-  });
-
-  if (keyword.trim()) params.set("search", keyword.trim());
-
-  try {
-    const response = await fetch(
-      "https://api.jamendo.com/v3.0/tracks/?" + params.toString()
-    );
-
-    if (!response.ok) throw new Error("Server musik tidak merespons.");
-
-    const data = await response.json();
-
-    currentTracks = (data.results || []).filter(allowedTrack);
-
-    renderTrackContainer(currentTracks, results);
-    renderHomeMixed();
-
-    if (!currentTracks.length) {
-      results.innerHTML =
-        '<div class="empty">Belum ada lagu yang cocok. Coba kata kunci lain seperti rock, jazz, atau acoustic.</div>';
-    }
-  } catch (error) {
-    results.innerHTML =
-      '<div class="empty">Gagal memuat musik. Periksa koneksi internet lalu coba lagi.</div>';
-    home.innerHTML =
-      '<div class="empty">Katalog musik belum dapat dimuat.</div>';
-    console.error(error);
-  }
 }
 
 function searchMusic() {
@@ -1314,16 +1188,12 @@ youtubeVideos.forEach(video => {
     console.error(error);
   }
 }
-
 function searchYouTubeCategory(keyword) {
   showPage("explorePage");
-  selectSource("youtube");
   document.getElementById("youtubeSearch").value = keyword;
   searchYouTube();
 }
-  
-
-function onYouTubeIframeAPIReady() {
+  function onYouTubeIframeAPIReady() {
   console.log("YouTube Player API siap");
 }
 
@@ -1409,38 +1279,7 @@ function playYouTubeVideo(videoId) {
     block: "start"
   });
 }
-
-/* SPOTIFY */
-
-function loadSpotify() {
-  const url = document.getElementById("spotifyUrl").value.trim();
-  const target = document.getElementById("spotifyPlayer");
-
-  const match = url.match(
-    /open\.spotify\.com\/(track|album|playlist|artist|episode|show)\/([a-zA-Z0-9]+)/
-  );
-
-  if (!match) {
-    alert("Masukkan tautan Spotify yang benar.");
-    return;
-  }
-
-  const type = match[1];
-  const id = match[2];
-
-  target.innerHTML = "";
-
-  const iframe = document.createElement("iframe");
-  iframe.src =
-    "https://open.spotify.com/embed/" + type + "/" + id;
-  iframe.height = "380";
-  iframe.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
-
-  target.appendChild(iframe);
-}
-
 /* AWAL HALAMAN */
-loadMusic();
 loadHomeVideos();
 
 </script>
