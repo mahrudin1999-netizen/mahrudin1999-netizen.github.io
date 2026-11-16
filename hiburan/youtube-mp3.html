@@ -767,9 +767,6 @@ function nextYouTubeVideo() {
 function playYouTubeVideo(videoId) {
   if (!videoId) return;
 
-  // Hentikan musik audio
-  audio.pause();
-
   // Tentukan antrean video
   let index = youtubeVideos.findIndex(
     video => video.videoId === videoId
