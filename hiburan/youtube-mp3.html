@@ -489,7 +489,7 @@ async function loadHomeVideos() {
   try {
     const response = await fetch(
       GIRINATAN_YOUTUBE_API +
-      "?q=" + encodeURIComponent("musik populer indonesia")
+      "?q=" + encodeURIComponent(dailyQuery)
     );
 
     const data = await response.json();
