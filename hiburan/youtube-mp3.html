@@ -1064,7 +1064,7 @@ audio.addEventListener("loadedmetadata", () => {
 });
 
 audio.addEventListener("ended", function () {
-  console.log("Lagu selesai, memutar lagu berikutnya");
+  alert("Lagu selesai terdeteksi!");
   if (currentTracks.length > 1) {
     nextTrack();
   }
