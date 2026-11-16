@@ -1050,6 +1050,7 @@ audio.addEventListener("pause", () => updatePlayState(false));
 audio.addEventListener("timeupdate", () => {
   const duration = audio.duration || 0;
   const current = audio.currentTime || 0;
+  console.log("Waktu audio:", current, "Durasi:", duration, "Selesai:", audio.ended);
   const percent = duration ? (current / duration) * 100 : 0;
 
   document.getElementById("musicProgress").value = percent;
