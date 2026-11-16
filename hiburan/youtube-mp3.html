@@ -769,11 +769,6 @@ function updateFavoriteButtons() {
     ".player-top button:last-child"
   ).textContent = isSaved ? "♥" : "♡";
 }
-function toggleShuffle() {
-  shuffleOn = !shuffleOn;
-  document.getElementById("shuffleButton").style.color =
-    shuffleOn ? "var(--green)" : "var(--gold2)";
-}
 
 function formatTime(seconds) {
   if (!Number.isFinite(seconds)) return "0:00";
