@@ -770,12 +770,6 @@ function updateFavoriteButtons() {
   ).textContent = isSaved ? "♥" : "♡";
 }
 
-function updatePlayState(playing) {
-  document.getElementById("miniPlay").textContent = playing ? "Ⅱ" : "▶";
-  document.getElementById("fullPlay").textContent = playing ? "Ⅱ" : "▶";
-  document.getElementById("vinyl").classList.toggle("playing", playing);
-}
-
 function togglePlayback() {
   if (!currentTrack) {
     if (currentTracks.length) playTrack(currentTracks[0]);
