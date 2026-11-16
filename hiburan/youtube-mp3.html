@@ -786,17 +786,6 @@ function seekMusic(value) {
   if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
   audio.currentTime = (Number(value) / 100) * audio.duration;
 }
-  function openFullPlayer() {
-  if (!currentTrack) {
-    alert("Pilih lagu terlebih dahulu.");
-    return;
-  }
-  document.getElementById("fullPlayer").classList.add("show");
-}
-
-function closeFullPlayer() {
-  document.getElementById("fullPlayer").classList.remove("show");
-}
 
 function toggleSave(track) {
   const id = String(track.id);
