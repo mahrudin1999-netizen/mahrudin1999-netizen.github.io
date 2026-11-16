@@ -636,19 +636,6 @@ function showPage(pageId) {
     );
   });
 }
-function showLibrary(mode) {
-  libraryMode = mode;
-
-  document.getElementById("favTab").classList.toggle(
-    "active", mode === "favorites"
-  );
-  document.getElementById("recentTab").classList.toggle(
-    "active", mode === "recent"
-  );
-
-  renderLibrary();
-}
-
 function renderHomeMixed() {
   const container = document.getElementById("homeTracks");
   if (!container) return;
