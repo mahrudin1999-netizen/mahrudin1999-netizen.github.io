@@ -769,21 +769,6 @@ function updateFavoriteButtons() {
     ".player-top button:last-child"
   ).textContent = isSaved ? "♥" : "♡";
 }
-
-function previousTrack() {
-  if (!currentTracks.length) return;
-
-  if (audio.currentTime > 3) {
-    audio.currentTime = 0;
-    return;
-  }
-
-  const previousIndex =
-    (currentIndex - 1 + currentTracks.length) % currentTracks.length;
-
-  playTrack(currentTracks[previousIndex]);
-}
-
 function toggleShuffle() {
   shuffleOn = !shuffleOn;
   document.getElementById("shuffleButton").style.color =
