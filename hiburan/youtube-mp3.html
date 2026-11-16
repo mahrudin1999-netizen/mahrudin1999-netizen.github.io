@@ -786,36 +786,6 @@ function renderHomeMixed() {
   }
 
   for (let i = 0; i < total; i++) {
-    const track = currentTracks.slice(0, 6)[i];
-
-    if (track) {
-      const card = document.createElement("div");
-      card.className = "track";
-
-      const img = document.createElement("img");
-      img.className = "track-art";
-      img.src = track.album_image || track.image || "";
-      img.alt = "Album musik";
-
-      const info = document.createElement("div");
-      info.className = "track-info";
-
-      const title = document.createElement("strong");
-      title.textContent = track.name || "Tanpa judul";
-
-      const artist = document.createElement("small");
-      artist.textContent = track.artist_name || "Artis";
-
-      info.append(title, artist);
-
-      const button = document.createElement("button");
-      button.className = "play-btn";
-      button.textContent = "▶";
-      button.onclick = () => playTrack(track);
-
-      card.append(img, info, button);
-      container.appendChild(card);
-    }
 
     const video = homeVideos[i];
 
