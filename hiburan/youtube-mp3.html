@@ -722,8 +722,6 @@ function playTrack(track) {
   audio.src = track.audio;
 
   audio.play().then(() => {
-    updatePlayerUI();
-    updatePlayState(true);
   }).catch(error => {
     alert("Musik tidak dapat diputar. Coba pilih lagu lain.");
     console.error(error);
