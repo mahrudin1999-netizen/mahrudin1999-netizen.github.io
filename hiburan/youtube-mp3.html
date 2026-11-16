@@ -1063,9 +1063,13 @@ audio.addEventListener("loadedmetadata", () => {
     formatTime(audio.duration);
 });
 
-audio.addEventListener("ended", nextTrack);
-
-function openFullPlayer() {
+audio.addEventListener("ended", function () {
+  console.log("Lagu selesai, memutar lagu berikutnya");
+  if (currentTracks.length > 1) {
+    nextTrack();
+  }
+});
+  function openFullPlayer() {
   if (!currentTrack) {
     alert("Pilih lagu terlebih dahulu.");
     return;
