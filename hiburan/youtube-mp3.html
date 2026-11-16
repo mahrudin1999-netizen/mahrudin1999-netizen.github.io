@@ -230,6 +230,22 @@ main{max-width:850px;margin:auto;padding:15px}
   padding: 10px;
   margin: 10px 12px;
 }
+  
+.mini-player:has(.youtube-top-video) {
+  display: block;
+  position: sticky;
+  top: 70px;
+  z-index: 100;
+}
+
+.youtube-top-video {
+  display: block;
+  width: 100%;
+  height: 220px;
+  border: 0;
+  border-radius: 10px;
+}
+
 .mini-inner {
   max-width: 850px;
   margin: auto;
@@ -884,13 +900,30 @@ function renderTrackContainer(tracks, container) {
   });
 }
 
+
 function playTrack(track) {
   if (!track || !track.audio) return;
 
+  // Hentikan video YouTube sebelumnya
+  const oldVideo = document.querySelector(".youtube-top-video");
+  if (oldVideo) oldVideo.remove();
+
+  // Tampilkan kembali pemutar musik
+  const miniPlayer = document.querySelector(".mini-player");
+  if (miniPlayer) {
+    miniPlayer.style.display = "block";
+
+    const miniInner = miniPlayer.querySelector(".mini-inner");
+    if (miniInner) miniInner.style.display = "flex";
+  }
+
   currentTrack = track;
-  currentIndex = currentTracks.findIndex(item => item.id === track.id);
+  currentIndex = currentTracks.findIndex(
+    item => item.id === track.id
+  );
 
   audio.src = track.audio;
+
   audio.play().then(() => {
     updatePlayerUI();
     updatePlayState(true);
@@ -900,7 +933,12 @@ function playTrack(track) {
   });
 
   const id = String(track.id);
-  recentIds = [id, ...recentIds.filter(item => item !== id)].slice(0, 50);
+
+  recentIds = [
+    id,
+    ...recentIds.filter(item => item !== id)
+  ].slice(0, 50);
+
   writeStorage("girinatanRecentTracks", recentIds);
 
   updatePlayerUI();
@@ -1168,17 +1206,8 @@ function renderHomeMixed() {
       button.className = "play-btn";
       button.textContent = "▶";
       button.onclick = () => {
-        const iframe = document.createElement("iframe");
-        iframe.src =
-          "https://www.youtube-nocookie.com/embed/" +
-          encodeURIComponent(video.videoId) + "?autoplay=1";
-        iframe.title = video.title || "Video musik";
-        iframe.allow =
-          "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
-        iframe.allowFullscreen = true;
-        iframe.style.height = "125px";
-        card.replaceChildren(iframe);
-      };
+  playYouTubeVideo(video.videoId);
+};
 
       card.append(img, info, button);
       container.appendChild(card);
@@ -1281,35 +1310,44 @@ function searchYouTubeCategory(keyword) {
   searchYouTube();
 }
 
+
+
 function playYouTubeVideo(videoId) {
   if (!videoId) return;
 
-  const results = document.getElementById("youtubeResults");
+  const player = document.querySelector(".mini-player");
+  if (!player) return;
 
-  let player = document.getElementById("youtubeCatalogPlayer");
+  player.style.display = "block";
 
-  if (!player) {
-    player = document.createElement("div");
-    player.id = "youtubeCatalogPlayer";
-    results.prepend(player);
-  }
+  const miniInner = player.querySelector(".mini-inner");
+  if (miniInner) miniInner.style.display = "none";
 
-  player.innerHTML = "";
+  const oldVideo = player.querySelector(".youtube-top-video");
+  if (oldVideo) oldVideo.remove();
 
   const iframe = document.createElement("iframe");
+  iframe.className = "youtube-top-video";
   iframe.src =
     "https://www.youtube-nocookie.com/embed/" +
     encodeURIComponent(videoId) +
     "?autoplay=1";
 
-  iframe.title = "Pemutar video YouTube";
-  iframe.height = "230";
+  iframe.title = "Pemutar video GIRINATAN MUSIC";
   iframe.allow =
     "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
   iframe.allowFullscreen = true;
+  iframe.style.width = "100%";
+  iframe.style.height = "220px";
+  iframe.style.border = "0";
+  iframe.style.borderRadius = "10px";
 
   player.appendChild(iframe);
-  player.scrollIntoView({behavior:"smooth",block:"start"});
+
+  player.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 }
 
 /* SPOTIFY */
