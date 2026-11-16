@@ -649,27 +649,6 @@ function showLibrary(mode) {
   renderLibrary();
 }
 
-function renderLibrary() {
-  const container = document.getElementById("libraryTracks");
-  if (!container) return;
-
-  const ids = libraryMode === "favorites" ? savedIds : recentIds;
-
-  const tracks = ids.map(id =>
-    currentTracks.find(track => String(track.id) === id)
-  ).filter(Boolean);
-
-  container.innerHTML = "";
-
-  if (!tracks.length) {
-    container.innerHTML =
-      '<div class="empty">Koleksi belum tersedia di perangkat ini. Simpan lagu favorit atau putar musik untuk membuat riwayat.</div>';
-    return;
-  }
-
-  renderTrackContainer(tracks, container);
-}
-
 function renderHomeMixed() {
   const container = document.getElementById("homeTracks");
   if (!container) return;
