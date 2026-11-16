@@ -264,15 +264,7 @@ main{max-width:850px;margin:auto;padding:15px}
 }
 .nav-btn span{font-size:20px}
 .nav-btn.active{color:var(--gold2)}
-.player-overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:60;
-  background:radial-gradient(circle at 50% 25%,#17462D,#07150D 65%,#030805);
-  padding:20px;
-  overflow-y:auto;
-}
+
 .vinyl-wrap{
   width:min(72vw,290px);
   height:min(72vw,290px);
@@ -288,24 +280,8 @@ main{max-width:850px;margin:auto;padding:15px}
   width:43%;height:43%;border-radius:50%;
   object-fit:cover;border:4px solid #111;
 }
-@keyframes spin{to{transform:rotate(360deg)}}
-.player-content h2{font-size:20px;margin:20px 0 7px}
-.player-content p{color:var(--muted);font-size:13px}
-.player-progress{width:100%;accent-color:var(--gold);margin-top:25px}
-.time-row{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
-.player-controls{
-  display:flex;justify-content:center;align-items:center;
-  gap:27px;margin:25px 0;
-}
-.player-controls button{
-  border:0;background:none;color:white;font-size:24px;
-}
-.player-controls .big-play{
-  width:62px;height:62px;border-radius:50%;
-  background:var(--gold);color:#111;font-size:25px;
-}
-.player-extras{display:flex;justify-content:center;gap:35px}
-.player-extras button{background:none;border:0;color:var(--gold2);font-size:20px}
+
+
 .youtube-card{
   background:#0C2519;border:1px solid var(--line);
   border-radius:13px;padding:11px;margin:10px 0;
