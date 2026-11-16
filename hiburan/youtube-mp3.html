@@ -742,15 +742,6 @@ function playTrack(track) {
   renderLibrary();
 }
 
-function updateFavoriteButtons() {
-  const isSaved = currentTrack &&
-    savedIds.includes(String(currentTrack.id));
-
-  document.getElementById("fullPlayer").querySelector(
-    ".player-top button:last-child"
-  ).textContent = isSaved ? "♥" : "♡";
-}
-
 function showLibrary(mode) {
   libraryMode = mode;
 
