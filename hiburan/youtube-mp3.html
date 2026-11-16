@@ -555,9 +555,17 @@ if (dateLabel) {
   dateLabel.textContent = "Pilihan: " + keyword;
 }
   const container = document.getElementById("homeTracks");
-  container.innerHTML =
-    '<div class="empty">Memuat pilihan musik baru...</div>';
+const refreshButton = document.querySelector(
+  'button[onclick="refreshDailyMusic()"]'
+);
 
+if (refreshButton) {
+  refreshButton.disabled = true;
+  refreshButton.textContent = "Memuat...";
+}
+
+container.innerHTML =
+  '<div class="empty">Memuat pilihan musik baru...</div>';
   fetch(
     GIRINATAN_YOUTUBE_API + "?q=" + encodeURIComponent(keyword),
     { cache: "no-store" }
