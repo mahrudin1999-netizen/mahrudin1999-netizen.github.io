@@ -726,6 +726,9 @@ const audio = document.getElementById("musicPlayer");
 let currentTracks = [];
 let currentIndex = -1;
   let homeVideos = [];
+  let youtubeVideos = [];
+let youtubeIndex = -1;
+let youtubePlayer = null;
 let currentTrack = null;
 let shuffleOn = false;
 let libraryMode = "favorites";
@@ -1280,8 +1283,10 @@ async function searchYouTube() {
         '<div class="empty">Video tidak ditemukan. Coba kata kunci lain.</div>';
       return;
     }
+youtubeVideos = data.videos;
 
-    data.videos.forEach(video => {
+youtubeVideos.forEach(video => {
+    
       const card = document.createElement("div");
       card.className = "youtube-card";
 
@@ -1316,42 +1321,90 @@ function searchYouTubeCategory(keyword) {
   document.getElementById("youtubeSearch").value = keyword;
   searchYouTube();
 }
+  
 
+function onYouTubeIframeAPIReady() {
+  console.log("YouTube Player API siap");
+}
 
+function nextYouTubeVideo() {
+  if (!youtubeVideos.length) return;
+
+  youtubeIndex = (youtubeIndex + 1) % youtubeVideos.length;
+
+  const nextVideo = youtubeVideos[youtubeIndex];
+
+  playYouTubeVideo(nextVideo.videoId);
+}
 
 function playYouTubeVideo(videoId) {
   if (!videoId) return;
 
-  const player = document.querySelector(".mini-player");
-  if (!player) return;
+  // Hentikan musik audio
+  audio.pause();
 
-  player.style.display = "block";
+  // Tentukan antrean video
+  let index = youtubeVideos.findIndex(
+    video => video.videoId === videoId
+  );
 
-  const miniInner = player.querySelector(".mini-inner");
+  if (index < 0) {
+    const homeIndex = homeVideos.findIndex(
+      video => video.videoId === videoId
+    );
+
+    if (homeIndex >= 0) {
+      youtubeVideos = homeVideos;
+      index = homeIndex;
+    } else {
+      youtubeVideos = [{ videoId }];
+      index = 0;
+    }
+  }
+
+  youtubeIndex = index;
+
+  const playerBox = document.querySelector(".mini-player");
+  if (!playerBox) return;
+
+  playerBox.style.display = "block";
+
+  const miniInner = playerBox.querySelector(".mini-inner");
   if (miniInner) miniInner.style.display = "none";
 
-  const oldVideo = player.querySelector(".youtube-top-video");
+  if (youtubePlayer) {
+    youtubePlayer.destroy();
+    youtubePlayer = null;
+  }
+
+  const oldVideo = playerBox.querySelector(".youtube-top-video");
   if (oldVideo) oldVideo.remove();
 
-  const iframe = document.createElement("iframe");
-  iframe.className = "youtube-top-video";
-  iframe.src =
-    "https://www.youtube-nocookie.com/embed/" +
-    encodeURIComponent(videoId) +
-    "?autoplay=1";
+  const container = document.createElement("div");
+  container.className = "youtube-top-video";
+  container.style.width = "100%";
+  container.style.height = "220px";
 
-  iframe.title = "Pemutar video GIRINATAN MUSIC";
-  iframe.allow =
-    "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
-  iframe.allowFullscreen = true;
-  iframe.style.width = "100%";
-  iframe.style.height = "220px";
-  iframe.style.border = "0";
-  iframe.style.borderRadius = "10px";
+  playerBox.appendChild(container);
 
-  player.appendChild(iframe);
+  youtubePlayer = new YT.Player(container, {
+    width: "100%",
+    height: "220",
+    videoId: videoId,
+    playerVars: {
+      autoplay: 1,
+      playsinline: 1
+    },
+    events: {
+      onStateChange: function(event) {
+        if (event.data === YT.PlayerState.ENDED) {
+          nextYouTubeVideo();
+        }
+      }
+    }
+  });
 
-  player.scrollIntoView({
+  playerBox.scrollIntoView({
     behavior: "smooth",
     block: "start"
   });
