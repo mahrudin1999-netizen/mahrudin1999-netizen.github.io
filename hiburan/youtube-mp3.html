@@ -636,16 +636,7 @@ function showPage(pageId) {
     );
   });
 }
-
-function allowedTrack(track) {
-  const license = track.license || {};
-  return Boolean(
-    track.audio &&
-    license.ccnc === false &&
-    license.prolicensing === false
-  );
-}
-function renderTrackContainer(tracks, container) {
+  function renderTrackContainer(tracks, container) {
   container.innerHTML = "";
 
   if (!tracks.length) {
