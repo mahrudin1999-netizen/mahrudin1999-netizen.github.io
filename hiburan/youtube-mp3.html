@@ -540,8 +540,14 @@ function refreshDailyMusic() {
     (today - new Date(today.getFullYear(), 0, 0)) / 86400000
   );
 
-  let currentIndex = (dayNumber - 1) % dailyQueries.length;
-  currentIndex = (currentIndex + 1) % dailyQueries.length;
+  if (manualMusicIndex === null) {
+  manualMusicIndex = (dayNumber - 1) % dailyQueries.length;
+}
+
+manualMusicIndex =
+  (manualMusicIndex + 1) % dailyQueries.length;
+
+const currentIndex = manualMusicIndex;
 
   const keyword = dailyQueries[currentIndex];
 
