@@ -468,7 +468,24 @@ function renderHomeMixed() {
 
 async function loadHomeVideos() {
   const container = document.getElementById("homeTracks");
+  const dailyQueries = [
+    "lagu indonesia terbaru",
+    "musik populer indonesia",
+    "dangdut viral terbaru",
+    "koplo terbaru",
+    "pop indonesia hits",
+    "lagu viral tiktok indonesia",
+    "lagu nostalgia indonesia"
+  ];
 
+  const today = new Date();
+  const dayNumber = Math.floor(
+    (today - new Date(today.getFullYear(), 0, 0)) / 86400000
+  );
+
+  const dailyQuery = dailyQueries[
+    (dayNumber - 1) % dailyQueries.length
+  ];
   try {
     const response = await fetch(
       GIRINATAN_YOUTUBE_API +
