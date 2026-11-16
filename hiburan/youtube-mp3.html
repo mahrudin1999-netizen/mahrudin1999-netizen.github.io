@@ -790,9 +790,6 @@ function playYouTubeVideo(videoId) {
 
   playerBox.style.display = "block";
 
-  const miniInner = playerBox.querySelector(".mini-inner");
-  if (miniInner) miniInner.style.display = "none";
-
   if (youtubePlayer) {
     youtubePlayer.destroy();
     youtubePlayer = null;
