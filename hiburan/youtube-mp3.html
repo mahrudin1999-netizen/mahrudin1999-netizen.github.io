@@ -770,22 +770,6 @@ function updateFavoriteButtons() {
   ).textContent = isSaved ? "♥" : "♡";
 }
 
-function nextTrack() {
-  if (!currentTracks.length) return;
-
-  let nextIndex;
-
-  if (shuffleOn && currentTracks.length > 1) {
-    do {
-      nextIndex = Math.floor(Math.random() * currentTracks.length);
-    } while (nextIndex === currentIndex);
-  } else {
-    nextIndex = (currentIndex + 1) % currentTracks.length;
-  }
-
-  playTrack(currentTracks[nextIndex]);
-}
-
 function previousTrack() {
   if (!currentTracks.length) return;
 
