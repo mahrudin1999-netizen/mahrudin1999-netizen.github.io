@@ -770,23 +770,6 @@ function updateFavoriteButtons() {
   ).textContent = isSaved ? "♥" : "♡";
 }
 
-function togglePlayback() {
-  if (!currentTrack) {
-    if (currentTracks.length) playTrack(currentTracks[0]);
-    else alert("Pilih musik terlebih dahulu.");
-    return;
-  }
-
-  if (audio.paused) {
-    audio.play().then(() => updatePlayState(true)).catch(() => {
-      alert("Musik tidak dapat diputar.");
-    });
-  } else {
-    audio.pause();
-    updatePlayState(false);
-  }
-}
-
 function nextTrack() {
   if (!currentTracks.length) return;
 
