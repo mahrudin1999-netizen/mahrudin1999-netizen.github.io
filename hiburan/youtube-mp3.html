@@ -499,9 +499,9 @@ async function loadHomeVideos() {
     (today - new Date(today.getFullYear(), 0, 0)) / 86400000
   );
 
-  const dailyQuery = dailyQueries[
-    (dayNumber - 1) % dailyQueries.length
-  ];
+  let dailyIndex = (dayNumber - 1) % dailyQueries.length;
+
+const dailyQuery = dailyQueries[dailyIndex];
   try {
     const response = await fetch(
   GIRINATAN_YOUTUBE_API +
