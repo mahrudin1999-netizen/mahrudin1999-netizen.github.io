@@ -524,7 +524,11 @@ const dailyQuery = dailyQueries[dailyIndex];
     renderHomeMixed();
   }
 }
+let isRefreshingMusic = false;
+
 function refreshDailyMusic() {
+  if (isRefreshingMusic) return;
+  isRefreshingMusic = true;
   const dailyQueries = [
     "lagu indonesia terbaru",
     "musik populer indonesia",
