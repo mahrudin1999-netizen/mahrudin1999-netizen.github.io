@@ -288,6 +288,31 @@ footer{
   <option value="contain">Pertahankan seluruh gambar</option>
 </select>
 
+<div class="hook-editor">
+  <h3>✨ Teks Pembuka Video</h3>
+
+  <label for="hookText">Tulis kalimat pembuka</label>
+  <textarea
+    id="hookText"
+    maxlength="100"
+    placeholder="Contoh: Jangan scroll dulu, tonton sampai selesai!"
+  ></textarea>
+
+  <label for="hookPosition">Posisi teks</label>
+  <select id="hookPosition">
+    <option value="top">Atas</option>
+    <option value="center">Tengah</option>
+    <option value="bottom">Bawah</option>
+  </select>
+
+  <label for="hookSize">Ukuran teks</label>
+  <select id="hookSize">
+    <option value="small">Kecil</option>
+    <option value="medium" selected>Sedang</option>
+    <option value="large">Besar</option>
+  </select>
+</div>
+
   <label for="exportQuality">Resolusi hasil</label>
   <select id="exportQuality">
     <option value="1080">1080 - Kualitas tinggi</option>
@@ -1174,11 +1199,108 @@ if(fitMode === "crop"){
 
 const duration = times.end - times.start;
 
+const hookText = $("hookText").value.trim();
+const hookPosition = $("hookPosition").value;
+const hookSize = $("hookSize").value;
+
+if(hookText){
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+
+  const fontSize = hookSize === "large"
+    ? width * 0.065
+    : hookSize === "small"
+    ? width * 0.035
+    : width * 0.05;
+
+  ctx.font = `bold ${fontSize}px Arial`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  const maxWidth = width * 0.82;
+  const words = hookText.split(/\s+/);
+  const lines = [];
+  let line = "";
+
+  words.forEach(word => {
+    const test = line ? line + " " + word : word;
+
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line);
+      line = word;
+    }else{
+      line = test;
+    }
+  });
+
+  if(line) lines.push(line);
+
+  const lineHeight = fontSize * 1.3;
+  const boxHeight = lines.length * lineHeight + fontSize;
+  const boxWidth = Math.min(maxWidth + fontSize, width * 0.92);
+
+  let centerY = height / 2;
+
+  if(hookPosition === "top"){
+    centerY = height * 0.17 + boxHeight / 2;
+  }else if(hookPosition === "bottom"){
+    centerY = height * 0.83 - boxHeight / 2;
+  }
+
+  ctx.fillStyle = "rgba(0,0,0,0.65)";
+  ctx.beginPath();
+  ctx.roundRect(
+    (width - boxWidth) / 2,
+    centerY - boxHeight / 2,
+    boxWidth,
+    boxHeight,
+    fontSize * 0.25
+  );
+  ctx.fill();
+
+  ctx.fillStyle = "#ffffff";
+  ctx.strokeStyle = "#000000";
+  ctx.lineWidth = Math.max(2, fontSize * 0.07);
+
+  lines.forEach((text, index) => {
+    const y = centerY +
+      (index - (lines.length - 1) / 2) * lineHeight;
+
+    ctx.strokeText(text, width / 2, y);
+    ctx.fillText(text, width / 2, y);
+  });
+
+  const blob = await new Promise(resolve =>
+    canvas.toBlob(resolve, "image/png")
+  );
+
+  if(!blob) throw new Error("Gagal membuat teks video.");
+
+  await ffmpegEngine.writeFile(
+    "hook.png",
+    new Uint8Array(await blob.arrayBuffer())
+  );
+}
+
 const command = [
   "-ss", String(times.start),
   "-i", inputName,
   "-t", String(duration),
-  "-vf", videoFilter,
+
+  ...(hookText ? [
+    "-loop", "1",
+    "-i", "hook.png",
+    "-filter_complex",
+    `[0:v]${videoFilter}[base];[base][1:v]overlay=0:0:format=auto:shortest=1[v]`,
+    "-map", "[v]",
+    "-map", "0:a?"
+  ] : [
+    "-vf", videoFilter
+  ]),
+
   "-c:v", "libx264",
   "-preset", "ultrafast",
   "-crf", crf,
@@ -1190,6 +1312,7 @@ const command = [
   "-y",
   outputName
 ];
+
     const exitCode = await ffmpegEngine.exec(command);
 
     if(exitCode !== 0){
