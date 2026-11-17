@@ -262,6 +262,59 @@ footer{
   </div>
 </section>
 
+<!-- EDITOR OTOMATIS GIRINATAN -->
+<section class="card">
+  <h2>⚙️ Editor Video Otomatis</h2>
+  <p>Proses video langsung di HP. Video asli tidak dikirim ke server.</p>
+
+  <div class="tip">
+    Mesin FFmpeg perlu dimuat terlebih dahulu. Pemrosesan video
+    membutuhkan memori dan baterai HP.
+  </div>
+
+  <button id="loadFFmpeg" type="button">Muat Mesin Editor</button>
+  <p id="ffmpegStatus" class="muted">Mesin belum dimuat.</p>
+
+  <label for="exportRatio">Rasio hasil video</label>
+  <select id="exportRatio">
+    <option value="9:16">9:16 - Vertikal</option>
+    <option value="1:1">1:1 - Persegi</option>
+    <option value="16:9">16:9 - Horizontal</option>
+  </select>
+
+  <label for="exportQuality">Resolusi hasil</label>
+  <select id="exportQuality">
+    <option value="1080">1080 - Kualitas tinggi</option>
+    <option value="720" selected>720 - Rekomendasi awal</option>
+    <option value="480">480 - Lebih ringan</option>
+  </select>
+
+  <label for="exportCrf">Kompresi video</label>
+  <select id="exportCrf">
+    <option value="23">Kualitas lebih tinggi</option>
+    <option value="26" selected>Seimbang</option>
+    <option value="29">Ukuran lebih kecil</option>
+  </select>
+
+  <button class="green" id="processVideo" type="button" disabled>
+    Proses Video
+  </button>
+
+  <div class="progress">
+    <div class="progress-bar" id="exportProgress"></div>
+  </div>
+  <p id="exportStatus">Pilih video untuk memulai.</p>
+
+  <div id="exportResult" hidden>
+    <h3>Hasil Video</h3>
+    <video id="outputPreview" controls playsinline></video>
+    <p id="outputInfo" class="muted"></p>
+    <a id="downloadVideo" download="girinatan-video.mp4">
+      <button type="button">Unduh Hasil MP4</button>
+    </a>
+  </div>
+</section>
+
 <!-- 2. POTONGAN VIDEO -->
 <section class="card">
   <h2>✂️ 2. Pengaturan Bagian Video</h2>
@@ -544,7 +597,7 @@ footer{
 </footer>
 
 </main>
-
+<script src="./ffmpeg/ffmpeg.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 
@@ -931,6 +984,239 @@ $("resetChecklist").addEventListener("click", function(){
 });
 
 updateProgress();
+
+// ======================================
+// EDITOR OTOMATIS GIRINATAN
+// FFmpeg WebAssembly 0.12.10
+// ======================================
+
+let ffmpegEngine = null;
+let ffmpegReady = false;
+let outputURL = null;
+let processing = false;
+
+function setExportStatus(message){
+  $("exportStatus").textContent = message;
+}
+
+function updateExportProgress(value){
+  $("exportProgress").style.width =
+    Math.max(0, Math.min(100, value)) + "%";
+}
+
+function blobURLFromBytes(bytes, type){
+  return URL.createObjectURL(
+    new Blob([bytes], {type:type})
+  );
+}
+
+async function loadFFmpegEngine(){
+  if(ffmpegReady) return;
+
+  if(!window.FFmpegWASM ||
+     !window.FFmpegWASM.FFmpeg){
+    throw new Error("File FFmpeg tidak berhasil dimuat.");
+  }
+
+  $("loadFFmpeg").disabled = true;
+  $("ffmpegStatus").textContent =
+    "Memuat mesin FFmpeg...";
+
+  const { FFmpeg } = window.FFmpegWASM;
+  ffmpegEngine = new FFmpeg();
+
+  ffmpegEngine.on("log", ({message}) => {
+    console.log("[FFmpeg]", message);
+  });
+
+  ffmpegEngine.on("progress", ({progress}) => {
+    updateExportProgress(Math.round(progress * 100));
+  });
+
+  const coreBase =
+    "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
+
+  async function toBlobURL(url, mimeType){
+    const response = await fetch(url);
+
+    if(!response.ok){
+      throw new Error("Gagal mengambil file mesin: " + url);
+    }
+
+    const blob = await response.blob();
+    return URL.createObjectURL(
+      new Blob([blob], {type:mimeType})
+    );
+  }
+
+  const coreURL = await toBlobURL(
+    coreBase + "/ffmpeg-core.js",
+    "text/javascript"
+  );
+
+  const wasmURL = await toBlobURL(
+    coreBase + "/ffmpeg-core.wasm",
+    "application/wasm"
+  );
+
+  await ffmpegEngine.load({
+    coreURL: coreURL,
+    wasmURL: wasmURL
+  });
+
+  ffmpegReady = true;
+  $("ffmpegStatus").textContent =
+    "Mesin siap digunakan.";
+
+  $("loadFFmpeg").textContent = "Mesin Siap";
+  $("processVideo").disabled = false;
+}
+
+$("loadFFmpeg").addEventListener("click", async function(){
+  try{
+    await loadFFmpegEngine();
+  }catch(error){
+    console.error(error);
+    $("ffmpegStatus").textContent =
+      "Gagal memuat mesin: " + error.message;
+    $("loadFFmpeg").disabled = false;
+    alert("Mesin gagal dimuat. Periksa koneksi internet dan file FFmpeg.");
+  }
+});
+
+$("processVideo").addEventListener("click", async function(){
+  if(processing) return;
+
+  const file = $("videoFile").files[0];
+
+  if(!file){
+    alert("Pilih video terlebih dahulu.");
+    return;
+  }
+
+  if(!ffmpegReady){
+    alert("Muat mesin editor terlebih dahulu.");
+    return;
+  }
+
+  const times = getCutTimes();
+  if(!times) return;
+
+  processing = true;
+  $("processVideo").disabled = true;
+  $("loadFFmpeg").disabled = true;
+  $("exportResult").hidden = true;
+  updateExportProgress(0);
+  setExportStatus("Menyiapkan video...");
+
+  let inputName = "girinatan_input";
+  let outputName = "girinatan_output.mp4";
+
+  try{
+    const extension = (
+      file.name.split(".").pop() || "mp4"
+    ).toLowerCase().replace(/[^a-z0-9]/g,"");
+
+    inputName += "." + extension;
+
+    await ffmpegEngine.writeFile(
+      inputName,
+      new Uint8Array(await file.arrayBuffer())
+    );
+
+    const ratio = $("exportRatio").value;
+    const quality = Number($("exportQuality").value);
+    const crf = $("exportCrf").value;
+
+    let width, height;
+
+    if(ratio === "9:16"){
+      width = Math.round(quality * 9 / 16);
+      height = quality;
+    }else if(ratio === "1:1"){
+      width = quality;
+      height = quality;
+    }else{
+      width = quality;
+      height = Math.round(quality * 9 / 16);
+    }
+
+    // Pastikan dimensi genap untuk encoder H.264.
+    width += width % 2;
+    height += height % 2;
+
+    setExportStatus("Memproses video. Jangan tutup halaman...");
+
+    const duration = times.end - times.start;
+
+    const command = [
+      "-ss", String(times.start),
+      "-i", inputName,
+      "-t", String(duration),
+      "-vf",
+      "scale=" + width + ":" + height +
+      ":force_original_aspect_ratio=decrease," +
+      "pad=" + width + ":" + height +
+      ":(ow-iw)/2:(oh-ih)/2,setsar=1",
+      "-c:v", "libx264",
+      "-preset", "ultrafast",
+      "-crf", crf,
+      "-threads", "1",
+      "-pix_fmt", "yuv420p",
+      "-c:a", "aac",
+      "-b:a", "128k",
+      "-movflags", "+faststart",
+      "-y",
+      outputName
+    ];
+
+    const exitCode = await ffmpegEngine.exec(command);
+
+    if(exitCode !== 0){
+      throw new Error("Proses video gagal. Kode: " + exitCode);
+    }
+
+    setExportStatus("Menyiapkan hasil video...");
+
+    const data = await ffmpegEngine.readFile(outputName);
+
+    if(!data || !data.length){
+      throw new Error("File hasil kosong.");
+    }
+
+    if(outputURL){
+      URL.revokeObjectURL(outputURL);
+    }
+
+    outputURL = blobURLFromBytes(data, "video/mp4");
+
+    $("outputPreview").src = outputURL;
+    $("downloadVideo").href = outputURL;
+    $("outputInfo").textContent =
+      "Ukuran hasil: " + formatBytes(data.length) +
+      " | Resolusi: " + width + " × " + height;
+
+    $("exportResult").hidden = false;
+    updateExportProgress(100);
+    setExportStatus("Selesai! Video berhasil diproses.");
+
+    try{
+      await ffmpegEngine.deleteFile(inputName);
+      await ffmpegEngine.deleteFile(outputName);
+    }catch(e){}
+
+  }catch(error){
+    console.error(error);
+    setExportStatus("Gagal memproses: " + error.message);
+    alert(
+      "Pemrosesan gagal. Coba video lebih pendek atau resolusi lebih rendah."
+    );
+  }finally{
+    processing = false;
+    $("processVideo").disabled = !ffmpegReady;
+    $("loadFFmpeg").disabled = ffmpegReady;
+  }
+});
 
 window.addEventListener("beforeunload", function(){
   if(currentVideoURL){
