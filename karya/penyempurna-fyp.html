@@ -1,1 +1,944 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<meta name="description" content="Penyempurna FYP GIRINATAN untuk membantu kreator mengoptimalkan konten video.">
+<title>Penyempurna FYP - GIRINATAN</title>
+
+<style>
+:root{
+  --bg:#080808;
+  --panel:#151515;
+  --panel2:#202020;
+  --gold:#D6AD48;
+  --green:#00C875;
+  --text:#fff;
+  --muted:#aaa;
+  --border:#343434;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:16px;
+  background:#080808;
+  border-bottom:1px solid #806326;
+}
+header a{
+  color:var(--gold);
+  text-decoration:none;
+  font-size:26px;
+}
+.logo{
+  color:var(--gold);
+  font-size:20px;
+  font-weight:bold;
+}
+main{
+  max-width:760px;
+  margin:auto;
+  padding:18px 14px 50px;
+}
+h1{
+  color:var(--gold);
+  font-size:25px;
+}
+h2{
+  color:var(--gold);
+  font-size:18px;
+  margin-top:0;
+}
+h3{
+  color:var(--gold);
+  font-size:15px;
+}
+p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+}
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:17px;
+  margin:16px 0;
+}
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  margin:8px 0 13px;
+  border:1px solid #444;
+  border-radius:9px;
+  background:var(--panel2);
+  color:white;
+  font-size:14px;
+}
+textarea{
+  min-height:90px;
+  resize:vertical;
+  line-height:1.5;
+}
+label{
+  display:block;
+  font-size:13px;
+  color:#ddd;
+  margin-top:8px;
+}
+button{
+  border:0;
+  border-radius:9px;
+  padding:12px 15px;
+  background:linear-gradient(135deg,#E5C36A,#B88A2E);
+  color:#080808;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:14px;
+}
+button.secondary{
+  background:#292929;
+  color:white;
+  border:1px solid #555;
+}
+button.green{
+  background:var(--green);
+  color:#001b10;
+}
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.video-box{
+  background:#000;
+  border:1px solid #444;
+  border-radius:12px;
+  overflow:hidden;
+  text-align:center;
+}
+video{
+  display:block;
+  width:100%;
+  max-height:420px;
+  object-fit:contain;
+  background:#000;
+}
+.file-info{
+  background:#202020;
+  padding:12px;
+  border-radius:9px;
+  margin-top:10px;
+  font-size:13px;
+  line-height:1.8;
+  color:#ccc;
+  overflow-wrap:anywhere;
+}
+.result{
+  background:#101b14;
+  border:1px solid #176b43;
+  border-radius:10px;
+  padding:13px;
+  margin-top:12px;
+  line-height:1.6;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  font-size:14px;
+}
+.tip{
+  border-left:3px solid var(--gold);
+  padding:10px 12px;
+  background:#201c12;
+  color:#ddd;
+  font-size:13px;
+  line-height:1.6;
+  border-radius:5px;
+  margin:12px 0;
+}
+.progress{
+  height:9px;
+  background:#333;
+  border-radius:20px;
+  overflow:hidden;
+  margin:12px 0;
+}
+.progress-bar{
+  height:100%;
+  width:0;
+  background:var(--green);
+  transition:.2s;
+}
+.check-item{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:11px 0;
+  border-bottom:1px solid #303030;
+  font-size:14px;
+  line-height:1.5;
+}
+.check-item input{
+  width:19px;
+  height:19px;
+  margin:1px 0 0;
+  accent-color:var(--green);
+}
+.muted{color:var(--muted)}
+.gold-text{color:var(--gold)}
+.green-text{color:var(--green)}
+hr{
+  border:0;
+  border-top:1px solid #333;
+  margin:18px 0;
+}
+footer{
+  text-align:center;
+  color:#777;
+  font-size:12px;
+  padding:25px 10px;
+  line-height:1.7;
+}
+[hidden]{display:none!important}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html">←</a>
+  <div class="logo">GIRINATAN</div>
+</header>
+
+<main>
+
+<h1>🚀 Penyempurna FYP</h1>
+<p>
+  Siapkan video, susun ide konten, buat caption, dan periksa
+  kualitas konten sebelum dipublikasikan.
+</p>
+
+<div class="tip">
+  <b>Informasi:</b> Tidak ada aplikasi yang dapat menjamin video masuk FYP.
+  Fitur ini membantu mempersiapkan konten agar lebih menarik dan jelas.
+</div>
+
+<!-- 1. VIDEO -->
+<section class="card">
+  <h2>🎬 1. Unggah dan Periksa Video</h2>
+  <p>Pilih video dari HP untuk melihat pratinjau dan informasi file.</p>
+
+  <label for="videoFile">Pilih video</label>
+  <input id="videoFile" type="file"
+    accept="video/mp4,video/webm,video/quicktime">
+
+  <div class="video-box">
+    <video id="preview" controls playsinline hidden></video>
+    <p id="emptyVideo">Belum ada video yang dipilih.</p>
+  </div>
+
+  <div id="fileInfo" class="file-info" hidden></div>
+
+  <div class="actions" style="margin-top:12px">
+    <button class="secondary" id="clearVideo" type="button">
+      Hapus video
+    </button>
+  </div>
+
+  <div class="tip">
+    Video yang dipilih hanya dibaca oleh browser untuk pratinjau.
+    Halaman ini tidak mengunggah video ke server.
+  </div>
+</section>
+
+<!-- 2. POTONGAN VIDEO -->
+<section class="card">
+  <h2>✂️ 2. Pengaturan Bagian Video</h2>
+  <p>
+    Tentukan waktu awal dan akhir untuk melihat bagian video
+    yang ingin digunakan.
+  </p>
+
+  <label for="startTime">Mulai pada detik</label>
+  <input id="startTime" type="number" min="0" step="0.1" value="0">
+
+  <label for="endTime">Akhir pada detik</label>
+  <input id="endTime" type="number" min="0" step="0.1" value="0">
+
+  <div class="actions">
+    <button id="previewCut" type="button">Pratinjau bagian</button>
+    <button class="secondary" id="playFromStart" type="button">
+      Putar dari awal
+    </button>
+  </div>
+
+  <p id="cutInfo">Pilih video terlebih dahulu.</p>
+  <p class="muted">
+    Pengaturan ini belum menghasilkan file potongan baru.
+  </p>
+</section>
+
+<!-- 3. FORMAT -->
+<section class="card">
+  <h2>📐 3. Pengaturan Format Video</h2>
+
+  <label for="ratio">Target rasio video</label>
+  <select id="ratio">
+    <option value="9:16">9:16 - Vertikal</option>
+    <option value="1:1">1:1 - Persegi</option>
+    <option value="16:9">16:9 - Horizontal</option>
+  </select>
+
+  <div id="ratioAdvice" class="tip">
+    Rasio 9:16 cocok untuk video vertikal.
+    Contoh ukuran 1080 × 1920.
+  </div>
+
+  <label for="quality">Panduan kualitas video</label>
+  <select id="quality">
+    <option value="1080">1080p - Kualitas tinggi</option>
+    <option value="720">720p - Lebih ringan</option>
+    <option value="480">480p - Ukuran lebih kecil</option>
+  </select>
+
+  <p>
+    Pengaturan di atas merupakan panduan. Pengubahan resolusi
+    dan kompresi memerlukan proses ekspor video.
+  </p>
+</section>
+
+<!-- 4. HOOK -->
+<section class="card">
+  <h2>🔥 4. Pembuat Hook Pembuka</h2>
+  <p>Buat contoh kalimat pembuka agar penonton tertarik mengikuti video.</p>
+
+  <label for="topic">Topik video</label>
+  <input id="topic" maxlength="120"
+    placeholder="Contoh: Perjalanan menjadi kreator">
+
+  <label for="style">Jenis konten</label>
+  <select id="style">
+    <option value="motivasi">Motivasi</option>
+    <option value="edukasi">Edukasi</option>
+    <option value="hiburan">Hiburan</option>
+    <option value="cerita">Cerita pengalaman</option>
+    <option value="promosi">Promosi</option>
+  </select>
+
+  <button id="generateIdeas" type="button">Buat Hook dan Ide</button>
+
+  <div id="ideasResult" class="result" hidden></div>
+  <div id="ideasActions" class="actions" hidden style="margin-top:10px">
+    <button class="secondary" id="copyIdeas" type="button">
+      Salin hasil
+    </button>
+  </div>
+</section>
+
+<!-- 5. JUDUL -->
+<section class="card">
+  <h2>📝 5. Pembuat Judul Video</h2>
+
+  <label for="titleTopic">Isi utama video</label>
+  <input id="titleTopic" maxlength="150"
+    placeholder="Contoh: Tips menjadi kreator sukses">
+
+  <button id="generateTitle" type="button">Buat Judul</button>
+
+  <div id="titleResult" class="result" hidden></div>
+  <div id="titleActions" class="actions" hidden style="margin-top:10px">
+    <button class="secondary" id="copyTitle" type="button">
+      Salin judul
+    </button>
+  </div>
+</section>
+
+<!-- 6. CAPTION -->
+<section class="card">
+  <h2>✍️ 6. Pembuat Caption dan Hashtag</h2>
+
+  <label for="captionTopic">Topik atau pesan utama video</label>
+  <textarea id="captionTopic" maxlength="300"
+    placeholder="Tuliskan isi video kamu..."></textarea>
+
+  <label for="captionTone">Gaya caption</label>
+  <select id="captionTone">
+    <option value="santai">Santai</option>
+    <option value="motivasi">Motivasi</option>
+    <option value="profesional">Profesional</option>
+    <option value="penasaran">Mengundang rasa penasaran</option>
+  </select>
+
+  <button id="generateCaption" type="button">Buat Caption</button>
+
+  <div id="captionResult" class="result" hidden></div>
+  <div id="captionActions" class="actions" hidden style="margin-top:10px">
+    <button class="secondary" id="copyCaption" type="button">
+      Salin caption
+    </button>
+  </div>
+</section>
+
+<!-- 7. SUBTITLE -->
+<section class="card">
+  <h2>💬 7. Penyusun Subtitle</h2>
+  <p>Tulis subtitle yang ingin ditampilkan pada video.</p>
+
+  <label for="subtitleText">Teks subtitle</label>
+  <textarea id="subtitleText" maxlength="2000"
+    placeholder="Tulis kalimat subtitle di sini..."></textarea>
+
+  <button id="copySubtitle" type="button">Salin subtitle</button>
+
+  <p class="muted">
+    Fitur ini untuk menyusun teks secara manual, belum melakukan
+    transkripsi suara otomatis.
+  </p>
+</section>
+
+<!-- 8. CHECKLIST -->
+<section class="card">
+  <h2>✅ 8. Checklist Kesiapan Konten</h2>
+  <p>Centang pemeriksaan yang sudah kamu lakukan.</p>
+
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <p id="progressText" class="green-text">
+    0 dari 10 pemeriksaan selesai.
+  </p>
+
+  <div id="checklist">
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Pembukaan video menarik perhatian sejak awal.</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Isi video memiliki pesan yang jelas.</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Tidak terlalu banyak jeda yang tidak diperlukan.</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Suara terdengar jelas.</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Pencahayaan cukup dan objek terlihat jelas.</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Teks mudah dibaca dan tidak tertutup tombol aplikasi.</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Format video sesuai platform tujuan.</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Musik dan materi yang digunakan memiliki izin.</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Konten tidak mengandung spam atau informasi menyesatkan.</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Caption dan hashtag sesuai isi video.</span>
+    </label>
+
+  </div>
+
+  <button class="secondary" id="resetChecklist" type="button"
+    style="margin-top:15px">
+    Reset Checklist
+  </button>
+</section>
+
+<!-- 9. PANDUAN -->
+<section class="card">
+  <h2>📚 9. Panduan Optimasi Video</h2>
+
+  <h3>Pembukaan video</h3>
+  <p>
+    Mulai dengan pertanyaan, masalah, kejadian menarik,
+    atau inti cerita. Hindari pembukaan yang terlalu panjang.
+  </p>
+
+  <h3>Durasi video</h3>
+  <p>
+    Gunakan durasi yang cukup untuk menyampaikan pesan.
+    Jangan memperpanjang video tanpa tujuan.
+  </p>
+
+  <h3>Pencahayaan</h3>
+  <p>
+    Pastikan wajah dan objek terlihat jelas.
+    Hindari gambar terlalu gelap atau terlalu terang.
+  </p>
+
+  <h3>Musik</h3>
+  <p>
+    Gunakan pustaka musik resmi platform atau audio yang
+    kamu miliki hak penggunaannya.
+  </p>
+
+  <h3>Green Screen</h3>
+  <p>
+    Green Screen dapat digunakan untuk membuat penjelasan,
+    cerita, atau konten kreatif dengan latar berbeda.
+    Teknik ini tidak otomatis membuat video masuk FYP.
+  </p>
+
+  <h3>Interaksi</h3>
+  <p>
+    Ajak penonton berdiskusi secara wajar.
+    Jangan menggunakan bot atau komentar palsu.
+  </p>
+</section>
+
+<!-- 10. ATURAN -->
+<section class="card">
+  <h2>🛡️ 10. Aturan Penggunaan</h2>
+
+  <p>1. Tidak ada jaminan video masuk FYP atau viral.</p>
+  <p>2. Dilarang menggunakan bot dan manipulasi interaksi.</p>
+  <p>3. Hormati hak cipta video, foto, dan musik.</p>
+  <p>4. Pastikan konten mengikuti aturan platform.</p>
+  <p>5. Simpan video asli sebelum melakukan pengeditan.</p>
+  <p>6. Periksa kembali hasil video sebelum dipublikasikan.</p>
+  <p>7. Jangan membagikan data pribadi yang sensitif.</p>
+  <p>8. Gunakan fitur secara bertanggung jawab.</p>
+</section>
+
+<footer>
+  <b class="gold-text">GIRINATAN</b><br>
+  Penyempurna FYP - Studio Kreator<br>
+  Alat bantu optimasi konten kreator.<br>
+  Bukan layanan resmi TikTok dan tidak menjamin FYP.
+</footer>
+
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let currentVideoURL = null;
+let videoDuration = 0;
+let ideasText = "";
+let titleText = "";
+let captionText = "";
+
+function formatBytes(bytes){
+  if(bytes < 1024) return bytes + " B";
+  if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + " KB";
+  return (bytes/(1024*1024)).toFixed(2) + " MB";
+}
+
+function formatTime(seconds){
+  if(!Number.isFinite(seconds)) return "-";
+  const m = Math.floor(seconds/60);
+  const s = Math.floor(seconds%60);
+  return m + ":" + String(s).padStart(2,"0");
+}
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[char]);
+}
+
+// UNGGAH VIDEO
+$("videoFile").addEventListener("change", function(){
+  const file = this.files[0];
+  if(!file) return;
+
+  const allowed = [
+    "video/mp4",
+    "video/webm",
+    "video/quicktime"
+  ];
+
+  if(!allowed.includes(file.type)){
+    alert("Pilih video MP4, WebM, atau MOV.");
+    this.value = "";
+    return;
+  }
+
+  if(currentVideoURL){
+    URL.revokeObjectURL(currentVideoURL);
+  }
+
+  currentVideoURL = URL.createObjectURL(file);
+
+  const video = $("preview");
+  video.src = currentVideoURL;
+  video.hidden = false;
+  video.load();
+
+  $("emptyVideo").hidden = true;
+  $("fileInfo").hidden = false;
+  $("fileInfo").textContent = "Membaca informasi video...";
+});
+
+$("preview").addEventListener("loadedmetadata", function(){
+  videoDuration = this.duration;
+
+  const file = $("videoFile").files[0];
+
+  $("fileInfo").innerHTML =
+    "Nama: " + escapeHTML(file.name) +
+    "<br>Ukuran: " + formatBytes(file.size) +
+    "<br>Durasi: " + formatTime(videoDuration) +
+    "<br>Resolusi: " + this.videoWidth +
+    " × " + this.videoHeight;
+
+  $("startTime").value = 0;
+  $("endTime").value = videoDuration.toFixed(1);
+
+  $("cutInfo").textContent =
+    "Durasi video: " + formatTime(videoDuration);
+});
+
+$("preview").addEventListener("error", function(){
+  $("fileInfo").textContent =
+    "Browser tidak dapat membaca video ini. Coba file video lain.";
+});
+
+$("clearVideo").addEventListener("click", function(){
+  $("preview").pause();
+  $("preview").removeAttribute("src");
+  $("preview").load();
+  $("preview").hidden = true;
+
+  if(currentVideoURL){
+    URL.revokeObjectURL(currentVideoURL);
+    currentVideoURL = null;
+  }
+
+  $("videoFile").value = "";
+  $("fileInfo").hidden = true;
+  $("emptyVideo").hidden = false;
+  $("startTime").value = 0;
+  $("endTime").value = 0;
+  videoDuration = 0;
+  $("cutInfo").textContent = "Pilih video terlebih dahulu.";
+});
+
+// PENGATURAN POTONGAN
+function getCutTimes(){
+  const start = Number($("startTime").value);
+  const end = Number($("endTime").value);
+
+  if(!videoDuration){
+    alert("Pilih video terlebih dahulu.");
+    return null;
+  }
+
+  if(!Number.isFinite(start) || !Number.isFinite(end) ||
+     start < 0 || end <= start || end > videoDuration){
+    alert("Waktu awal dan akhir tidak valid.");
+    return null;
+  }
+
+  return {start,end};
+}
+
+$("previewCut").addEventListener("click", function(){
+  const times = getCutTimes();
+  if(!times) return;
+
+  const video = $("preview");
+  video.currentTime = times.start;
+  video.play();
+
+  $("cutInfo").textContent =
+    "Pratinjau bagian " + formatTime(times.start) +
+    " sampai " + formatTime(times.end) +
+    ". Belum membuat file baru.";
+});
+
+$("preview").addEventListener("timeupdate", function(){
+  if(!videoDuration) return;
+
+  const end = Number($("endTime").value);
+  const start = Number($("startTime").value);
+
+  if(Number.isFinite(end) && end > start && this.currentTime >= end){
+    this.pause();
+  }
+});
+
+$("playFromStart").addEventListener("click", function(){
+  if(!videoDuration){
+    alert("Pilih video terlebih dahulu.");
+    return;
+  }
+
+  $("preview").currentTime = 0;
+  $("preview").play();
+});
+
+// RASIO VIDEO
+$("ratio").addEventListener("change", function(){
+  const advice = {
+    "9:16":"Rasio 9:16 cocok untuk video vertikal. Contoh: 1080 × 1920.",
+    "1:1":"Rasio 1:1 cocok untuk video persegi. Contoh: 1080 × 1080.",
+    "16:9":"Rasio 16:9 cocok untuk video horizontal. Contoh: 1920 × 1080."
+  };
+
+  $("ratioAdvice").textContent = advice[this.value];
+});
+
+// SALIN TEKS
+async function copyText(text){
+  if(!text){
+    alert("Belum ada teks untuk disalin.");
+    return;
+  }
+
+  try{
+    await navigator.clipboard.writeText(text);
+    alert("Teks berhasil disalin.");
+  }catch(error){
+    const area = document.createElement("textarea");
+    area.value = text;
+    document.body.appendChild(area);
+    area.select();
+
+    try{
+      document.execCommand("copy");
+      alert("Teks berhasil disalin.");
+    }catch(e){
+      alert("Silakan salin teks secara manual.");
+    }
+
+    area.remove();
+  }
+}
+
+// PEMBUAT HOOK
+$("generateIdeas").addEventListener("click", function(){
+  const topic = $("topic").value.trim();
+  const style = $("style").value;
+
+  if(!topic){
+    alert("Masukkan topik video terlebih dahulu.");
+    return;
+  }
+
+  const hooks = {
+    motivasi:[
+      "Jangan menyerah sebelum mencoba hal ini.",
+      "Ada satu hal yang sering dilupakan saat mengejar impian.",
+      "Perjalanan besar selalu dimulai dari langkah kecil."
+    ],
+    edukasi:[
+      "Tahukah kamu hal penting tentang " + topic + "?",
+      "Banyak orang belum memahami hal ini.",
+      "Sebelum melakukan ini, perhatikan dulu."
+    ],
+    hiburan:[
+      "Pernah mengalami kejadian seperti ini?",
+      "Coba lihat sampai akhir!",
+      "Bagian ini mungkin pernah kamu alami."
+    ],
+    cerita:[
+      "Aku ingin berbagi satu pengalaman tentang " + topic + ".",
+      "Awalnya aku tidak menyangka hal ini akan terjadi.",
+      "Ada pelajaran penting dari perjalanan ini."
+    ],
+    promosi:[
+      "Sedang mencari solusi untuk kebutuhan ini?",
+      "Kenali hal yang bisa membantu kamu.",
+      "Sebelum memilih, simak informasi berikut."
+    ]
+  };
+
+  ideasText =
+    "TOPIK: " + topic + "\n\n" +
+    "PILIHAN HOOK:\n" +
+    "1. " + hooks[style][0] + "\n" +
+    "2. " + hooks[style][1] + "\n" +
+    "3. " + hooks[style][2] + "\n\n" +
+    "SUSUNAN VIDEO:\n" +
+    "1. Mulai dengan pembukaan menarik.\n" +
+    "2. Sampaikan inti pembahasan.\n" +
+    "3. Berikan contoh atau penjelasan.\n" +
+    "4. Tutup dengan kesimpulan atau pertanyaan.";
+
+  $("ideasResult").textContent = ideasText;
+  $("ideasResult").hidden = false;
+  $("ideasActions").hidden = false;
+});
+
+$("copyIdeas").addEventListener("click", function(){
+  copyText(ideasText);
+});
+
+// PEMBUAT JUDUL
+$("generateTitle").addEventListener("click", function(){
+  const topic = $("titleTopic").value.trim();
+
+  if(!topic){
+    alert("Masukkan topik video terlebih dahulu.");
+    return;
+  }
+
+  titleText =
+    "1. Hal Penting yang Perlu Kamu Ketahui tentang " + topic + "\n\n" +
+    "2. Jangan Lewatkan Informasi tentang " + topic + "\n\n" +
+    "3. Pelajaran Berharga dari " + topic + "\n\n" +
+    "4. Mengenal Lebih Dekat " + topic + "\n\n" +
+    "5. Ini yang Perlu Kamu Pahami tentang " + topic;
+
+  $("titleResult").textContent = titleText;
+  $("titleResult").hidden = false;
+  $("titleActions").hidden = false;
+});
+
+$("copyTitle").addEventListener("click", function(){
+  copyText(titleText);
+});
+
+// PEMBUAT CAPTION
+$("generateCaption").addEventListener("click", function(){
+  const topic = $("captionTopic").value.trim();
+  const tone = $("captionTone").value;
+
+  if(!topic){
+    alert("Tuliskan isi video terlebih dahulu.");
+    return;
+  }
+
+  const endings = {
+    santai:"Menurut kamu bagaimana? Ceritakan di kolom komentar.",
+    motivasi:"Terus belajar, terus berkembang, dan jangan berhenti mencoba.",
+    profesional:"Semoga informasi ini bermanfaat dan dapat menjadi referensi.",
+    penasaran:"Apa pendapatmu tentang hal ini? Mari berdiskusi."
+  };
+
+  const words = topic.toLowerCase()
+    .replace(/[^a-z0-9\s]/g," ")
+    .split(/\s+/)
+    .filter(word => word.length > 3);
+
+  const uniqueWords = [...new Set(words)].slice(0,4);
+  const tags = ["#GIRINATAN","#Kreator","#KontenKreatif"];
+
+  uniqueWords.forEach(word => {
+    tags.push("#" + word.charAt(0).toUpperCase() + word.slice(1));
+  });
+
+  captionText =
+    topic + "\n\n" +
+    endings[tone] + "\n\n" +
+    tags.join(" ");
+
+  $("captionResult").textContent = captionText;
+  $("captionResult").hidden = false;
+  $("captionActions").hidden = false;
+});
+
+$("copyCaption").addEventListener("click", function(){
+  copyText(captionText);
+});
+
+// SUBTITLE MANUAL
+$("copySubtitle").addEventListener("click", function(){
+  const text = $("subtitleText").value.trim();
+
+  if(!text){
+    alert("Tulis subtitle terlebih dahulu.");
+    return;
+  }
+
+  copyText(text);
+});
+
+// CHECKLIST
+const checks = [
+  ...document.querySelectorAll("#checklist input")
+];
+
+function updateProgress(){
+  const completed = checks.filter(item => item.checked).length;
+  const total = checks.length;
+  const percent = total ? completed/total*100 : 0;
+
+  $("progressBar").style.width = percent + "%";
+  $("progressText").textContent =
+    completed + " dari " + total + " pemeriksaan selesai.";
+}
+
+checks.forEach((check,index) => {
+  try{
+    check.checked =
+      localStorage.getItem("girinatan_fyp_check_" + index) === "true";
+  }catch(e){}
+
+  check.addEventListener("change", function(){
+    updateProgress();
+
+    try{
+      localStorage.setItem(
+        "girinatan_fyp_check_" + index,
+        this.checked
+      );
+    }catch(e){}
+  });
+});
+
+$("resetChecklist").addEventListener("click", function(){
+  checks.forEach((check,index) => {
+    check.checked = false;
+
+    try{
+      localStorage.removeItem("girinatan_fyp_check_" + index);
+    }catch(e){}
+  });
+
+  updateProgress();
+});
+
+updateProgress();
+
+window.addEventListener("beforeunload", function(){
+  if(currentVideoURL){
+    URL.revokeObjectURL(currentVideoURL);
+  }
+});
+</script>
+
+</body>
+</html>
+
