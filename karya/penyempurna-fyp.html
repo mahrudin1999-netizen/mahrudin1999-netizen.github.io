@@ -282,6 +282,12 @@ footer{
     <option value="16:9">16:9 - Horizontal</option>
   </select>
 
+<label for="fitMode">Cara menyesuaikan gambar</label>
+<select id="fitMode">
+  <option value="crop">Potong memenuhi layar</option>
+  <option value="contain">Pertahankan seluruh gambar</option>
+</select>
+
   <label for="exportQuality">Resolusi hasil</label>
   <select id="exportQuality">
     <option value="1080">1080 - Kualitas tinggi</option>
@@ -1128,36 +1134,49 @@ $("processVideo").addEventListener("click", async function(){
     const quality = Number($("exportQuality").value);
     const crf = $("exportCrf").value;
 
-    let width, height;
+    
+let width, height;
 
-    if(ratio === "9:16"){
-      width = Math.round(quality * 9 / 16);
-      height = quality;
-    }else if(ratio === "1:1"){
-      width = quality;
-      height = quality;
-    }else{
-      width = quality;
-      height = Math.round(quality * 9 / 16);
-    }
+// Ukuran standar berdasarkan sisi pendek
+if(ratio === "9:16"){
+  width = quality;
+  height = Math.round(quality * 16 / 9);
+}else if(ratio === "1:1"){
+  width = quality;
+  height = quality;
+}else{
+  width = Math.round(quality * 16 / 9);
+  height = quality;
+}
 
-    // Pastikan dimensi genap untuk encoder H.264.
-    width += width % 2;
-    height += height % 2;
+// Pastikan ukuran genap
+width += width % 2;
+height += height % 2;
 
-    setExportStatus("Memproses video. Jangan tutup halaman...");
+// Pilihan pemotongan gambar
+const fitMode = $("fitMode").value;
 
-    const duration = times.end - times.start;
+let videoFilter;
 
-    const command = [
+if(fitMode === "crop"){
+  videoFilter =
+    "scale=" + width + ":" + height +
+    ":force_original_aspect_ratio=increase," +
+    "crop=" + width + ":" + height +
+    ",setsar=1";
+}else{
+  videoFilter =
+    "scale=" + width + ":" + height +
+    ":force_original_aspect_ratio=decrease," +
+    "pad=" + width + ":" + height +
+    ":(ow-iw)/2:(oh-ih)/2,setsar=1";
+}
+
+      const command = [
       "-ss", String(times.start),
       "-i", inputName,
       "-t", String(duration),
-      "-vf",
-      "scale=" + width + ":" + height +
-      ":force_original_aspect_ratio=decrease," +
-      "pad=" + width + ":" + height +
-      ":(ow-iw)/2:(oh-ih)/2,setsar=1",
+      "-vf", videoFilter,
       "-c:v", "libx264",
       "-preset", "ultrafast",
       "-crf", crf,
