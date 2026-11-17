@@ -1172,23 +1172,24 @@ if(fitMode === "crop"){
     ":(ow-iw)/2:(oh-ih)/2,setsar=1";
 }
 
-      const command = [
-      "-ss", String(times.start),
-      "-i", inputName,
-      "-t", String(duration),
-      "-vf", videoFilter,
-      "-c:v", "libx264",
-      "-preset", "ultrafast",
-      "-crf", crf,
-      "-threads", "1",
-      "-pix_fmt", "yuv420p",
-      "-c:a", "aac",
-      "-b:a", "128k",
-      "-movflags", "+faststart",
-      "-y",
-      outputName
-    ];
+const duration = times.end - times.start;
 
+const command = [
+  "-ss", String(times.start),
+  "-i", inputName,
+  "-t", String(duration),
+  "-vf", videoFilter,
+  "-c:v", "libx264",
+  "-preset", "ultrafast",
+  "-crf", crf,
+  "-threads", "1",
+  "-pix_fmt", "yuv420p",
+  "-c:a", "aac",
+  "-b:a", "128k",
+  "-movflags", "+faststart",
+  "-y",
+  outputName
+];
     const exitCode = await ffmpegEngine.exec(command);
 
     if(exitCode !== 0){
