@@ -474,21 +474,50 @@ footer{
   </div>
 </section>
 
-<!-- 7. SUBTITLE -->
+
+<!-- 7. SUBTITLE OTOMATIS -->
 <section class="card">
-  <h2>💬 7. Penyusun Subtitle</h2>
-  <p>Tulis subtitle yang ingin ditampilkan pada video.</p>
-
-  <label for="subtitleText">Teks subtitle</label>
-  <textarea id="subtitleText" maxlength="2000"
-    placeholder="Tulis kalimat subtitle di sini..."></textarea>
-
-  <button id="copySubtitle" type="button">Salin subtitle</button>
-
-  <p class="muted">
-    Fitur ini untuk menyusun teks secara manual, belum melakukan
-    transkripsi suara otomatis.
+  <h2>💬 7. Subtitle Otomatis AI</h2>
+  <p>
+    AI akan mendengarkan suara dalam video dan membuat
+    subtitle sesuai waktu ucapan.
   </p>
+
+  <div class="tip">
+    Model AI perlu diunduh saat pertama digunakan.
+    Proses pengenalan suara dilakukan di browser HP.
+  </div>
+
+  <label for="subtitleLanguage">Bahasa video</label>
+  <select id="subtitleLanguage">
+    <option value="auto">Deteksi otomatis</option>
+    <option value="indonesian">Bahasa Indonesia</option>
+    <option value="english">Bahasa Inggris</option>
+  </select>
+
+  <button class="green" id="generateSubtitles" type="button">
+    🎙️ Buat Subtitle Otomatis
+  </button>
+
+  <div class="progress">
+    <div class="progress-bar" id="subtitleProgressBar"></div>
+  </div>
+
+  <p id="subtitleStatus" class="muted">
+    Pilih video dan muat mesin editor terlebih dahulu.
+  </p>
+
+  <label for="subtitleText">Hasil pengenalan suara</label>
+  <textarea id="subtitleText" readonly
+    placeholder="Hasil subtitle otomatis akan muncul di sini..."></textarea>
+
+  <p id="subtitleCount" class="muted">
+    Belum ada subtitle yang dibuat.
+  </p>
+
+  <button class="secondary" id="copySubtitle" type="button">
+    Salin hasil transkripsi
+  </button>
 </section>
 
 <!-- 8. CHECKLIST -->
@@ -637,7 +666,9 @@ let videoDuration = 0;
 let ideasText = "";
 let titleText = "";
 let captionText = "";
-
+let subtitleTranscriber = null;
+let subtitleSegments = [];
+let subtitleRange = null;
 function formatBytes(bytes){
   if(bytes < 1024) return bytes + " B";
   if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + " KB";
@@ -956,18 +987,247 @@ $("generateCaption").addEventListener("click", function(){
 $("copyCaption").addEventListener("click", function(){
   copyText(captionText);
 });
+  
+// ======================================
+// SUBTITLE OTOMATIS WHISPER AI
+// ======================================
 
-// SUBTITLE MANUAL
-$("copySubtitle").addEventListener("click", function(){
-  const text = $("subtitleText").value.trim();
+async function loadSubtitleModel(){
 
-  if(!text){
-    alert("Tulis subtitle terlebih dahulu.");
-    return;
+  if(subtitleTranscriber){
+    return subtitleTranscriber;
   }
 
-  copyText(text);
+  $("subtitleStatus").textContent =
+    "Mengunduh mesin AI Whisper...";
+
+  const { pipeline, env } = await import(
+    "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1"
+  );
+
+  env.allowLocalModels = false;
+  env.useBrowserCache = true;
+
+  subtitleTranscriber = await pipeline(
+    "automatic-speech-recognition",
+    "onnx-community/whisper-tiny",
+    {
+      progress_callback: (info) => {
+        if(Number.isFinite(info.progress)){
+          const progress = Math.max(
+            0,
+            Math.min(100, info.progress)
+          );
+
+          $("subtitleProgressBar").style.width =
+            progress + "%";
+        }
+
+        if(info.status === "progress"){
+          $("subtitleStatus").textContent =
+            "Mengunduh model AI: " +
+            (info.file || "model");
+        }
+      }
+    }
+  );
+
+  return subtitleTranscriber;
+}
+
+$("generateSubtitles").addEventListener(
+  "click",
+  async function(){
+
+    const file = $("videoFile").files[0];
+
+    if(!file){
+      alert("Pilih video terlebih dahulu.");
+      return;
+    }
+
+    if(!ffmpegReady){
+      alert("Muat Mesin Editor terlebih dahulu.");
+      return;
+    }
+
+    if(processing) return;
+
+    const times = getCutTimes();
+    if(!times) return;
+
+    processing = true;
+    $("generateSubtitles").disabled = true;
+    $("processVideo").disabled = true;
+    $("loadFFmpeg").disabled = true;
+
+    $("subtitleText").value = "";
+    $("subtitleCount").textContent = "";
+    $("subtitleProgressBar").style.width = "0%";
+
+    let audioURL = null;
+    const inputName = "subtitle_input.mp4";
+    const audioName = "subtitle_audio.wav";
+
+    try{
+
+      $("subtitleStatus").textContent =
+        "Menyiapkan audio video...";
+
+      const extension = (
+        file.name.split(".").pop() || "mp4"
+      ).toLowerCase().replace(/[^a-z0-9]/g,"");
+
+      const realInputName =
+        "subtitle_input." + extension;
+
+      await ffmpegEngine.writeFile(
+        realInputName,
+        new Uint8Array(await file.arrayBuffer())
+      );
+
+      const duration = times.end - times.start;
+
+      const exitCode = await ffmpegEngine.exec([
+        "-ss", String(times.start),
+        "-i", realInputName,
+        "-t", String(duration),
+        "-vn",
+        "-ac", "1",
+        "-ar", "16000",
+        "-c:a", "pcm_s16le",
+        "-y",
+        audioName
+      ]);
+
+      if(exitCode !== 0){
+        throw new Error(
+          "Gagal mengambil suara. Pastikan video memiliki audio."
+        );
+      }
+
+      const audioData =
+        await ffmpegEngine.readFile(audioName);
+
+      if(!audioData || !audioData.length){
+        throw new Error("Audio video tidak ditemukan.");
+      }
+
+      audioURL = URL.createObjectURL(
+        new Blob([audioData], {type:"audio/wav"})
+      );
+
+      $("subtitleStatus").textContent =
+        "Memuat mesin pengenal suara AI...";
+
+      const transcriber = await loadSubtitleModel();
+
+      $("subtitleStatus").textContent =
+        "AI sedang mendengarkan dan mengenali ucapan...";
+
+      const language = $("subtitleLanguage").value;
+
+      const options = {
+        return_timestamps: true,
+        chunk_length_s: 30,
+        stride_length_s: 5,
+        task: "transcribe"
+      };
+
+      if(language !== "auto"){
+        options.language = language;
+      }
+
+      const result = await transcriber(
+        audioURL,
+        options
+      );
+
+      const chunks = result.chunks || [];
+
+      subtitleSegments = chunks
+        .filter(chunk =>
+          chunk.timestamp &&
+          Number.isFinite(chunk.timestamp[0]) &&
+          chunk.text &&
+          chunk.text.trim()
+        )
+        .map(chunk => ({
+          start: Math.max(0, chunk.timestamp[0]),
+          end: Number.isFinite(chunk.timestamp[1])
+            ? chunk.timestamp[1]
+            : duration,
+          text: chunk.text.trim()
+        }))
+        .filter(segment => segment.end > segment.start);
+
+      if(!subtitleSegments.length){
+        throw new Error(
+          "AI belum menemukan segmen subtitle. Coba video lain."
+        );
+      }
+
+      subtitleRange = {
+        start: times.start,
+        end: times.end
+      };
+
+      $("subtitleText").value =
+        subtitleSegments
+          .map(segment => segment.text)
+          .join("\n");
+
+      $("subtitleCount").textContent =
+        subtitleSegments.length +
+        " segmen subtitle berhasil dibuat.";
+
+      $("subtitleStatus").textContent =
+        "Selesai! Subtitle otomatis berhasil dibuat.";
+
+      $("subtitleProgressBar").style.width = "100%";
+
+    }catch(error){
+
+      console.error(error);
+
+      $("subtitleStatus").textContent =
+        "Gagal membuat subtitle: " + error.message;
+
+      alert(
+        "Subtitle otomatis gagal. Pastikan internet aktif dan HP memiliki cukup memori."
+      );
+
+    }finally{
+
+      if(audioURL){
+        URL.revokeObjectURL(audioURL);
+      }
+
+      try{
+        await ffmpegEngine.deleteFile(audioName);
+      }catch(e){}
+
+      try{
+        await ffmpegEngine.deleteFile(
+          "subtitle_input." +
+          (file.name.split(".").pop() || "mp4")
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g,"")
+        );
+      }catch(e){}
+
+      processing = false;
+      $("generateSubtitles").disabled = false;
+      $("processVideo").disabled = !ffmpegReady;
+      $("loadFFmpeg").disabled = ffmpegReady;
+    }
+  }
+);
+
+$("copySubtitle").addEventListener("click", function(){
+  copyText($("subtitleText").value.trim());
 });
+
 
 // CHECKLIST
 const checks = [
