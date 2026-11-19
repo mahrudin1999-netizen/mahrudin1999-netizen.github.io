@@ -199,19 +199,23 @@ footer {
     format dan ukuran video secara otomatis.
   </div>
 
-  <label class="upload-box" for="videoInput">
-    <div class="symbol">📁</div>
-    <strong>PILIH VIDEO</strong>
-    <p>Ketuk untuk memasukkan video dari perangkat</p>
-  </label>
+<div class="upload-box" id="uploadBox">
+  <div class="symbol">📁</div>
+  <strong>PILIH VIDEO</strong>
+  <p>Ketuk untuk memilih video dari HP</p>
+  <button type="button" class="generate" id="chooseVideo">
+    PILIH VIDEO
+  </button>
+</div>
 
-  <input
-    type="file"
-    id="videoInput"
-    accept="video/mp4,video/webm,video/quicktime,video/*"
-  >
+<input
+  type="file"
+  id="videoInput"
+  accept="video/*"
+  style="display:none"
+>
 
-  <video id="preview" controls playsinline></video>
+    <video id="preview" controls playsinline></video>
 
   <div class="file-info" id="fileInfo"></div>
 
@@ -256,6 +260,9 @@ import {
 const $ = id => document.getElementById(id);
 
 const videoInput = $("videoInput");
+  $("chooseVideo").addEventListener("click", () => {
+  videoInput.click();
+});
 const preview = $("preview");
 const fileInfo = $("fileInfo");
 const generateBtn = $("generateBtn");
