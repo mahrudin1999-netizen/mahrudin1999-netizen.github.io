@@ -270,7 +270,7 @@ let outputURL = null;
 let ffmpeg = null;
 let isReady = false;
 let isGenerating = false;
-
+let lastFFmpegLog = "";
 function formatSize(bytes) {
   if (bytes < 1024 * 1024) {
     return (bytes / 1024).toFixed(1) + " KB";
@@ -338,7 +338,10 @@ async function loadEngine() {
   generateBtn.disabled = true;
 
   ffmpeg = new FFmpeg();
-
+ffmpeg.on("log", ({ message }) => {
+  lastFFmpegLog = message;
+  console.log("FFmpeg:", message);
+});
   ffmpeg.on("progress", ({ progress: value }) => {
     if (isGenerating && Number.isFinite(value)) {
       setProgress(value * 100);
@@ -447,19 +450,20 @@ generateBtn.addEventListener("click", async () => {
     }
 
   } catch (error) {
-    console.error(error);
+  console.error("GIRINATAN ERROR:", error);
 
-    showStatus(
-      "Proses gagal. Coba video yang lebih kecil atau format MP4."
-    );
+  const detail = String(error?.message || error);
 
-    setProgress(0);
+  statusText.textContent =
+    "Gagal: " + detail +
+    (lastFFmpegLog ? " | Log: " + lastFFmpegLog : "");
 
-  } finally {
-    isGenerating = false;
-    generateBtn.disabled = !selectedVideo;
-  }
-});
+  setProgress(0);
+
+} finally {
+  isGenerating = false;
+  generateBtn.disabled = !selectedVideo;
+}
 
 </script>
 
