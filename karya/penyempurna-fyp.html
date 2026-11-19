@@ -199,21 +199,20 @@ footer {
     format dan ukuran video secara otomatis.
   </div>
 
-<div class="upload-box" id="uploadBox">
+
+<div class="upload-box">
   <div class="symbol">📁</div>
-  <strong>PILIH VIDEO</strong>
-  <p>Ketuk untuk memilih video dari HP</p>
-  <button type="button" class="generate" id="chooseVideo">
-    PILIH VIDEO
-  </button>
+  <strong>MASUKKAN VIDEO</strong>
+  <p>Pilih video langsung dari penyimpanan HP</p>
+
+  <input
+    type="file"
+    id="videoInput"
+    accept="video/*"
+    style="display:block;width:100%;margin-top:18px;color:white"
+  >
 </div>
 
-<input
-  type="file"
-  id="videoInput"
-  accept="video/*"
-  style="display:none"
->
 
     <video id="preview" controls playsinline></video>
 
@@ -260,9 +259,6 @@ import {
 const $ = id => document.getElementById(id);
 
 const videoInput = $("videoInput");
-  $("chooseVideo").addEventListener("click", () => {
-  videoInput.click();
-});
 const preview = $("preview");
 const fileInfo = $("fileInfo");
 const generateBtn = $("generateBtn");
