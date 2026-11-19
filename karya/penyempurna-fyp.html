@@ -341,25 +341,34 @@ async function loadEngine() {
   generateBtn.disabled = true;
 
   ffmpeg = new FFmpeg();
-ffmpeg.on("log", ({ message }) => {
-  lastFFmpegLog = message;
-  console.log("FFmpeg:", message);
-});
+
+  ffmpeg.on("log", ({ message }) => {
+    lastFFmpegLog = message;
+    console.log("FFmpeg:", message);
+  });
+
   ffmpeg.on("progress", ({ progress: value }) => {
     if (isGenerating && Number.isFinite(value)) {
       setProgress(value * 100);
-      statusText.textContent = "Sedang mengoptimalkan video...";
+      statusText.textContent =
+        "Sedang mengoptimalkan video...";
     }
   });
 
   const baseURL =
     "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
 
+  const localWorker =
+    window.location.origin + "/karya/ffmpeg/worker.js";
+
   await ffmpeg.load({
+    classWorkerURL: localWorker,
+
     coreURL: await toBlobURL(
       baseURL + "/ffmpeg-core.js",
       "text/javascript"
     ),
+
     wasmURL: await toBlobURL(
       baseURL + "/ffmpeg-core.wasm",
       "application/wasm"
@@ -369,105 +378,7 @@ ffmpeg.on("log", ({ message }) => {
   isReady = true;
 }
 
-generateBtn.addEventListener("click", async () => {
-  if (!selectedVideo || isGenerating) return;
 
-  isGenerating = true;
-  generateBtn.disabled = true;
-  releaseOutput();
-  setProgress(0);
-
-  const inputName = "gir-input-video";
-  const outputName = "gir-output.mp4";
-
-  try {
-    await loadEngine();
-
-    showStatus("Membaca video...");
-
-    await ffmpeg.writeFile(
-      inputName,
-      await fetchFile(selectedVideo)
-    );
-
-    showStatus("Mengoptimalkan video...");
-
-    /*
-      Pengaturan otomatis:
-      - MP4
-      - H.264
-      - Resolusi maksimal 1080p
-      - Rasio asli dipertahankan
-      - 30 FPS
-      - Audio AAC jika tersedia
-      - Kompresi seimbang
-      - Fast start untuk pemutaran web
-    */
-
-    await ffmpeg.exec([
-      "-i", inputName,
-      "-map", "0:v:0",
-      "-map", "0:a?",
-      "-vf",
-      "scale=w='min(1080,iw)':h='min(1920,ih)':force_original_aspect_ratio=decrease:force_divisible_by=2,fps=30",
-      "-c:v", "libx264",
-      "-preset", "veryfast",
-      "-crf", "23",
-      "-pix_fmt", "yuv420p",
-      "-c:a", "aac",
-      "-b:a", "128k",
-      "-movflags", "+faststart",
-      "-max_muxing_queue_size", "1024",
-      outputName
-    ]);
-
-    showStatus("Menyiapkan hasil video...");
-
-    const data = await ffmpeg.readFile(outputName);
-
-    const blob = new Blob(
-      [data],
-      { type: "video/mp4" }
-    );
-
-    outputURL = URL.createObjectURL(blob);
-
-    downloadBtn.href = outputURL;
-    downloadBtn.download = "GIRINATAN-VIDEO.mp4";
-    downloadBtn.style.display = "block";
-
-    setProgress(100);
-
-    statusText.textContent =
-      "Selesai! Video berhasil dioptimalkan.";
-
-    fileInfo.textContent =
-      "Ukuran awal: " + formatSize(selectedVideo.size) +
-      "\nUkuran hasil: " + formatSize(blob.size);
-
-    try {
-      await ffmpeg.deleteFile(inputName);
-      await ffmpeg.deleteFile(outputName);
-    } catch (cleanupError) {
-      // File sementara akan dibersihkan saat sesi berakhir.
-    }
-
-  } catch (error) {
-  console.error("GIRINATAN ERROR:", error);
-
-  const detail = String(error?.message || error);
-
-  statusText.textContent =
-    "Gagal: " + detail +
-    (lastFFmpegLog ? " | Log: " + lastFFmpegLog : "");
-
-  setProgress(0);
-
-} finally {
-  isGenerating = false;
-  generateBtn.disabled = !selectedVideo;
-}
-});
 </script>
 
 </body>
