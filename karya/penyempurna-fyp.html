@@ -378,10 +378,104 @@ async function loadEngine() {
   isReady = true;
 }
 
+generateBtn.addEventListener("click", async () => {
+  if (!selectedVideo || isGenerating) return;
 
+  isGenerating = true;
+  generateBtn.disabled = true;
+  releaseOutput();
+  setProgress(0);
+
+  const inputName = "gir-input-video";
+  const outputName = "gir-output.mp4";
+
+  try {
+    await loadEngine();
+
+    showStatus("Membaca video...");
+
+    await ffmpeg.writeFile(
+      inputName,
+      await fetchFile(selectedVideo)
+    );
+
+    showStatus("Mengoptimalkan video...");
+
+    await ffmpeg.exec([
+      "-i", inputName,
+      "-map", "0:v:0",
+      "-map", "0:a?",
+      "-vf",
+      "scale=w='min(1080,iw)':h='min(1920,ih)':force_original_aspect_ratio=decrease:force_divisible_by=2,fps=30",
+      "-c:v", "libx264",
+      "-preset", "veryfast",
+      "-crf", "23",
+      "-pix_fmt", "yuv420p",
+      "-c:a", "aac",
+      "-b:a", "128k",
+      "-movflags", "+faststart",
+      "-max_muxing_queue_size", "1024",
+      outputName
+    ]);
+
+    showStatus("Menyiapkan hasil video...");
+
+    const data = await ffmpeg.readFile(outputName);
+
+    const blob = new Blob(
+      [data],
+      { type: "video/mp4" }
+    );
+
+    outputURL = URL.createObjectURL(blob);
+
+    downloadBtn.href = outputURL;
+    downloadBtn.download = "GIRINATAN-VIDEO.mp4";
+    downloadBtn.style.display = "block";
+
+    setProgress(100);
+
+    statusText.textContent =
+      "Selesai! Video berhasil dioptimalkan.";
+
+    fileInfo.textContent =
+      "Ukuran awal: " + formatSize(selectedVideo.size) +
+      "\nUkuran hasil: " + formatSize(blob.size);
+
+    await ffmpeg.deleteFile(inputName);
+    await ffmpeg.deleteFile(outputName);
+
+  } catch (error) {
+    console.error("GIRINATAN ERROR:", error);
+
+    statusText.textContent =
+      "Gagal: " + String(error?.message || error);
+
+    setProgress(0);
+
+  } finally {
+    isGenerating = false;
+    generateBtn.disabled = !selectedVideo;
+  }
+});
 </script>
 
 </body>
 </html>
+```
+
+## Setelah menyimpan
+
+1. Commit perubahan di GitHub.
+2. Buka ulang halaman Penyempurna FYP.
+3. Pilih video.
+4. Tekan GENERATE VIDEO.
+
+**Jangan mengganti seluruh HTML.** Cukup ganti bagian paling bawah tadi.
+
+Kalau muncul pesan gagal, kirimkan teks error-nya. Kita lanjut perbaiki mesin FFmpeg sampai bisa menghasilkan video yang dapat diunduh.
+  
+
+
 
 
