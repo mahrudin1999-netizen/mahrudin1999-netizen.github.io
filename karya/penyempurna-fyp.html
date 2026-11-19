@@ -1,374 +1,467 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#080808">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Penyempurna FYP - GIRINATAN</title>
+
 <style>
-:root{--bg:#080808;--panel:#151515;--panel2:#202020;--gold:#D6AD48;--green:#00C875;--text:#fff;--muted:#a8ada8;--border:#343434}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;line-height:1.5}
-header{position:sticky;top:0;z-index:10;background:#090909f2;border-bottom:1px solid #806326;padding:13px 15px;display:flex;gap:14px;align-items:center}
-header a{color:var(--gold);text-decoration:none;font-weight:bold}.brand{font-size:19px;font-weight:900;letter-spacing:1px}.brand span{color:var(--gold)}
-main{max-width:900px;margin:auto;padding:14px 13px 45px}h1{font-size:25px;margin:12px 0 3px}h2{font-size:19px;color:var(--gold);margin:0 0 12px}h3{font-size:15px;color:var(--gold);margin:18px 0 8px}
-.intro,.muted,.small{color:var(--muted)}.intro{font-size:14px;margin:0 0 16px}.small{font-size:12px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:15px;margin:13px 0}
-label{display:block;font-size:13px;margin:11px 0 5px;color:#e5e5e5}
-input,select,textarea{width:100%;background:#090909;color:white;border:1px solid #444;border-radius:9px;padding:11px;font:inherit}
-input[type=range]{padding:0;accent-color:var(--gold)}input[type=checkbox]{width:auto;accent-color:var(--green);margin-right:7px}
-textarea{min-height:88px;resize:vertical}
-button{border:0;border-radius:10px;padding:12px 15px;font-weight:bold;cursor:pointer;background:linear-gradient(135deg,#e5c36a,#b88a2e);color:#17120a;margin:8px 5px 0 0}
-button.secondary{background:#292929;color:white;border:1px solid #555}button:disabled{opacity:.45;cursor:not-allowed}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}video{width:100%;max-height:520px;background:#000;border-radius:12px;margin-top:10px}
-.status{background:#0b0b0b;border:1px solid #333;border-radius:9px;padding:10px;margin-top:9px;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
-.progress{height:9px;background:#333;border-radius:20px;overflow:hidden;margin-top:9px}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--green));transition:width .2s}
-.hint{border-left:3px solid var(--gold);padding:9px 11px;background:#211d12;border-radius:5px;font-size:13px;color:#eee}
-#downloadVideo{display:none;color:#101010;background:var(--green);padding:12px 16px;border-radius:9px;text-decoration:none;font-weight:bold;margin-top:12px}
-hr{border:0;border-top:1px solid #333;margin:18px 0}ul{padding-left:20px}footer{text-align:center;color:#777;font-size:12px;padding:20px}
-@media(max-width:560px){.row{grid-template-columns:1fr}main{padding:10px}}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #080808;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 17px;
+  background: #111;
+  border-bottom: 1px solid #806326;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-size: 21px;
+  font-weight: bold;
+  color: white;
+}
+
+.brand span {
+  color: #D6AD48;
+}
+
+.back {
+  color: #D6AD48;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.container {
+  max-width: 520px;
+  margin: auto;
+  padding: 20px 16px 40px;
+}
+
+h2 {
+  text-align: center;
+  margin: 20px 0 8px;
+}
+
+.description {
+  text-align: center;
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.upload-box {
+  border: 2px dashed #806326;
+  border-radius: 16px;
+  padding: 30px 15px;
+  text-align: center;
+  background: #141414;
+  cursor: pointer;
+}
+
+.upload-box .symbol {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.upload-box p {
+  color: #aaa;
+  font-size: 13px;
+}
+
+input[type=file] {
+  display: none;
+}
+
+video {
+  width: 100%;
+  max-height: 420px;
+  margin-top: 18px;
+  border-radius: 12px;
+  background: black;
+  display: none;
+}
+
+.file-info {
+  margin-top: 12px;
+  padding: 12px;
+  background: #171717;
+  border-radius: 10px;
+  color: #ccc;
+  font-size: 13px;
+  display: none;
+  word-break: break-word;
+}
+
+button {
+  width: 100%;
+  padding: 16px;
+  margin-top: 18px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.generate {
+  background: linear-gradient(135deg,#E5C36A,#B88A2E);
+  color: #111;
+}
+
+.generate:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 20px;
+  padding: 14px;
+  background: #141414;
+  border-radius: 10px;
+  color: #ccc;
+  font-size: 13px;
+  line-height: 1.6;
+  display: none;
+  text-align: center;
+}
+
+.progress-bg {
+  width: 100%;
+  height: 9px;
+  background: #333;
+  border-radius: 20px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.progress {
+  width: 0%;
+  height: 100%;
+  background: #00C875;
+  transition: width .2s;
+}
+
+.download {
+  display: none;
+  background: #00C875;
+  color: #07150e;
+  text-decoration: none;
+  text-align: center;
+  padding: 16px;
+  margin-top: 15px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.note {
+  margin-top: 25px;
+  color: #777;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  color: #777;
+  padding: 20px;
+  font-size: 12px;
+}
 </style>
 </head>
+
 <body>
-<header><a href="index.html">← Kembali</a><div class="brand">GIRI<span>NATAN</span></div></header>
-<main>
-<h1>🎬 Penyempurna FYP</h1>
-<p class="intro">Studio editing GIRINATAN. Atur video, audio, teks, subtitle, lalu ekspor MP4 langsung dari browser.</p>
 
-<section class="card">
-<h2>1. Unggah Video</h2>
-<input id="videoFile" type="file" accept="video/*">
-<video id="preview" controls playsinline style="display:none"></video>
-<div id="fileInfo" class="small">Belum ada video dipilih.</div>
-<button class="secondary" id="clearVideo" type="button">Hapus Video</button>
-<div class="hint">Untuk HP, disarankan mulai dengan video 15 sampai 60 detik, ukuran file di bawah 100 MB, dan resolusi 720p. Browser dapat kehabisan memori saat memproses file besar.</div>
-</section>
+<header>
+  <a class="back" href="index.html">← Kembali</a>
+  <div class="brand">GIRI<span>NATAN</span></div>
+</header>
 
-<section class="card">
-<h2>2. Potongan dan Format</h2>
-<div class="row">
-<div><label for="startTime">Mulai (detik)</label><input id="startTime" type="number" min="0" step=".1" value="0"></div>
-<div><label for="endTime">Selesai (detik)</label><input id="endTime" type="number" min="0" step=".1" value="0"></div>
-</div>
-<div class="row">
-<div><label for="exportRatio">Rasio</label><select id="exportRatio"><option value="9:16">9:16 Vertikal</option><option value="1:1">1:1 Persegi</option><option value="16:9">16:9 Landscape</option><option value="original">Ikuti video asli</option></select></div>
-<div><label for="fitMode">Penyesuaian</label><select id="fitMode"><option value="crop">Isi layar / crop</option><option value="contain">Tampilkan seluruh gambar</option></select></div>
-</div>
-<div class="row">
-<div><label for="exportQuality">Resolusi ekspor</label><select id="exportQuality"><option value="1080">1080p</option><option value="720" selected>720p</option><option value="480">480p</option></select></div>
-<div><label for="exportCrf">Kompresi</label><select id="exportCrf"><option value="21">Kualitas tinggi</option><option value="25" selected>Seimbang</option><option value="29">Ukuran lebih kecil</option></select></div>
-</div>
-</section>
+<div class="container">
 
-<section class="card">
-<h2>3. Hook dan Watermark</h2>
-<label for="hookText">Teks pembuka</label><textarea id="hookText" maxlength="120" placeholder="Contoh: Jangan menyerah sebelum mencoba..."></textarea>
-<div class="row">
-<div><label for="hookPosition">Posisi hook</label><select id="hookPosition"><option value="top">Atas</option><option value="center">Tengah</option><option value="bottom">Bawah</option></select></div>
-<div><label for="hookSize">Ukuran hook</label><select id="hookSize"><option value="small">Kecil</option><option value="medium" selected>Sedang</option><option value="large">Besar</option></select></div>
-</div>
-<label><input id="enableWatermark" type="checkbox" checked> Tambahkan watermark</label>
-<label for="watermarkText">Tulisan watermark</label><input id="watermarkText" maxlength="40" value="GIRINATAN">
-<label for="watermarkPosition">Posisi watermark</label><select id="watermarkPosition"><option value="top">Atas</option><option value="bottom" selected>Bawah</option></select>
-</section>
+  <h2>✨ Penyempurna FYP</h2>
 
-<section class="card">
-<h2>4. Musik dan Audio</h2>
-<label for="musicFile">Pilih musik latar (opsional)</label><input id="musicFile" type="file" accept="audio/*">
-<div class="row">
-<div><label for="originalVolume">Volume audio asli: <b id="originalVolumeText">100%</b></label><input id="originalVolume" type="range" min="0" max="200" value="100"></div>
-<div><label for="musicVolume">Volume musik: <b id="musicVolumeText">25%</b></label><input id="musicVolume" type="range" min="0" max="100" value="25"></div>
-</div>
-<label><input id="fadeMusic" type="checkbox" checked> Fade in dan fade out musik</label>
-<p class="small">Musik latar dicampur dengan suara asli jika video memiliki audio. Jika video tidak memiliki audio, musik tetap digunakan.</p>
-</section>
+  <div class="description">
+    Masukkan video kamu. GIRINATAN akan mengoptimalkan
+    format dan ukuran video secara otomatis.
+  </div>
 
-<section class="card">
-<h2>5. Filter dan Kecepatan</h2>
-<div class="row">
-<div><label for="brightness">Kecerahan <b id="brightnessText">0</b></label><input id="brightness" type="range" min="-1" max="1" step=".1" value="0"></div>
-<div><label for="contrast">Kontras <b id="contrastText">1</b></label><input id="contrast" type="range" min=".5" max="2" step=".1" value="1"></div>
-</div>
-<div class="row">
-<div><label for="saturation">Saturasi <b id="saturationText">1</b></label><input id="saturation" type="range" min="0" max="2" step=".1" value="1"></div>
-<div><label for="videoSpeed">Kecepatan</label><select id="videoSpeed"><option value=".5">0,5x lambat</option><option value="1" selected>1x normal</option><option value="2">2x cepat</option></select></div>
-</div>
-</section>
+  <label class="upload-box" for="videoInput">
+    <div class="symbol">📁</div>
+    <strong>PILIH VIDEO</strong>
+    <p>Ketuk untuk memasukkan video dari perangkat</p>
+  </label>
 
-<section class="card">
-<h2>6. Subtitle AI dan Editor Subtitle</h2>
-<p class="small">Whisper AI berjalan di browser. Model perlu diunduh saat pertama kali digunakan dan dapat memerlukan memori besar.</p>
-<div class="row">
-<div><label for="subtitleLanguage">Bahasa audio</label><select id="subtitleLanguage"><option value="indonesian">Indonesia</option><option value="english">Inggris</option></select></div>
-<div><label for="subtitleStyle">Tampilan subtitle</label><select id="subtitleStyle"><option value="box">Kotak gelap</option><option value="plain">Teks dengan outline</option></select></div>
+  <input
+    type="file"
+    id="videoInput"
+    accept="video/mp4,video/webm,video/quicktime,video/*"
+  >
+
+  <video id="preview" controls playsinline></video>
+
+  <div class="file-info" id="fileInfo"></div>
+
+  <button class="generate" id="generateBtn" disabled>
+    GENERATE VIDEO
+  </button>
+
+  <div class="status" id="status">
+    <div id="statusText">Menyiapkan sistem...</div>
+    <div class="progress-bg">
+      <div class="progress" id="progress"></div>
+    </div>
+    <div id="progressText">0%</div>
+  </div>
+
+  <a class="download" id="downloadBtn" download="GIRINATAN-VIDEO.mp4">
+    ⬇ DOWNLOAD HASIL VIDEO
+  </a>
+
+  <div class="note">
+    Proses dilakukan di browser perangkat kamu.
+    Jangan tutup halaman selama proses berlangsung.
+    Hasil optimasi teknis tidak menjamin video masuk FYP.
+  </div>
+
 </div>
-<button id="generateSubtitles" type="button">Buat Subtitle Otomatis (Whisper)</button>
-<div class="progress"><div id="subtitleProgressBar"></div></div>
-<div id="subtitleStatus" class="status">Belum ada proses subtitle.</div>
-<label for="subtitleEditor">Edit subtitle, satu kalimat per baris</label>
-<textarea id="subtitleEditor" placeholder="Hasil subtitle AI akan muncul di sini. Kamu juga bisa mengetik sendiri, satu kalimat per baris."></textarea>
-<div class="row">
-<div><label for="subtitleFontSize">Ukuran subtitle</label><select id="subtitleFontSize"><option value="small">Kecil</option><option value="medium" selected>Sedang</option><option value="large">Besar</option></select></div>
-<div><label for="subtitlePosition">Posisi subtitle</label><select id="subtitlePosition"><option value="top">Atas</option><option value="middle">Tengah</option><option value="bottom" selected>Bawah</option></select></div>
-</div>
-<label><input id="burnSubtitles" type="checkbox" checked> Bakar subtitle ke dalam video MP4</label>
-<button class="secondary" id="downloadSRT" type="button">Unduh Subtitle SRT</button>
-<p class="small">Subtitle manual dibagi rata sepanjang klip. Subtitle AI memakai waktu hasil transkripsi. Jika teks diubah, urutan waktunya tetap mengikuti segmen asal.</p>
-</section>
 
-<section class="card">
-<h2>7. Mesin Editor dan Ekspor MP4</h2>
-<p class="small">FFmpeg WebAssembly dimuat dari CDN. Koneksi internet diperlukan saat memuat mesin.</p>
-<button id="loadFFmpeg" type="button">Muat Mesin Editor</button>
-<div id="ffmpegStatus" class="status">Mesin belum dimuat.</div>
-<button id="processVideo" type="button" disabled>Proses Video Sekarang</button>
-<div class="progress"><div id="exportProgress"></div></div>
-<div id="exportStatus" class="status">Menunggu video dan mesin editor.</div>
-<video id="outputPreview" controls playsinline style="display:none"></video>
-<div id="outputInfo" class="small"></div>
-<a id="downloadVideo" download="GIRINATAN-video.mp4">⬇ Unduh Hasil MP4</a>
-</section>
-
-<section class="card">
-<h2>8. Pembuat Ide Konten</h2>
-<label for="topic">Topik video</label><input id="topic" placeholder="Contoh: semangat, persahabatan, kehidupan">
-<button id="generateIdeas" type="button">Buat Ide Hook</button><div id="ideasResult" class="status"></div><button class="secondary" id="copyIdeas" type="button">Salin Ide</button>
-<label for="titleTopic">Topik judul</label><input id="titleTopic" placeholder="Masukkan topik">
-<button id="generateTitle" type="button">Buat Judul</button><div id="titleResult" class="status"></div><button class="secondary" id="copyTitle" type="button">Salin Judul</button>
-<label for="captionTopic">Topik caption</label><input id="captionTopic" placeholder="Masukkan topik caption">
-<button id="generateCaption" type="button">Buat Caption dan Hashtag</button><div id="captionResult" class="status"></div><button class="secondary" id="copyCaption" type="button">Salin Caption</button>
-<p class="small">Generator ini memakai template lokal, bukan AI generatif atau analisis tren langsung.</p>
-</section>
-
-<section class="card">
-<h2>9. Checklist Sebelum Posting</h2>
-<div id="checklist">
-<label><input type="checkbox"> Tiga detik pertama menarik perhatian</label>
-<label><input type="checkbox"> Suara jelas dan seimbang</label>
-<label><input type="checkbox"> Video cukup terang</label>
-<label><input type="checkbox"> Teks mudah dibaca</label>
-<label><input type="checkbox"> Materi video dan musik punya izin</label>
-<label><input type="checkbox"> Caption sesuai isi video</label>
-<label><input type="checkbox"> Hashtag relevan</label>
-<label><input type="checkbox"> Tidak ada bagian kosong yang mengganggu</label>
-</div>
-</section>
-
-<section class="card">
-<h2>Catatan</h2>
-<ul><li>Alat ini membantu mengedit dan menyiapkan video, bukan menjamin FYP.</li><li>Gunakan konten dan musik yang kamu miliki atau berizin.</li><li>Jangan tutup halaman, pindah aplikasi, atau kunci layar selama ekspor.</li><li>Ekspor dilakukan di perangkat, bukan di server GIRINATAN.</li><li>Jika HP berhenti merespons, coba video lebih pendek atau resolusi lebih rendah.</li></ul>
-</section>
-</main>
-<footer>GIRINATAN • Penyempurna FYP</footer>
+<footer>
+  © 2026 GIRINATAN
+</footer>
 
 <script type="module">
-const $=id=>document.getElementById(id);
-let ffmpeg=null,ffmpegReady=false,videoFile=null,musicFile=null,videoURL=null,outputURL=null;
-let transcriber=null,subtitleSegments=[],subtitleBusy=false,exportBusy=false;
-const status=(id,msg)=>$(id).textContent=msg;
-const fmt=n=>{const u=["B","KB","MB","GB"];let i=0;while(n>=1024&&i<3){n/=1024;i++}return n.toFixed(i?1:0)+" "+u[i]};
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function busy(){ $("processVideo").disabled=exportBusy||!ffmpegReady||!videoFile; $("loadFFmpeg").disabled=exportBusy; $("generateSubtitles").disabled=subtitleBusy||!videoFile; }
-function cleanOutput(){if(outputURL)URL.revokeObjectURL(outputURL);outputURL=null;$("outputPreview").removeAttribute("src");$("outputPreview").style.display="none";$("downloadVideo").style.display="none";$("outputInfo").textContent=""}
-$("videoFile").addEventListener("change",e=>{
- const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith("video/")){alert("Pilih file video yang benar.");e.target.value="";return}
- videoFile=f;if(videoURL)URL.revokeObjectURL(videoURL);videoURL=URL.createObjectURL(f);
- $("preview").src=videoURL;$("preview").style.display="block";$("fileInfo").textContent=f.name+" • "+fmt(f.size);
- $("preview").onloadedmetadata=()=>{$("startTime").value="0";$("endTime").value=Number.isFinite($("preview").duration)?$("preview").duration.toFixed(1):"0"};
- cleanOutput();busy();
+import { FFmpeg } from
+"https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js";
+
+import {
+  fetchFile,
+  toBlobURL
+} from
+"https://unpkg.com/@ffmpeg/util@0.12.1/dist/esm/index.js";
+
+const $ = id => document.getElementById(id);
+
+const videoInput = $("videoInput");
+const preview = $("preview");
+const fileInfo = $("fileInfo");
+const generateBtn = $("generateBtn");
+const statusBox = $("status");
+const statusText = $("statusText");
+const progress = $("progress");
+const progressText = $("progressText");
+const downloadBtn = $("downloadBtn");
+
+let selectedVideo = null;
+let outputURL = null;
+let ffmpeg = null;
+let isReady = false;
+let isGenerating = false;
+
+function formatSize(bytes) {
+  if (bytes < 1024 * 1024) {
+    return (bytes / 1024).toFixed(1) + " KB";
+  }
+  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+}
+
+function showStatus(message) {
+  statusBox.style.display = "block";
+  statusText.textContent = message;
+}
+
+function setProgress(value) {
+  const number = Math.max(0, Math.min(100, value));
+  progress.style.width = number + "%";
+  progressText.textContent = Math.round(number) + "%";
+}
+
+function releaseOutput() {
+  if (outputURL) {
+    URL.revokeObjectURL(outputURL);
+    outputURL = null;
+  }
+
+  downloadBtn.style.display = "none";
+  downloadBtn.removeAttribute("href");
+}
+
+videoInput.addEventListener("change", () => {
+  const file = videoInput.files[0];
+
+  if (!file) return;
+
+  if (!file.type.startsWith("video/")) {
+    alert("File yang dipilih bukan video.");
+    videoInput.value = "";
+    return;
+  }
+
+  selectedVideo = file;
+
+  releaseOutput();
+
+  if (preview.src) {
+    URL.revokeObjectURL(preview.src);
+  }
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+
+  fileInfo.style.display = "block";
+  fileInfo.textContent =
+    "Nama: " + file.name +
+    "\nUkuran: " + formatSize(file.size);
+
+  generateBtn.disabled = false;
+  showStatus("Video siap diproses.");
+  setProgress(0);
 });
-$("clearVideo").onclick=()=>{videoFile=null;$("videoFile").value="";if(videoURL)URL.revokeObjectURL(videoURL);videoURL=null;$("preview").removeAttribute("src");$("preview").style.display="none";$("fileInfo").textContent="Belum ada video dipilih.";subtitleSegments=[];$("subtitleEditor").value="";cleanOutput();busy()};
-$("musicFile").addEventListener("change",e=>musicFile=e.target.files?.[0]||null);
-for(const [id,out,suffix] of [["originalVolume","originalVolumeText","%"],["musicVolume","musicVolumeText","%"],["brightness","brightnessText",""],["contrast","contrastText",""],["saturation","saturationText",""]])$(id).addEventListener("input",()=>$(out).textContent=$(id).value+suffix);
 
-$("loadFFmpeg").onclick=async()=>{
- if(ffmpegReady||exportBusy)return;$("loadFFmpeg").disabled=true;status("ffmpegStatus","Mengunduh mesin FFmpeg. Tunggu sampai selesai...");
- try{
-  const [{FFmpeg},{toBlobURL}]=await Promise.all([
-   import("https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js"),
-   import("https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js")
-  ]);
-  ffmpeg=new FFmpeg();
-  ffmpeg.on("log",({message})=>{if(message)status("ffmpegStatus",message.slice(-450))});
-  ffmpeg.on("progress",({progress})=>{$("exportProgress").style.width=Math.round(Math.max(0,Math.min(1,progress))*100)+"%"});
-  const base="https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
-  await ffmpeg.load({coreURL:await toBlobURL(base+"/ffmpeg-core.js","text/javascript"),wasmURL:await toBlobURL(base+"/ffmpeg-core.wasm","application/wasm")});
-  ffmpegReady=true;status("ffmpegStatus","Mesin FFmpeg siap digunakan.");
- }catch(e){console.error(e);status("ffmpegStatus","Gagal memuat FFmpeg: "+e.message+"\nCoba muat ulang halaman dan gunakan koneksi stabil.");}
- $("loadFFmpeg").disabled=false;busy();
-};
+async function loadEngine() {
+  if (isReady) return;
 
-async function ensureWhisper(){
- if(transcriber)return transcriber;
- status("subtitleStatus","Memuat pustaka dan model Whisper AI. Unduhan pertama bisa besar...");
- const {pipeline}=await import("https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1");
- transcriber=await pipeline("automatic-speech-recognition","onnx-community/whisper-tiny",{
-  progress_callback:p=>{if(p.status==="progress"&&p.total){$("subtitleProgressBar").style.width=Math.round(p.progress||0)+"%";status("subtitleStatus",`Mengunduh model: ${p.file||"file model"} ${Math.round(p.progress||0)}%`)}}
- });
- return transcriber;
-}
-function wavToFloat32(buffer){
- const view=new DataView(buffer);if(view.getUint32(0,false)!==0x52494646)throw new Error("Audio WAV tidak valid.");
- const channels=view.getUint16(22,true),rate=view.getUint32(24,true),bits=view.getUint16(34,true);
- let offset=12,dataOffset=-1,dataSize=0;
- while(offset+8<=view.byteLength){const id=view.getUint32(offset,false),size=view.getUint32(offset+4,true);if(id===0x64617461){dataOffset=offset+8;dataSize=size;break}offset+=8+size+(size%2)}
- if(dataOffset<0)throw new Error("Data audio WAV tidak ditemukan.");
- const samples=bits===16?new Float32Array(Math.floor(dataSize/2/channels)):new Float32Array(Math.floor(dataSize/4/channels));
- for(let i=0;i<samples.length;i++){let sum=0;for(let c=0;c<channels;c++){const pos=dataOffset+(i*channels+c)*(bits/8);sum+=bits===16?view.getInt16(pos,true)/32768:view.getFloat32(pos,true)}samples[i]=sum/channels}
- if(rate===16000)return samples;
- const outLength=Math.floor(samples.length*16000/rate),out=new Float32Array(outLength),ratio=rate/16000;
- for(let i=0;i<outLength;i++){const x=i*ratio,a=Math.floor(x),b=Math.min(a+1,samples.length-1),t=x-a;out[i]=samples[a]*(1-t)+samples[b]*t}
- return out;
-}
-$("generateSubtitles").onclick=async()=>{
- if(!videoFile||subtitleBusy)return;
- const start=Math.max(0,Number($("startTime").value)||0),end=Number($("endTime").value)||0,dur=end-start;
- if(!ffmpegReady){alert("Muat Mesin Editor terlebih dahulu agar audio video bisa diekstrak.");return}
- if(dur<=0||dur>300){alert("Pilih potongan video maksimal 5 menit untuk transkripsi AI.");return}
- subtitleBusy=true;busy();$("subtitleProgressBar").style.width="0%";
- const ext=(videoFile.name.split(".").pop()||"mp4").toLowerCase().replace(/[^a-z0-9]/g,"")||"mp4",input="whisper-input."+ext,wav="whisper-audio.wav";
- try{
-  await ffmpeg.writeFile(input,new Uint8Array(await videoFile.arrayBuffer()));
-  status("subtitleStatus","Mengambil audio dari video...");
-  await ffmpeg.exec(["-ss",String(start),"-i",input,"-t",String(dur),"-vn","-ac","1","-ar","16000","-c:a","pcm_s16le",wav]);
-  const wavData=await ffmpeg.readFile(wav);const audio=wavToFloat32(wavData.buffer.slice(wavData.byteOffset,wavData.byteOffset+wavData.byteLength));
-  const model=await ensureWhisper();status("subtitleStatus","Whisper sedang mengenali ucapan...");
-  const result=await model(audio,{language:$("subtitleLanguage").value,task:"transcribe",return_timestamps:true,chunk_length_s:30,stride_length_s:5});
-  const chunks=Array.isArray(result.chunks)?result.chunks:[];
-  subtitleSegments=chunks.map(c=>({start:Number(c.timestamp?.[0]??0),end:Number(c.timestamp?.[1]??0),text:String(c.text||"").trim()})).filter(c=>c.text);
-  if(!subtitleSegments.length&&result.text){subtitleSegments=[{start:0,end:dur,text:String(result.text).trim()}]}
-  $("subtitleEditor").value=subtitleSegments.map(s=>s.text).join("\n");
-  $("subtitleProgressBar").style.width="100%";
-  status("subtitleStatus",`Selesai. ${subtitleSegments.length} segmen subtitle ditemukan. Periksa dan edit teks sebelum ekspor.`);
-  await ffmpeg.deleteFile(input).catch(()=>{});await ffmpeg.deleteFile(wav).catch(()=>{});
- }catch(e){console.error(e);status("subtitleStatus","Subtitle AI gagal: "+e.message+"\nCoba potongan lebih pendek atau ketik subtitle secara manual.");}
- finally{subtitleBusy=false;busy()}
-};
+  showStatus("Memuat mesin pengolah video...");
+  generateBtn.disabled = true;
 
-function makeCanvas(w,h){
- const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");
- const hook=$("hookText").value.trim(),wm=$("enableWatermark").checked?$("watermarkText").value.trim():"";
- if(hook){
-  const fs=$("hookSize").value==="large"?w*.065:$("hookSize").value==="small"?w*.035:w*.05;
-  x.font=`bold ${fs}px Arial`;x.textAlign="center";x.textBaseline="middle";
-  const words=hook.split(/\s+/),lines=[];let line="";for(const word of words){const test=line?line+" "+word:word;if(x.measureText(test).width>w*.86&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);
-  const lh=fs*1.25,bh=lines.length*lh,cy=$("hookPosition").value==="top"?h*.16:$("hookPosition").value==="bottom"?h*.78:h*.5;
-  x.fillStyle="rgba(0,0,0,.62)";x.fillRect(w*.05,cy-bh/2-fs*.35,w*.9,bh+fs*.7);
-  x.fillStyle="#fff";x.strokeStyle="#000";x.lineWidth=Math.max(2,fs*.08);
-  lines.forEach((t,i)=>{const y=cy-bh/2+i*lh+lh/2;x.strokeText(t,w/2,y,w*.86);x.fillText(t,w/2,y,w*.86)});
- }
- if(wm){const fs=Math.max(18,w*.035),y=$("watermarkPosition").value==="top"?h*.07:h*.94;x.font=`bold ${fs}px Arial`;x.textAlign="right";x.fillStyle="rgba(0,0,0,.5)";x.fillRect(w*.65,y-fs*1.25,w*.3,fs*1.7);x.fillStyle="#D6AD48";x.fillText(wm,w*.93,y,w*.26)}
- return c;
+  ffmpeg = new FFmpeg();
+
+  ffmpeg.on("progress", ({ progress: value }) => {
+    if (isGenerating && Number.isFinite(value)) {
+      setProgress(value * 100);
+      statusText.textContent = "Sedang mengoptimalkan video...";
+    }
+  });
+
+  const baseURL =
+    "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+
+  await ffmpeg.load({
+    coreURL: await toBlobURL(
+      baseURL + "/ffmpeg-core.js",
+      "text/javascript"
+    ),
+    wasmURL: await toBlobURL(
+      baseURL + "/ffmpeg-core.wasm",
+      "application/wasm"
+    )
+  });
+
+  isReady = true;
 }
-function subtitleCues(duration){
- const lines=$("subtitleEditor").value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
- if(!lines.length)return [];
- if(subtitleSegments.length===lines.length){
-  return lines.map((text,i)=>({start:Math.max(0,Number(subtitleSegments[i].start)||0),end:Math.min(duration,Number(subtitleSegments[i].end)||duration),text})).filter(s=>s.end>s.start);
- }
- const each=duration/lines.length;return lines.map((text,i)=>({start:i*each,end:Math.min(duration,(i+1)*each),text}));
-}
-function subtitlePng(w,h,text){
- const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");
- const fs=$("subtitleFontSize").value==="large"?Math.round(w*.055):$("subtitleFontSize").value==="small"?Math.round(w*.032):Math.round(w*.043);
- x.font=`bold ${fs}px Arial`;x.textAlign="center";x.textBaseline="middle";
- const words=text.split(/\s+/),lines=[];let line="";for(const word of words){const test=line?line+" "+word:word;if(x.measureText(test).width>w*.86&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);
- const lh=fs*1.25,block=lines.length*lh;let cy=$("subtitlePosition").value==="top"?h*.13:$("subtitlePosition").value==="middle"?h*.5:h*.86;
- if($("subtitleStyle").value==="box"){x.fillStyle="rgba(0,0,0,.72)";x.fillRect(w*.05,cy-block/2-fs*.3,w*.9,block+fs*.6)}
- x.fillStyle="#fff";x.strokeStyle="#000";x.lineWidth=Math.max(2,fs*.12);
- lines.forEach((t,i)=>{const y=cy-block/2+i*lh+lh/2;x.strokeText(t,w/2,y,w*.86);x.fillText(t,w/2,y,w*.86)});
- return c;
-}
-async function canvasPng(canvas){return new Uint8Array(await (await new Promise(resolve=>canvas.toBlob(resolve,"image/png"))).arrayBuffer())}
-function atempo(speed){return speed===1?"":speed===2?",atempo=2":",atempo=0.5"}
-$("processVideo").onclick=async()=>{
- if(!videoFile||!ffmpegReady||exportBusy)return;
- const start=Math.max(0,Number($("startTime").value)||0),end=Number($("endTime").value)||0,duration=end-start,speed=Number($("videoSpeed").value);
- if(duration<=0){alert("Waktu selesai harus lebih besar dari waktu mulai.");return}
- if(duration>300){alert("Untuk stabilitas HP, versi ini membatasi ekspor hingga 5 menit per proses.");return}
- const cues=$("burnSubtitles").checked?subtitleCues(duration):[];
- if(cues.length>80){alert("Maksimal 80 segmen subtitle untuk satu ekspor. Gabungkan beberapa baris subtitle.");return}
- exportBusy=true;busy();cleanOutput();$("exportProgress").style.width="0%";status("exportStatus","Menyiapkan file dan filter...");
- const ext=(videoFile.name.split(".").pop()||"mp4").toLowerCase().replace(/[^a-z0-9]/g,"")||"mp4";
- const input="source."+ext,musicName="background-audio."+((musicFile?.name.split(".").pop()||"mp3").toLowerCase().replace(/[^a-z0-9]/g,"")||"mp3");
- const overlayName="branding-overlay.png",outName="girinatan-final.mp4",subNames=[];
- let logText="",logFn=({message})=>{logText+=message+"\n";if(logText.length>10000)logText=logText.slice(-7000)};
- try{
-  await ffmpeg.writeFile(input,new Uint8Array(await videoFile.arrayBuffer()));
-  let probe="";const probeFn=({message})=>probe+=message+"\n";ffmpeg.on("log",probeFn);
-  try{await ffmpeg.exec(["-i",input,"-t","0.1","-f","null","-"])}catch(_){}
-  ffmpeg.off("log",probeFn);
-  const hasAudio=/Stream #0:\d+.*Audio:/i.test(probe);
-  let w,h;const q=Number($("exportQuality").value),ratio=$("exportRatio").value;
-  if(ratio==="9:16"){h=q;w=Math.round(q*9/16/2)*2}
-  else if(ratio==="1:1"){w=h=q}
-  else if(ratio==="16:9"){w=q;h=Math.round(q*9/16/2)*2}
-  else {w=q;h=Math.round(q*9/16/2)*2}
-  const scale=ratio==="original"?`scale=${q}:-2`:$("fitMode").value==="crop"?`scale=${w}:${h}:force_original_aspect_ratio=increase,crop=${w}:${h}`:`scale=${w}:${h}:force_original_aspect_ratio=decrease,pad=${w}:${h}:(ow-iw)/2:(oh-ih)/2:black`;
-  const vf=`${scale},setsar=1,eq=brightness=${$("brightness").value}:contrast=${$("contrast").value}:saturation=${$("saturation").value},setpts=PTS/${speed}`;
-  const args=["-ss",String(start),"-i",input];
-  const hasBrand=!!$("hookText").value.trim()||($("enableWatermark").checked&&!!$("watermarkText").value.trim());
-  let inputIndex=1;
-  if(hasBrand){await ffmpeg.writeFile(overlayName,await canvasPng(makeCanvas(w,h)));args.push("-i",overlayName);inputIndex++}
-  let musicIndex=-1;if(musicFile){musicIndex=inputIndex++;await ffmpeg.writeFile(musicName,new Uint8Array(await musicFile.arrayBuffer()));args.push("-stream_loop","-1","-i",musicName)}
-  const subtitleInputs=[];
-  for(let i=0;i<cues.length;i++){
-   const cue=cues[i],name=`subtitle-${i}.png`;await ffmpeg.writeFile(name,await canvasPng(subtitlePng(w,h,cue.text)));
-   subtitleInputs.push({name,index:inputIndex++,cue});args.push("-loop","1","-i",name);
+
+generateBtn.addEventListener("click", async () => {
+  if (!selectedVideo || isGenerating) return;
+
+  isGenerating = true;
+  generateBtn.disabled = true;
+  releaseOutput();
+  setProgress(0);
+
+  const inputName = "gir-input-video";
+  const outputName = "gir-output.mp4";
+
+  try {
+    await loadEngine();
+
+    showStatus("Membaca video...");
+
+    await ffmpeg.writeFile(
+      inputName,
+      await fetchFile(selectedVideo)
+    );
+
+    showStatus("Mengoptimalkan video...");
+
+    /*
+      Pengaturan otomatis:
+      - MP4
+      - H.264
+      - Resolusi maksimal 1080p
+      - Rasio asli dipertahankan
+      - 30 FPS
+      - Audio AAC jika tersedia
+      - Kompresi seimbang
+      - Fast start untuk pemutaran web
+    */
+
+    await ffmpeg.exec([
+      "-i", inputName,
+      "-map", "0:v:0",
+      "-map", "0:a?",
+      "-vf",
+      "scale=w='min(1080,iw)':h='min(1920,ih)':force_original_aspect_ratio=decrease:force_divisible_by=2,fps=30",
+      "-c:v", "libx264",
+      "-preset", "veryfast",
+      "-crf", "23",
+      "-pix_fmt", "yuv420p",
+      "-c:a", "aac",
+      "-b:a", "128k",
+      "-movflags", "+faststart",
+      "-max_muxing_queue_size", "1024",
+      outputName
+    ]);
+
+    showStatus("Menyiapkan hasil video...");
+
+    const data = await ffmpeg.readFile(outputName);
+
+    const blob = new Blob(
+      [data],
+      { type: "video/mp4" }
+    );
+
+    outputURL = URL.createObjectURL(blob);
+
+    downloadBtn.href = outputURL;
+    downloadBtn.download = "GIRINATAN-VIDEO.mp4";
+    downloadBtn.style.display = "block";
+
+    setProgress(100);
+
+    statusText.textContent =
+      "Selesai! Video berhasil dioptimalkan.";
+
+    fileInfo.textContent =
+      "Ukuran awal: " + formatSize(selectedVideo.size) +
+      "\nUkuran hasil: " + formatSize(blob.size);
+
+    try {
+      await ffmpeg.deleteFile(inputName);
+      await ffmpeg.deleteFile(outputName);
+    } catch (cleanupError) {
+      // File sementara akan dibersihkan saat sesi berakhir.
+    }
+
+  } catch (error) {
+    console.error(error);
+
+    showStatus(
+      "Proses gagal. Coba video yang lebih kecil atau format MP4."
+    );
+
+    setProgress(0);
+
+  } finally {
+    isGenerating = false;
+    generateBtn.disabled = !selectedVideo;
   }
-  const filters=[];let vlabel="0:v";
-  filters.push(`[0:v]${vf}[v0]`);vlabel="v0";
-  if(hasBrand){filters.push(`[${vlabel}][1:v]overlay=0:0:shortest=1[vbrand]`);vlabel="vbrand"}
-  for(let i=0;i<subtitleInputs.length;i++){
-   const item=subtitleInputs[i],next=`vsub${i}`;
-   filters.push(`[${vlabel}][${item.index}:v]overlay=0:0:enable='between(t,${item.cue.start.toFixed(3)},${item.cue.end.toFixed(3)})'[${next}]`);
-   vlabel=next;
-  }
-  const origVol=Number($("originalVolume").value)/100,musicVol=Number($("musicVolume").value)/100,fade=$("fadeMusic").checked;
-  let audioLabel=null;
-  if(musicFile&&hasAudio){
-   filters.push(`[0:a]volume=${origVol}${atempo(speed)}[aorig]`);
-   let m=`[${musicIndex}:a]volume=${musicVol}`;
-   if(fade){m+=",afade=t=in:st=0:d=1";if(duration>1.5)m+=`,afade=t=out:st=${Math.max(0,duration/speed-1.5).toFixed(3)}:d=1.5`}
-   filters.push(m+"[amusic]");
-   filters.push("[aorig][amusic]amix=inputs=2:duration=first:dropout_transition=2[aout]");audioLabel="aout";
-  }else if(musicFile){
-   let m=`[${musicIndex}:a]volume=${musicVol}`;
-   if(fade){m+=",afade=t=in:st=0:d=1";if(duration/speed>1.5)m+=`,afade=t=out:st=${Math.max(0,duration/speed-1.5).toFixed(3)}:d=1.5`}
-   filters.push(m+"[aout]");audioLabel="aout";
-  }else if(hasAudio){
-   filters.push(`[0:a]volume=${origVol}${atempo(speed)}[aout]`);audioLabel="aout";
-  }
-  args.push("-filter_complex",filters.join(";"),"-map",`[${vlabel}]`);
-  if(audioLabel)args.push("-map",`[${audioLabel}]`);
-  args.push("-t",String(duration/speed),"-c:v","libx264","-preset","ultrafast","-crf",$("exportCrf").value,"-pix_fmt","yuv420p","-threads","1");
-  if(audioLabel)args.push("-c:a","aac","-b:a","128k");
-  args.push("-movflags","+faststart",outName);
-  ffmpeg.on("log",logFn);status("exportStatus","Ekspor berjalan. Jangan tutup halaman atau kunci layar...");
-  await ffmpeg.exec(args);ffmpeg.off("log",logFn);
-  const data=await ffmpeg.readFile(outName),blob=new Blob([data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength)],{type:"video/mp4"});
-  outputURL=URL.createObjectURL(blob);$("outputPreview").src=outputURL;$("outputPreview").style.display="block";$("downloadVideo").href=outputURL;$("downloadVideo").style.display="inline-block";$("outputInfo").textContent="Ukuran hasil: "+fmt(blob.size);
-  $("exportProgress").style.width="100%";status("exportStatus","Selesai. Tonton hasilnya terlebih dahulu, lalu unduh MP4.");
- }catch(e){console.error(e);ffmpeg.off("log",logFn);status("exportStatus","Ekspor gagal: "+e.message+"\nCoba resolusi 480p, hapus musik/subtitle sementara, atau gunakan video lebih pendek.\n"+logText.slice(-1200))}
- finally{
-  const files=[input,musicName,overlayName,outName,...subNames,...Array.from({length:cues.length},(_,i)=>`subtitle-${i}.png`)];
-  for(const f of files)try{await ffmpeg.deleteFile(f)}catch(_){}
-  exportBusy=false;busy();
- }
-};
-$("downloadSRT").onclick=()=>{
- const duration=Math.max(0,(Number($("endTime").value)||0)-(Number($("startTime").value)||0));
- const cues=subtitleCues(duration);if(!cues.length){alert("Belum ada teks subtitle.");return}
- const ts=s=>{const ms=Math.round(s*1000),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),sec=Math.floor(ms%60000/1000),mil=ms%1000;return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")},${String(mil).padStart(3,"0")}`};
- const srt=cues.map((c,i)=>`${i+1}\n${ts(c.start)} --> ${ts(c.end)}\n${c.text}`).join("\n\n");
- const a=document.createElement("a"),u=URL.createObjectURL(new Blob([srt],{type:"text/plain;charset=utf-8"}));a.href=u;a.download="GIRINATAN-subtitle.srt";a.click();setTimeout(()=>URL.revokeObjectURL(u),1500);
-};
-$("generateIdeas").onclick=()=>{const t=$("topic").value.trim()||"kehidupan";$("ideasResult").textContent=[`Pernahkah kamu merasa ${t} mengubah segalanya?`,`Jangan menyerah hanya karena perjalanan ${t} terasa berat.`,`Satu hal tentang ${t} yang sering kita lupakan...`].join("\n\n")};
-$("generateTitle").onclick=()=>{const t=$("titleTopic").value.trim()||"perjalanan hidup";$("titleResult").textContent=`"${t}: Hal Kecil yang Bisa Mengubah Cara Pandangmu"`};
-$("generateCaption").onclick=()=>{const t=$("captionTopic").value.trim()||"perjalanan";$("captionResult").textContent=`Setiap ${t} punya prosesnya sendiri. Tetap belajar, tetap berkarya, dan jangan berhenti melangkah.\n\n#GIRINATAN #KreatorIndonesia #SemangatBerkarya #KontenPositif`};
-for(const [btn,src] of [["copyIdeas","ideasResult"],["copyTitle","titleResult"],["copyCaption","captionResult"]])$(btn).onclick=async()=>{try{await navigator.clipboard.writeText($(src).textContent);alert("Berhasil disalin.")}catch(_){alert("Salin teks secara manual.")}};
-document.querySelectorAll("#checklist input").forEach((el,i)=>{const key="girinatan-fyp-check-"+i;el.checked=localStorage.getItem(key)==="1";el.addEventListener("change",()=>localStorage.setItem(key,el.checked?"1":"0"))});
-window.addEventListener("beforeunload",()=>{if(videoURL)URL.revokeObjectURL(videoURL);if(outputURL)URL.revokeObjectURL(outputURL)});
-busy();
+});
+
 </script>
+
 </body>
 </html>
