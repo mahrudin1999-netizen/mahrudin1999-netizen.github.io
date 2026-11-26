@@ -1182,9 +1182,9 @@ window.runTransaction = runTransaction;
 window.serverTimestamp = serverTimestamp;
 try {
   await setPersistence(auth, browserLocalPersistence);
-  const TIKTOK_WORKER =
-  "https://girinatan-tiktok-auth.mahrudin1999.workers.dev";
-
+  
+const TIKTOK_WORKER =
+"https://girinatan-tiktok-auth.mahrudin1999.workers.dev/auth/tiktok/start";
 window.signInTikTok = function() {
   location.href = TIKTOK_WORKER + "/auth/tiktok";
 };
