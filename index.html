@@ -1186,7 +1186,7 @@ try {
 const TIKTOK_WORKER =
 "https://girinatan-tiktok-auth.mahrudin1999.workers.dev/auth/tiktok/start";
 window.signInTikTok = function() {
-  location.href = TIKTOK_WORKER + "/auth/tiktok";
+  location.href = TIKTOK_WORKER + "/auth/tiktok/start"
 };
   async function finishTikTokLogin() {
   const params = new URLSearchParams(location.search);
