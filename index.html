@@ -1214,14 +1214,18 @@ history.replaceState(
 
     const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(result.error || "Gagal menerima data login.");
-    }
+    if (
+  !result ||
+  typeof result.customToken !== "string" ||
+  !result.customToken.trim()
+) {
+  throw new Error("Firebase Custom Token tidak ditemukan dari Worker.");
+}
 
-    const credential = await signInWithCustomToken(
-      auth,
-      result.customToken
-    );
+const credential = await signInWithCustomToken(
+  auth,
+  result.customToken
+);
 
     const user = credential.user;
 
